@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main_nav"
+    app:startDestination="@id/startFragment">
+
+    <fragment
+        android:id="@+id/startFragment"
+        android:name="com.example.spotifyclone.StartFragment"
+        android:label="fragment_start"
+        tools:layout="@layout/fragment_start" >
+        <action
+            android:id="@+id/toSignUp1"
+            app:destination="@id/signUp1"
+            app:enterAnim="@android:anim/slide_out_right"
+            app:exitAnim="@android:anim/slide_in_left" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUp1"
+        android:name="com.example.spotifyclone.SignUp1"
+        android:label="fragment_sign_up1"
+        tools:layout="@layout/fragment_sign_up1" >
+        <action
+            android:id="@+id/toSignUp2"
+            app:destination="@id/signUp2"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUp2"
+        android:name="com.example.spotifyclone.SignUp2"
+        android:label="fragment_sign_up2"
+        tools:layout="@layout/fragment_sign_up2" >
+        <action
+            android:id="@+id/toSignUp3"
+            app:destination="@id/signUp3"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUp3"
+        android:name="com.example.spotifyclone.SignUp3"
+        android:label="fragment_sign_up3"
+        tools:layout="@layout/fragment_sign_up3" />
+</navigation>

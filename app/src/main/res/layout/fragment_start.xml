@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@color/primary"
+    tools:context=".StartFragment">
+
+
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logo"
+        app:layout_constraintBottom_toTopOf="@+id/header1"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:translationZ="1dp"
+        app:layout_constraintVertical_bias="0.48"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@id/viewLayout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/header1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Millions of Songs."
+        android:translationZ="1dp"
+        android:textColor="@color/white"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/header2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgLogo" />
+
+    <TextView
+        android:id="@+id/header2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Free on Spotify."
+        android:textColor="@color/white"
+        android:textSize="28sp"
+        android:translationZ="1dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header1" />
+
+    <Button
+        android:id="@+id/btnSign"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background = "@drawable/btn_signup"
+        android:text="Sign up free"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toTopOf="@+id/btnGoogle"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/header2"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <Button
+        android:id="@+id/btnGoogle"
+        android:layout_width="0dp"
+        android:layout_marginTop="5dp"
+        android:layout_height="wrap_content"
+        android:text="Continue with Google"
+        android:textStyle="bold"
+        android:drawableLeft="@drawable/google"
+        android:padding="15dp"
+        android:textAllCaps="false"
+        android:background="@drawable/btn_continue"
+        app:layout_constraintBottom_toTopOf="@+id/btnFacebook"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/btnSign" />
+
+    <Button
+        android:id="@+id/btnFacebook"
+        android:layout_width="0dp"
+        android:layout_marginTop="5dp"
+        android:textStyle="bold"
+        android:layout_height="wrap_content"
+        android:drawableStart="@drawable/facebook"
+        android:padding="15dp"
+        android:textAllCaps="false"
+        android:background="@drawable/btn_continue"
+        android:text="Continue with Facebook"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/btnApple"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/btnGoogle" />
+
+    <Button
+        android:id="@+id/btnApple"
+        android:layout_width="0dp"
+        android:drawableStart="@drawable/apple"
+        android:layout_marginTop="5dp"
+        android:padding="15dp"
+        android:textAllCaps="false"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_continue"
+        android:textStyle="bold"
+        android:text="Continue with Apple"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/btnFacebook" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/leftGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rightGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.90" />
+
+    <TextView
+        android:id="@+id/txtLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        android:text="Log in"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/btnApple" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/backgroundlogo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/viewLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        app:layout_constraintEnd_toEndOf="@id/view"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toTopOf="@+id/view"
+        app:layout_constraintVertical_bias="0.0">
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
