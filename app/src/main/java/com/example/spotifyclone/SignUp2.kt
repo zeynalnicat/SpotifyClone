@@ -31,6 +31,12 @@ class SignUp2 : Fragment() {
 
         }
 
+        binding.navBack.setOnClickListener {
+            val navController = Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
+            navController.popBackStack(R.id.signUp1, false)
+        }
+
+
         return view
     }
 
