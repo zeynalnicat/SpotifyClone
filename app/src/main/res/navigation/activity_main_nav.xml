@@ -43,5 +43,13 @@
         android:id="@+id/signUp3"
         android:name="com.example.spotifyclone.SignUp3"
         android:label="fragment_sign_up3"
-        tools:layout="@layout/fragment_sign_up3" />
+        tools:layout="@layout/fragment_sign_up3" >
+        <action
+            android:id="@+id/toSignUp4"
+            app:destination="@id/signUp43" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUp43"
+        android:name="com.example.spotifyclone.SignUp4"
+        android:label="SignUp4" />
 </navigation>
