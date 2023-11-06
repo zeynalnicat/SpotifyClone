@@ -24,6 +24,10 @@ class SignUp4 : Fragment() {
             navController.popBackStack(R.id.signUp3, false)
         }
 
+        binding.createAcc.setOnClickListener{
+            Navigation.findNavController(it).navigate(R.id.toChooseArtist)
+        }
+
         return binding.root
     }
 }
