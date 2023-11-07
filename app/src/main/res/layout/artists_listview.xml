@@ -42,6 +42,7 @@
         android:textColor="@color/white"
         android:textStyle="bold"
         android:textSize="12sp"
+        android:layout_marginTop="5dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="@+id/layoutImage"
         app:layout_constraintStart_toStartOf="parent"
