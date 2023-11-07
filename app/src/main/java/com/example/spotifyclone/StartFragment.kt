@@ -23,6 +23,10 @@ class StartFragment:Fragment() {
             Navigation.findNavController(it).navigate(R.id.toSignUp1)
         }
 
+        binding.txtLogin.setOnClickListener{
+            Navigation.findNavController(it).navigate(R.id.toLogin)
+        }
+
         return view
     }
 

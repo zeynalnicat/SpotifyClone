@@ -15,10 +15,13 @@
             app:destination="@id/signUp1"
             app:popUpTo="@id/startFragment"
             app:popUpToInclusive="false" />
+        <action
+            android:id="@+id/toLogin"
+            app:destination="@id/login" />
     </fragment>
     <fragment
         android:id="@+id/signUp1"
-        android:name="com.example.spotifyclone.SignUp1"
+        android:name="com.example.spotifyclone.SignUp.SignUp1"
         android:label="fragment_sign_up1"
         tools:layout="@layout/fragment_sign_up1" >
         <action
@@ -29,7 +32,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUp2"
-        android:name="com.example.spotifyclone.SignUp2"
+        android:name="com.example.spotifyclone.SignUp.SignUp2"
         android:label="fragment_sign_up2"
         tools:layout="@layout/fragment_sign_up2" >
         <action
@@ -41,7 +44,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUp3"
-        android:name="com.example.spotifyclone.SignUp3"
+        android:name="com.example.spotifyclone.SignUp.SignUp3"
         android:label="fragment_sign_up3"
         tools:layout="@layout/fragment_sign_up3" >
         <action
@@ -50,7 +53,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUp43"
-        android:name="com.example.spotifyclone.SignUp4"
+        android:name="com.example.spotifyclone.SignUp.SignUp4"
         android:label="SignUp4"
         tools:layout="@layout/fragment_sign_up4">
         <action
@@ -62,4 +65,9 @@
         android:name="com.example.spotifyclone.ChooseArtist"
         android:label="ChooseArtist"
         tools:layout="@layout/fragment_choose_artist"/>
+    <fragment
+        android:id="@+id/login"
+        android:name="com.example.spotifyclone.Login.Login"
+        android:label="Login"
+        tools:layout="@layout/fragment_login"/>
 </navigation>
