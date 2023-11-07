@@ -1,5 +1,6 @@
-package com.example.spotifyclone
+package com.example.spotifyclone.ChooseArtistPage
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,6 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
 import com.example.spotifyclone.Adapters.ArtistsAdapter
+import com.example.spotifyclone.Artists
+import com.example.spotifyclone.HomeActivity
+import com.example.spotifyclone.R
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.example.spotifyclone.databinding.FragmentChooseArtistBinding
@@ -79,9 +83,14 @@ class ChooseArtist : Fragment() {
 
             )
 
+        val countListener = ArtistsAdapter.getSelectionCount()
+
+        binding.btnNext.visibility = if(countListener==0) View.VISIBLE else View.GONE
 
         binding.navBack.setOnClickListener {
-            val navController = Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
+            val navController = Navigation.findNavController(requireActivity(),
+                R.id.fragmentContainerView
+            )
             navController.popBackStack(R.id.signUp43, false)
         }
 
@@ -89,7 +98,14 @@ class ChooseArtist : Fragment() {
         binding.artistRecycle.adapter = adapter
 
 
-        return binding.root
+
+            binding.btnNext.setOnClickListener{
+                val intent = Intent(context,HomeActivity::class.java)
+                startActivity(intent)
+                requireActivity().finish()
+            }
+
+            return binding.root
     }
 
 }

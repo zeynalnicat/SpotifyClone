@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="@color/primary"
-    tools:context=".StartFragment">
+    tools:context=".FirstPage.StartFragment">
 
 
     <ImageView
@@ -87,37 +87,22 @@
     <Button
         android:id="@+id/btnFacebook"
         android:layout_width="0dp"
-        android:layout_marginTop="5dp"
-        android:textStyle="bold"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/btn_continue"
         android:drawableStart="@drawable/facebook"
         android:padding="15dp"
-        android:textAllCaps="false"
-        android:background="@drawable/btn_continue"
         android:text="Continue with Facebook"
+        android:textAllCaps="false"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@id/btnApple"
-        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
 
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toBottomOf="@+id/btnGoogle" />
 
-    <Button
-        android:id="@+id/btnApple"
-        android:layout_width="0dp"
-        android:drawableStart="@drawable/apple"
-        android:layout_marginTop="5dp"
-        android:padding="15dp"
-        android:textAllCaps="false"
-        android:layout_height="wrap_content"
-        android:background="@drawable/btn_continue"
-        android:textStyle="bold"
-        android:text="Continue with Apple"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
-        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/btnFacebook" />
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/leftGuideline"
@@ -142,7 +127,7 @@
         android:textColor="@color/white"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/btnApple" />
+        app:layout_constraintTop_toBottomOf="@+id/btnFacebook" />
 
     <View
         android:id="@+id/view"

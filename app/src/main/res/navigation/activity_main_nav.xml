@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/startFragment"
-        android:name="com.example.spotifyclone.StartFragment"
+        android:name="com.example.spotifyclone.FirstPage.StartFragment"
         android:label="fragment_start"
         tools:layout="@layout/fragment_start" >
         <action
@@ -62,7 +62,7 @@
     </fragment>
     <fragment
         android:id="@+id/chooseArtist"
-        android:name="com.example.spotifyclone.ChooseArtist"
+        android:name="com.example.spotifyclone.ChooseArtistPage.ChooseArtist"
         android:label="ChooseArtist"
         tools:layout="@layout/fragment_choose_artist"/>
     <fragment
