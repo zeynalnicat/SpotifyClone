@@ -5,11 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.spotifyclone.Artists
+import com.example.spotifyclone.ChooseArtistPage.ChooseArtist
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ArtistsListviewBinding
+import com.example.spotifyclone.databinding.FragmentChooseArtistBinding
 import java.util.Currency
 
-class ArtistsAdapter(val artistList: MutableList<Artists>) :
+class ArtistsAdapter(private val artistList: MutableList<Artists>) :
     RecyclerView.Adapter<ArtistsAdapter.AdapterHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterHolder {
@@ -27,6 +29,14 @@ class ArtistsAdapter(val artistList: MutableList<Artists>) :
         return holder.bind(current)
     }
 
+    companion object {
+        private var selectionCount = 0
+
+        fun getSelectionCount(): Int {
+            return selectionCount
+        }
+    }
+
     inner class AdapterHolder(private val binding: ArtistsListviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -39,8 +49,18 @@ class ArtistsAdapter(val artistList: MutableList<Artists>) :
 
             binding.root.setOnClickListener {
                 current.isSelected = !current.isSelected
+                if (current.isSelected){
+                    selectionCount++
+                }else {
+                    selectionCount--
+                }
                 notifyDataSetChanged()
             }
+
+
+
         }
+
+
     }
 }
