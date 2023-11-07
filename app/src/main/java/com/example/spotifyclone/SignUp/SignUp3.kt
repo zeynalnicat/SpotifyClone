@@ -1,4 +1,4 @@
-package com.example.spotifyclone
+package com.example.spotifyclone.SignUp
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import android.widget.Button
 
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
+import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.FragmentSignUp3Binding
 
 class SignUp3 : Fragment() {
@@ -31,7 +32,9 @@ class SignUp3 : Fragment() {
         }
 
         binding.navBack.setOnClickListener {
-            val navController = Navigation.findNavController(requireActivity(), R.id.fragmentContainerView)
+            val navController = Navigation.findNavController(requireActivity(),
+                R.id.fragmentContainerView
+            )
             navController.popBackStack(R.id.signUp2, false)
         }
 
