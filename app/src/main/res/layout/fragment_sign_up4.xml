@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary"
-    tools:context=".SignUp2">
+    tools:context=".SignUp.SignUp2">
 
 
     <androidx.appcompat.widget.Toolbar
@@ -129,7 +129,7 @@
         android:layout_marginTop="15dp"
         android:text="By tapping on Create Account , you agree to the spotify Terms of Use. "
         android:textColor="@color/white"
-        android:textSize="10dp"
+        android:textSize="10sp"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toBottomOf="@+id/divider" />
@@ -139,7 +139,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:textSize="10dp"
+        android:textSize="10sp"
         android:text="Terms of use"
         android:textColor="@color/green"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
@@ -152,7 +152,7 @@
         android:layout_marginTop="8dp"
         android:text="to learn more about how Spotify collect, uses, shares and protects your personal data, Please see the Spotify Privacy Policy.."
         android:textColor="@color/white"
-        android:textSize="10dp"
+        android:textSize="10sp"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toBottomOf="@+id/txtTerms" />
@@ -161,7 +161,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:textSize="10dp"
+        android:textSize="10sp"
         android:text="Privacy Policy"
         android:textColor="@color/green"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
@@ -174,7 +174,7 @@
         android:layout_marginTop="8dp"
         android:text="Please send me news and offers from Spotify"
         android:textColor="@color/white"
-        android:textSize="10dp"
+        android:textSize="10sp"
         app:layout_constraintEnd_toStartOf="@+id/radioButton"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toBottomOf="@+id/txtPrivacy" />
@@ -197,7 +197,7 @@
         android:layout_marginTop="8dp"
         android:text="Share my registration data with Spotify's content providers for marketing purposes"
         android:textColor="@color/white"
-        android:textSize="10dp"
+        android:textSize="10sp"
         app:layout_constraintEnd_toStartOf="@+id/radioButton2"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toBottomOf="@+id/radioButton" />
