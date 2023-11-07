@@ -7,15 +7,33 @@
 
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/imgArtist"
+    <FrameLayout
+        android:id="@+id/layoutImage"
         android:layout_width="100dp"
-        android:clipToOutline="true"
-        android:background="@drawable/img_artist"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imgArtist"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/img_artist"
+            android:clipToOutline="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <ImageView
+            android:id="@+id/imgChecked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="70dp"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/baseline_check_circle_32" />
+
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/txtArtistName"
@@ -25,7 +43,7 @@
         android:textStyle="bold"
         android:textSize="12sp"
         android:text="TextView"
-        app:layout_constraintEnd_toEndOf="@+id/imgArtist"
+        app:layout_constraintEnd_toEndOf="@+id/layoutImage"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgArtist" />
+        app:layout_constraintTop_toBottomOf="@+id/layoutImage" />
 </androidx.constraintlayout.widget.ConstraintLayout>

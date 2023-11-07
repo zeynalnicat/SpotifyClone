@@ -1,6 +1,7 @@
 package com.example.spotifyclone.Adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.spotifyclone.Artists
@@ -32,13 +33,12 @@ class ArtistsAdapter(val artistList: MutableList<Artists>) :
 
         fun bind(current: Artists) {
 
-            binding.imgArtist.setBackgroundResource(if(current.isSelected) R.drawable.img_artist_clicked else R.drawable.img_artist)
+            binding.imgChecked.visibility = if (current.isSelected) View.VISIBLE else View.INVISIBLE
             binding.txtArtistName.text = current.name
             binding.imgArtist.setImageResource(current.imgSrc )
 
             binding.root.setOnClickListener {
                 current.isSelected = !current.isSelected
-                binding.imgArtist.setBackgroundResource(if(current.isSelected) R.drawable.img_artist_clicked else R.drawable.img_artist)
                 notifyDataSetChanged()
             }
         }
