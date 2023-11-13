@@ -12,11 +12,7 @@
         tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/toLibrary"
-            app:destination="@id/libraryFragment"
-            app:enterAnim="@anim/slide_in"
-            app:exitAnim="@anim/slide_out"
-            app:popEnterAnim="@anim/slide_in"
-            app:popExitAnim="@anim/slide_out" />
+            app:destination="@id/libraryFragment" />
     </fragment>
     <fragment
         android:id="@+id/libraryFragment"
@@ -32,10 +28,6 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/toSearch"
-            app:destination="@id/searchFragment"
-            app:enterAnim="@anim/slide_in"
-            app:exitAnim="@anim/slide_out"
-            app:popEnterAnim="@anim/slide_in"
-            app:popExitAnim="@anim/slide_out" />
+            app:destination="@id/searchFragment" />
     </fragment>
 </navigation>
