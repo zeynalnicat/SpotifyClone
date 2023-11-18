@@ -31,4 +31,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/activity_home_nav" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
