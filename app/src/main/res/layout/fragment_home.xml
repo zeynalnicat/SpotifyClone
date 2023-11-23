@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Recently played"
+        android:text="@string/home_txt_recently"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -33,7 +33,7 @@
         android:id="@+id/txtGood"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Good evening"
+        android:text="@string/home_txt_welcome"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -67,6 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:src="@drawable/baseline_notifications_none_24"
+        app:layout_constraintBottom_toBottomOf="@+id/txtGood"
         app:layout_constraintEnd_toStartOf="@+id/imgSettings"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintTop_toTopOf="@+id/topGuideline" />
@@ -78,7 +79,8 @@
         android:src="@drawable/baseline_history_24"
         app:layout_constraintBottom_toBottomOf="@+id/imgSettings"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
-        app:layout_constraintTop_toTopOf="@+id/topGuideline" />
+        app:layout_constraintTop_toTopOf="@+id/imgNotification"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/imgSettings"
@@ -104,7 +106,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Try something else"
+        android:text="@string/home_txt_try"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -117,7 +119,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:background="@drawable/btn_filled_gray"
-        android:text="Music"
+        android:text="@string/home_btn_music"
         android:textStyle="bold"
         android:textAllCaps="false"
         android:textColor="@color/white"
@@ -130,7 +132,7 @@
        android:layout_height="wrap_content"
        android:layout_marginLeft="10dp"
        android:background="@drawable/btn_filled_gray"
-       android:text="Podcasts"
+       android:text="@string/home_btn_podcast"
        android:textStyle="bold"
        android:textAllCaps="false"
        android:textColor="@color/white"
