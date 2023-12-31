@@ -11,5 +11,6 @@
     <color name="green">#1ED760</color>
     <color name="gray">#60FFFFFF</color>
     <color name="input_gray">#777777</color>
+    <color name="filled_gray">#282828</color>
     <color name="btn_gray">#535353</color>
 </resources>

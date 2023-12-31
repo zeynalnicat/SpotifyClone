@@ -2,4 +2,41 @@
     <string name="app_name">SpotifyClone</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="startL_header1">Millions of Songs.</string>
+    <string name="startL_header2">Free on Spotify.</string>
+    <string name="startL_btn_signUp">Sign up free</string>
+    <string name="startL_btn_google">Continue with Google</string>
+    <string name="startL_btn_facebook">Continue with Facebook</string>
+    <string name="startL_txt_login">Log in</string>
+
+
+    <string name="sign_txt_create">Create account</string>
+    <string name="sign_txt_label">What’s your email?</string>
+    <string name="sign_txt_description">You’ll need to confirm this email later.</string>
+    <string name="sign_btn_next">Next</string>
+
+
+    <string name="sign3_txt_label">What’s your gender?</string>
+    <string name="sign3_btn_men">Men</string>
+    <string name="sign3_btn_women">Women</string>
+    <string name="sign3_btn_other">Other</string>
+
+    <string name="sign4_txt_label">What\'s your name?</string>
+    <string name="sign4_txt_description">This appears on your spotify profile</string>
+    <string name="sign4_txt_agree">By tapping on Create Account , you agree to the spotify Terms of Use.</string>
+    <string name="sign4_txt_terms">Terms of use</string>
+    <string name="sign4_txt_agree2">to learn more about how Spotify collect, uses, shares and protects your personal data, Please see the Spotify Privacy Policy..</string>
+    <string name="sign4_txt_privacy">Privacy Policy</string>
+    <string name="sign4_txt_accept">Please send me news and offers from Spotify</string>
+    <string name="sign4_txt_accept2">Share my registration data with Spotify\'s content providers for marketing purposes</string>
+    <string name="sign4_btn_create">Create an account</string>
+
+
+    <string name="choose_txt_header">Choose 3 or more artists you like.</string>
+
+    <string name="home_txt_welcome">Good morning!</string>
+    <string name="home_btn_music">Music</string>
+    <string name="home_btn_podcast">Podcasts</string>
+    <string name="home_txt_recently">Recently Played</string>
+    <string name="home_txt_try">Try Something Else</string>
 </resources>

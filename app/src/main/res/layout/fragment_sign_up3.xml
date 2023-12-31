@@ -26,7 +26,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Create account"
+            android:text="@string/sign_txt_create"
             android:textSize="16sp" />
 
     </androidx.appcompat.widget.Toolbar>
@@ -46,14 +46,15 @@
         app:layout_constraintGuide_percent="0.94" />
 
     <TextView
-        android:id="@+id/txtEmail"
+        android:id="@+id/labelEdt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="What’s your gender?"
+        android:text="@string/sign3_txt_label"
         android:textColor="@color/white"
         android:textSize="35sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
@@ -77,14 +78,14 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/btn_gender"
-        android:text="Men"
+        android:text="@string/sign3_btn_men"
         android:textAllCaps="false"
         android:textColor="@color/white"
         app:layout_constraintEnd_toStartOf="@+id/btnWomen"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/txtEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/labelEdt" />
 
     <Button
         android:id="@+id/btnWomen"
@@ -92,7 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:background="@drawable/btn_gender"
-        android:text="Women"
+        android:text="@string/sign3_btn_women"
         android:textAllCaps="false"
         android:textColor="@color/white"
         app:layout_constraintEnd_toStartOf="@+id/btnOther"
@@ -106,7 +107,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:background="@drawable/btn_gender"
-        android:text="Other"
+        android:text="@string/sign3_btn_other"
         android:textAllCaps="false"
         android:textColor="@color/white"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
