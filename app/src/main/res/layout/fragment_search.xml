@@ -45,12 +45,11 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.04" />
-
     <TextView
         android:id="@+id/txtHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="@android:string/search_go"
         android:textColor="@color/white"
         android:textSize="25sp"
@@ -58,14 +57,104 @@
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toTopOf="@+id/topGuideline" />
 
-    <TextView
-        android:id="@+id/txtTopGenre"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/search_txt_top_genre"
-        android:textSize="18sp"
-        android:textColor="@color/white"
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/edtSearch" />
+        app:layout_constraintTop_toBottomOf="@+id/edtSearch">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/rightGuideline2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="1.0" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/leftGuideline2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.0" />
+
+            <TextView
+                android:id="@+id/txtTopGenre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/search_txt_top_genre"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/leftGuideline2"
+                app:layout_constraintTop_toTopOf="@+id/constraint2" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toStartOf="@+id/rightGuideline2"
+                app:layout_constraintStart_toStartOf="@+id/leftGuideline2"
+                app:layout_constraintTop_toBottomOf="@+id/txtTopGenre"
+                app:spanCount="2" />
+
+            <TextView
+                android:id="@+id/txtPopularTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/search_txt_popular_genre"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/leftGuideline2"
+                app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewPopular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/rightGuideline2"
+                app:layout_constraintStart_toStartOf="@+id/leftGuideline2"
+                app:layout_constraintTop_toBottomOf="@+id/txtPopularTitle" />
+
+            <TextView
+                android:id="@+id/txtBrowseTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/search_txt_browse_all"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/leftGuideline2"
+                app:layout_constraintTop_toBottomOf="@+id/recyclerViewPopular" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewAll"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/rightGuideline2"
+                app:layout_constraintStart_toStartOf="@+id/leftGuideline2"
+                app:layout_constraintTop_toBottomOf="@+id/txtBrowseTitle" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
