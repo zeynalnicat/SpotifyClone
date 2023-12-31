@@ -39,4 +39,8 @@
     <string name="home_btn_podcast">Podcasts</string>
     <string name="home_txt_recently">Recently Played</string>
     <string name="home_txt_try">Try Something Else</string>
+    
+    
+    <string name="search_txt_search">Artists,songs, or podcasts</string>
+    <string name="search_txt_top_genre">Your top genres</string>
 </resources>
