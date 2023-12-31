@@ -63,7 +63,7 @@ class SignUp2 : Fragment() {
     private fun adaptLayout(){
         binding.edtEmail.inputType=InputType.TYPE_TEXT_VARIATION_PASSWORD
         binding.txtNeed.text = "Use at least 8 characters."
-        binding.txtEmail.text = "Create a password"
+        binding.labelEdt.text = "Create a password"
     }
 
 
