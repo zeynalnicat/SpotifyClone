@@ -1,4 +1,4 @@
-package com.example.spotifyclone.SignUp
+package com.example.spotifyclone.ui.fragments.sign_up
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

@@ -1,4 +1,4 @@
-package com.example.spotifyclone.FirstPage
+package com.example.spotifyclone.ui.fragments.pre_information
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
