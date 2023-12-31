@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ActivityMainBinding
 
@@ -15,11 +17,21 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        val navController = navHostFragment.navController
+        NavigationUI.setupWithNavController(binding.bottomNav, navController)
 
     }
 
-    fun setBottomNavigation(isSet: Boolean) {
-        binding.bottomNav.visibility = if (isSet) View.VISIBLE else View.GONE
+    fun setBottomNavigation(visibility: Boolean) {
+        if (visibility) {
+            binding.bottomNav.visibility = View.VISIBLE
+            binding.bottomNav.itemIconTintList = null;
+
+        } else {
+            binding.bottomNav.visibility = View.GONE
+        }
     }
 
 }

@@ -6,10 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.spotifyclone.adapters.RecentlyPlayedAdapter
-import com.example.spotifyclone.adapters.TrackAdapter
+
 import com.example.spotifyclone.model.PlayedTracks
 import com.example.spotifyclone.R
+import com.example.spotifyclone.adapters.RecentlyPlayedAdapter
+import com.example.spotifyclone.adapters.TrackAdapter
 import com.example.spotifyclone.model.Tracks
 import com.example.spotifyclone.databinding.FragmentHomeBinding
 import com.example.spotifyclone.ui.activity.MainActivity
@@ -66,9 +67,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setBottom() {
-        val activity = activity as? MainActivity
-        activity?.let {
-            it.setBottomNavigation(true)
-        }
+        val activity = requireActivity() as? MainActivity
+        activity?.setBottomNavigation(true)
     }
 }
