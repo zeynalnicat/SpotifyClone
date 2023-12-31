@@ -1,16 +1,14 @@
-package com.example.spotifyclone.ChooseArtistPage
+package com.example.spotifyclone.ui.fragments.choose_artist
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.Navigation
-import com.example.spotifyclone.Adapters.ArtistsAdapter
-import com.example.spotifyclone.Artists
-import com.example.spotifyclone.HomeActivity
+import androidx.navigation.fragment.findNavController
+import com.example.spotifyclone.adapters.ArtistsAdapter
+import com.example.spotifyclone.model.Artists
 import com.example.spotifyclone.R
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
@@ -27,12 +25,34 @@ class ChooseArtist : Fragment() {
     companion object {
         var count = 0
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentChooseArtistBinding.inflate(inflater, container, false)
+        setAdapter()
+        setNavigation()
 
+        return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateButtonVisibility()
+    }
+
+    fun updateButtonVisibility() {
+        binding.btnNext.visibility = if (count >= 3) View.VISIBLE else View.GONE
+    }
+
+    fun setNavigation() {
+        binding.btnNext.setOnClickListener {
+            findNavController().navigate(R.id.action_chooseArtist_to_homeFragment)
+        }
+    }
+
+    private fun setAdapter() {
 
         val layoutManager = FlexboxLayoutManager(requireContext())
         layoutManager.flexDirection = FlexDirection.ROW
@@ -89,35 +109,17 @@ class ChooseArtist : Fragment() {
             )
 
 
-
-
-
         binding.navBack.setOnClickListener {
-            val navController = Navigation.findNavController(requireActivity(),
+            val navController = Navigation.findNavController(
+                requireActivity(),
                 R.id.fragmentContainerView
             )
             navController.popBackStack(R.id.signUp43, false)
         }
 
-        val adapter = ArtistsAdapter(artistsList,this)
+        val adapter = ArtistsAdapter(artistsList, this)
         binding.artistRecycle.adapter = adapter
 
-
-
-            binding.btnNext.setOnClickListener{
-                val intent = Intent(context,HomeActivity::class.java)
-                startActivity(intent)
-                requireActivity().finish()
-            }
-
-            return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        updateButtonVisibility()
-    }
-    fun updateButtonVisibility() {
-        binding.btnNext.visibility = if (count >= 3) View.VISIBLE else View.GONE
-    }
 }

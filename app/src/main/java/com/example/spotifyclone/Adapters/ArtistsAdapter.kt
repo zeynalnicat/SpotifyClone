@@ -1,4 +1,4 @@
-package com.example.spotifyclone.Adapters
+package com.example.spotifyclone.adapters
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -6,15 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.example.spotifyclone.Artists
-import com.example.spotifyclone.ChooseArtistPage.ChooseArtist
 
-import com.example.spotifyclone.R
+
+
 import com.example.spotifyclone.databinding.ArtistsListviewBinding
-import com.example.spotifyclone.databinding.FragmentChooseArtistBinding
-import java.util.Currency
+import com.example.spotifyclone.model.Artists
+import com.example.spotifyclone.ui.fragments.choose_artist.ChooseArtist
 
-class ArtistsAdapter(private val artistList: MutableList<Artists> ,  private val fragment: Fragment) :
+
+class ArtistsAdapter(private val artistList: MutableList<Artists>, private val fragment: Fragment) :
     RecyclerView.Adapter<ArtistsAdapter.AdapterHolder>() {
 
 

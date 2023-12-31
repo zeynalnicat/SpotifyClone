@@ -1,4 +1,4 @@
-package com.example.spotifyclone.Library
+package com.example.spotifyclone.ui.fragments.library
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

@@ -1,4 +1,4 @@
-package com.example.spotifyclone.Search
+package com.example.spotifyclone.ui.fragments.search
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
