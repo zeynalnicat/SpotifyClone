@@ -26,8 +26,9 @@
         android:name="com.example.spotifyclone.Home.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/toSearch"
-            app:destination="@id/searchFragment" />
+    <action
+        android:id="@+id/toSearch"
+        app:destination="@id/searchFragment" />
+
     </fragment>
 </navigation>

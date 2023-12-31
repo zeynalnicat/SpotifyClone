@@ -9,25 +9,25 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
 import com.example.spotifyclone.R
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
-
-import com.example.spotifyclone.databinding.FragmentSignUp2Binding
+import com.example.spotifyclone.databinding.FragmentSignUp1Binding
 
 
 
 class SignUp2 : Fragment() {
 
-    private lateinit var binding: FragmentSignUp2Binding
+    private lateinit var binding: FragmentSignUp1Binding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSignUp2Binding.inflate(inflater,container,false)
+        binding = FragmentSignUp1Binding.inflate(inflater,container,false)
         val view = binding.root
-
+        adaptLayout()
         binding.btnNext.setOnClickListener{
-            if(binding.edtPassword.text.toString().length>=8){
+            if(binding.edtEmail.text.toString().length>=8){
                 binding.btnNext.setBackgroundColor(ContextCompat.getColor(requireContext(),
                     R.color.white
                 ))
@@ -36,7 +36,7 @@ class SignUp2 : Fragment() {
 
         }
 
-        binding.edtPassword.addTextChangedListener(object : TextWatcher {
+        binding.edtEmail.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
@@ -58,6 +58,12 @@ class SignUp2 : Fragment() {
 
 
         return view
+    }
+
+    private fun adaptLayout(){
+        binding.edtEmail.inputType=InputType.TYPE_TEXT_VARIATION_PASSWORD
+        binding.txtNeed.text = "Use at least 8 characters."
+        binding.txtEmail.text = "Create a password"
     }
 
 

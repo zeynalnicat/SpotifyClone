@@ -70,4 +70,7 @@
         android:name="com.example.spotifyclone.Login.Login"
         android:label="Login"
         tools:layout="@layout/fragment_login"/>
+    <include app:graph="@navigation/activity_home_nav" />
+
+
 </navigation>

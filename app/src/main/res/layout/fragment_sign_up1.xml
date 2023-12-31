@@ -26,7 +26,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Create account"
+            android:text="@string/sign_txt_create"
             android:textSize="16sp" />
 
     </androidx.appcompat.widget.Toolbar>
@@ -46,11 +46,11 @@
         app:layout_constraintGuide_percent="0.94" />
 
     <TextView
-        android:id="@+id/txtEmail"
+        android:id="@+id/labelEdt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="What’s your email?"
+        android:text="@string/sign_txt_label"
         android:textColor="@color/white"
         android:textSize="35sp"
         android:textStyle="bold"
@@ -69,13 +69,13 @@
         android:textColor="@color/white"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/txtEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/labelEdt" />
 
     <TextView
         android:id="@+id/txtNeed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="You’ll need to confirm this email later."
+        android:text="@string/sign_txt_description"
         android:textSize="10sp"
         android:layout_marginTop="5dp"
         android:textColor="@color/white"
@@ -88,7 +88,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:background="@drawable/btn_next"
-        android:text="Next"
+        android:text="@string/sign_btn_next"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toBottomOf="@+id/txtNeed" />
@@ -101,7 +101,7 @@
         android:layout_marginTop="16dp"
         android:backgroundTint="@color/primary"
         android:src="@drawable/baseline_arrow_back_ios_24"
-        app:layout_constraintBottom_toTopOf="@+id/txtEmail"
+        app:layout_constraintBottom_toTopOf="@+id/labelEdt"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
