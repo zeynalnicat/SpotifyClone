@@ -1,11 +1,11 @@
-package com.example.spotifyclone.Adapters
+package com.example.spotifyclone.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Recycler
-import com.example.spotifyclone.Tracks
+
 import com.example.spotifyclone.databinding.TrackListviewBinding
+import com.example.spotifyclone.model.Tracks
 
 class TrackAdapter(private val tracks: MutableList<Tracks>) :
     RecyclerView.Adapter<TrackAdapter.TrackAdapterHolder>() {

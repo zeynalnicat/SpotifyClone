@@ -1,13 +1,13 @@
-package com.example.spotifyclone.Adapters
+package com.example.spotifyclone.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.marginRight
+
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.example.spotifyclone.PlayedTracks
+
 import com.example.spotifyclone.databinding.ArtistsListviewBinding
 import com.example.spotifyclone.databinding.RecentTracksListviewBinding
+import com.example.spotifyclone.model.PlayedTracks
 
 class RecentlyPlayedAdapter(private val recentlyList: MutableList<PlayedTracks>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -17,10 +17,15 @@ class RecentlyPlayedAdapter(private val recentlyList: MutableList<PlayedTracks>)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == VIEW_SIMPLE) {
-            val view = ArtistsListviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            val view =
+                ArtistsListviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             AdapterHolder(view)
         } else {
-            val view = RecentTracksListviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            val view = RecentTracksListviewBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
             SpecialAdapterHolder(view)
         }
     }
