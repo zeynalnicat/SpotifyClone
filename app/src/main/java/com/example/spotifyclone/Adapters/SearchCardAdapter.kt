@@ -1,11 +1,11 @@
-package com.example.spotifyclone.Adapters
+package com.example.spotifyclone.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.spotifyclone.SearchCard
+import com.example.spotifyclone.model.SearchCard
 import com.example.spotifyclone.databinding.ItemSearchCardBinding
 
 class SearchCardAdapter : RecyclerView.Adapter<SearchCardAdapter.ViewHolder>() {

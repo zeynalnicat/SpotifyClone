@@ -1,4 +1,4 @@
-package com.example.spotifyclone
+package com.example.spotifyclone.model
 
 data class SearchCard(
     val title: String ,

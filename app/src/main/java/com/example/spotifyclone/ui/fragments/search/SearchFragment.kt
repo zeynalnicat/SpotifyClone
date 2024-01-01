@@ -5,14 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
-import com.example.spotifyclone.Adapters.SearchCardAdapter
 import com.example.spotifyclone.R
-import com.example.spotifyclone.SearchCard
+import com.example.spotifyclone.adapters.SearchCardAdapter
+import com.example.spotifyclone.model.SearchCard
 import com.example.spotifyclone.databinding.FragmentSearchBinding
-import com.example.spotifyclone.databinding.ItemSearchCardBinding
 
 class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
@@ -23,6 +22,7 @@ class SearchFragment : Fragment() {
     ): View? {
         binding = FragmentSearchBinding.inflate(inflater)
         setAdapter()
+        setNavigation()
         return binding.root
     }
 
@@ -60,5 +60,11 @@ class SearchFragment : Fragment() {
         adapterAll.submitList(allCards)
         binding.recyclerViewAll.layoutManager = GridLayoutManager(requireContext(),2,GridLayoutManager.HORIZONTAL,false)
         binding.recyclerViewAll.adapter = adapterAll
+    }
+
+    private fun setNavigation(){
+        binding.edtSearch.setOnClickListener {
+            findNavController().navigate(R.id.action_searchFragment_to_searchNextFragment)
+        }
     }
 }
