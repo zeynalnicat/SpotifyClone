@@ -79,20 +79,35 @@
     app:layout_constraintTop_toBottomOf="@id/edtEmail"
     app:layout_constraintStart_toStartOf="@+id/leftGuideline"/>
 
-    <EditText
-        android:id="@+id/edtPassword"
+    <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/edt_signup"
-        android:ems="10"
-        android:padding="10dp"
-        android:drawableEnd="@drawable/baseline_visibility_24"
-        android:textColor="@color/white"
-        android:inputType="textPassword"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@id/txtPassword"/>
+        app:layout_constraintTop_toBottomOf="@id/txtPassword">
+        <EditText
+            android:id="@+id/edtPassword"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edt_signup"
+            android:ems="10"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:inputType="textPassword"
+            />
+
+        <ImageView
+            android:id="@+id/imgVisibility"
+            android:layout_width="30dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="10dp"
+            android:layout_height="30dp"
+            android:src="@drawable/baseline_visibility_24" />
+    </FrameLayout>
+
 
     <Button
         android:id="@+id/btnNext"
@@ -104,7 +119,7 @@
         android:textAllCaps="false"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/edtPassword" />
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
 
     <ImageButton
         android:id="@+id/navBack"
