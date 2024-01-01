@@ -64,6 +64,7 @@ class SignUp2 : Fragment() {
         binding.edtEmail.inputType=InputType.TYPE_TEXT_VARIATION_PASSWORD
         binding.txtNeed.text = "Use at least 8 characters."
         binding.labelEdt.text = "Create a password"
+        binding.edtEmail.inputType =InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
     }
 
 
