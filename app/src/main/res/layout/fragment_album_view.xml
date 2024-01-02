@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/primary"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragments.others.AlbumViewFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/leftGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.06" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rightGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.94" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.06" />
+
+    <ImageView
+        android:id="@+id/imgBack"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/icon_arrow_back"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toTopOf="@+id/guideline" />
+
+    <ImageView
+        android:id="@+id/imgAlbum"
+        android:layout_width="234dp"
+        android:layout_height="234dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ariaa"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/imgBack" />
+
+    <TextView
+        android:id="@+id/txtAlbumName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="TextView"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/imgAlbum" />
+
+    <ImageView
+        android:id="@+id/imgArtist"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/img_artist"
+        android:clipToOutline="true"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/txtAlbumName"
+        tools:src="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/txtArtistName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="TextView"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/imgArtist"
+        app:layout_constraintStart_toEndOf="@+id/imgArtist"
+        app:layout_constraintTop_toTopOf="@+id/imgArtist" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Album"
+        android:textStyle="bold"
+        android:textSize="12sp"
+        android:textColor="@color/txt_gray"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/imgArtist" />
+
+    <TextView
+        android:id="@+id/txtAlbumYear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="TextView"
+        android:textStyle="bold"
+        android:textSize="12sp"
+        android:textColor="@color/txt_gray"
+        app:layout_constraintBottom_toBottomOf="@+id/textView4"
+        app:layout_constraintStart_toEndOf="@+id/textView4"
+        app:layout_constraintTop_toTopOf="@+id/textView4" />
+
+    <ImageView
+        android:id="@+id/imgLike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/icon_like"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_album_pause"
+        app:layout_constraintBottom_toBottomOf="@+id/imgLike"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline" />
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="439dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/imgLike">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
