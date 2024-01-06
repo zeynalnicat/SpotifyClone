@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.spotifyclone.databinding.TrackListviewBinding
 import com.example.spotifyclone.model.Tracks
 
-class TrackAdapter(private val tracks: MutableList<Tracks>) :
+class TrackAdapter(private val tracks: MutableList<Tracks>,private val nav : ()->Unit) :
     RecyclerView.Adapter<TrackAdapter.TrackAdapterHolder>() {
 
 
@@ -34,6 +34,9 @@ class TrackAdapter(private val tracks: MutableList<Tracks>) :
             val params = binding.root.layoutParams as ViewGroup.MarginLayoutParams
             params.rightMargin = 30
             binding.root.layoutParams = params
+            itemView.setOnClickListener {
+                nav()
+            }
         }
     }
 

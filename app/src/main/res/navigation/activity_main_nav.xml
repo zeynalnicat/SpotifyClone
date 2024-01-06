@@ -28,7 +28,11 @@
         android:id="@+id/homeFragment"
         android:name="com.example.spotifyclone.ui.fragments.home.HomeFragment"
         android:label="HomeFragment"
-        tools:layout="@layout/fragment_home"/>
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_albumViewFragment"
+            app:destination="@id/albumViewFragment" />
+    </fragment>
     <action
         android:id="@+id/toSearch"
         app:destination="@id/searchFragment" />
@@ -114,6 +118,11 @@
         android:name="com.example.spotifyclone.ui.fragments.search.SearchNextFragment"
         android:label="fragment_search_next"
         tools:layout="@layout/fragment_search_next" />
+    <fragment
+        android:id="@+id/albumViewFragment"
+        android:name="com.example.spotifyclone.ui.fragments.others.AlbumViewFragment"
+        android:label="fragment_album_view"
+        tools:layout="@layout/fragment_album_view" />
 
 
 </navigation>

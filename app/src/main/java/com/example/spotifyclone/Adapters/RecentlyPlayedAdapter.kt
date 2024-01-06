@@ -9,7 +9,10 @@ import com.example.spotifyclone.databinding.ArtistsListviewBinding
 import com.example.spotifyclone.databinding.RecentTracksListviewBinding
 import com.example.spotifyclone.model.PlayedTracks
 
-class RecentlyPlayedAdapter(private val recentlyList: MutableList<PlayedTracks>) :
+class RecentlyPlayedAdapter(
+    private val recentlyList: MutableList<PlayedTracks>,
+    private val nav: () -> Unit
+) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val VIEW_SPECIAL = 1
@@ -55,6 +58,9 @@ class RecentlyPlayedAdapter(private val recentlyList: MutableList<PlayedTracks>)
             val params = binding.root.layoutParams as ViewGroup.MarginLayoutParams
             params.rightMargin = 30
             binding.root.layoutParams = params
+            itemView.setOnClickListener {
+                nav()
+            }
         }
     }
 
@@ -67,6 +73,9 @@ class RecentlyPlayedAdapter(private val recentlyList: MutableList<PlayedTracks>)
             params.rightMargin = 30
             binding.root.layoutParams = params
             binding.imgArtist.setImageResource(current.imgSrc)
+            itemView.setOnClickListener {
+                nav()
+            }
         }
     }
 }

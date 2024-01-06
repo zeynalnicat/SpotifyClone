@@ -14,5 +14,6 @@
     <color name="input_gray">#777777</color>
     <color name="purple">#9854B2</color>
     <color name="filled_gray">#282828</color>
+    <color name="txt_gray">#B3B3B3</color>
     <color name="btn_gray">#535353</color>
 </resources>
