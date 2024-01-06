@@ -12,24 +12,30 @@ import com.example.spotifyclone.databinding.FragmentSignUp4Binding
 
 class SignUp4 : Fragment() {
     private lateinit var binding: FragmentSignUp4Binding
-    private lateinit var btnList:MutableList<Button>
+    private lateinit var btnList: MutableList<Button>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSignUp4Binding.inflate(inflater, container, false)
+        setNavigation()
 
+        return binding.root
+    }
+
+
+    private fun setNavigation() {
         binding.navBack.setOnClickListener {
-            val navController = Navigation.findNavController(requireActivity(),
+            val navController = Navigation.findNavController(
+                requireActivity(),
                 R.id.fragmentContainerView
             )
             navController.popBackStack(R.id.signUp3, false)
         }
 
-        binding.createAcc.setOnClickListener{
+        binding.createAcc.setOnClickListener {
             Navigation.findNavController(it).navigate(R.id.toChooseArtist)
         }
 
-        return binding.root
     }
 }

@@ -13,13 +13,19 @@ import com.example.spotifyclone.databinding.FragmentSignUp3Binding
 
 class SignUp3 : Fragment() {
     private lateinit var binding: FragmentSignUp3Binding
-    private lateinit var btnList:MutableList<Button>
+    private lateinit var btnList: MutableList<Button>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentSignUp3Binding.inflate(inflater, container, false)
+        setNavigation()
 
+
+        return binding.root
+    }
+
+    private fun setNavigation() {
         btnList = mutableListOf()
         btnList.add(binding.btnMen)
         btnList.add(binding.btnWomen)
@@ -32,12 +38,11 @@ class SignUp3 : Fragment() {
         }
 
         binding.navBack.setOnClickListener {
-            val navController = Navigation.findNavController(requireActivity(),
+            val navController = Navigation.findNavController(
+                requireActivity(),
                 R.id.fragmentContainerView
             )
             navController.popBackStack(R.id.signUp2, false)
         }
-
-        return binding.root
     }
 }

@@ -1,25 +1,30 @@
 package com.example.spotifyclone.adapters
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
+
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
+import com.example.spotifyclone.databinding.ArtistsListviewBinding
+import com.example.spotifyclone.databinding.RecentTracksListviewBinding
 import com.example.spotifyclone.databinding.TrackListviewBinding
+import com.example.spotifyclone.model.PlayedTracks
 import com.example.spotifyclone.model.album.newrelease.Item
+import com.example.spotifyclone.model.album.trysomething.Album
 
-class TrackAdapter(private val nav: (Bundle) -> Unit) :
-    RecyclerView.Adapter<TrackAdapter.TrackAdapterHolder>() {
+class AlbumAdapter(
+    private val nav: () -> Unit
+) : RecyclerView.Adapter<AlbumAdapter.ViewHolder>() {
 
-    private val diffCallBack = object : DiffUtil.ItemCallback<Item>() {
-        override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
+    private val diffCallBack = object : DiffUtil.ItemCallback<Album>() {
+        override fun areItemsTheSame(oldItem: Album, newItem: Album): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
+        override fun areContentsTheSame(oldItem: Album, newItem: Album): Boolean {
             return oldItem == newItem
         }
 
@@ -27,23 +32,23 @@ class TrackAdapter(private val nav: (Bundle) -> Unit) :
 
     private val diffUtil = AsyncListDiffer(this, diffCallBack)
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackAdapterHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
             TrackListviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return TrackAdapterHolder(binding)
+        return ViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
         return diffUtil.currentList.size
     }
 
-    override fun onBindViewHolder(holder: TrackAdapterHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         return holder.bind(diffUtil.currentList[position])
     }
 
-    inner class TrackAdapterHolder(private val binding: TrackListviewBinding) :
+    inner class ViewHolder(private val binding: TrackListviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(current: Item) {
+        fun bind(current: Album) {
             Glide.with(binding.root)
                 .load(current.images[0].url)
                 .into(binding.imgArtist)
@@ -53,14 +58,12 @@ class TrackAdapter(private val nav: (Bundle) -> Unit) :
             params.rightMargin = 30
             binding.root.layoutParams = params
             itemView.setOnClickListener {
-                val bundle = Bundle()
-                bundle.putString("albumId",current.id)
-                nav(bundle)
+                nav()
             }
         }
     }
 
-    fun submitList(list: List<Item>) {
+    fun submitList(list: List<Album>) {
         diffUtil.submitList(list)
     }
 

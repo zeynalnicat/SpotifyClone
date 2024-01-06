@@ -1,7 +1,10 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
+//    id("com.google.devtools.ksp")
 }
+
 
 android {
     namespace = "com.example.spotifyclone"
@@ -42,7 +45,7 @@ android {
         dataBinding = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.0"
     }
     packaging {
         resources {
@@ -75,7 +78,25 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:$versionRetrofit")
     implementation("com.squareup.retrofit2:converter-gson:$versionRetrofit")
 
-// Glide
+    // Glide
     implementation("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
+
+    // Room
+    val room_version = "2.6.0"
+    implementation("androidx.room:room-runtime:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+
+
+    val lifecycle_version = "2.6.2"
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+    // ViewModel utilities for Compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
+    // LiveData
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
+    ksp("androidx.lifecycle:lifecycle-compiler:$lifecycle_version")
+
 }

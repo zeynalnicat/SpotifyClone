@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/primary"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/txtTrackName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="16dp"
+        android:text="TextView"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/imgMore"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imgAlbum"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/img_artist"
+
+        android:clipToOutline="true"
+        app:layout_constraintStart_toStartOf="@+id/txtTrackName"
+        app:layout_constraintTop_toBottomOf="@+id/txtTrackName"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/txtAlbumName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="TextView"
+        android:textColor="@color/txt_gray"
+        app:layout_constraintBottom_toBottomOf="@+id/imgAlbum"
+        app:layout_constraintStart_toEndOf="@+id/imgAlbum"
+        app:layout_constraintTop_toTopOf="@+id/imgAlbum" />
+
+    <ImageView
+        android:id="@+id/imgMore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/txtTrackName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/icon_more" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,8 @@
 package com.example.spotifyclone.retrofit
 
+import com.example.spotifyclone.retrofit.api.AlbumApi
 import com.example.spotifyclone.retrofit.api.ArtistsApi
+import com.example.spotifyclone.retrofit.consts.ConstValues
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -11,11 +13,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 const val url = "https://api.spotify.com/v1/"
 
 object RetrofitInstance {
-    private var token = ""
+    private var token = ConstValues.token
 
-    fun setToken(newToken: String) {
-        token = newToken
-    }
 
     val artistsApi = lazy {
         val okHttpClient =
@@ -27,6 +26,19 @@ object RetrofitInstance {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ArtistsApi::class.java)
+    }
+
+    val albumApi = lazy {
+
+        val okHttpClient =
+            OkHttpClient().newBuilder().addInterceptor(TokenInterceptor(token)).build()
+
+        Retrofit.Builder()
+            .baseUrl(url)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(AlbumApi::class.java)
     }
 }
 

@@ -17,16 +17,17 @@ class SignUp1 : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentSignUp1Binding.inflate(inflater,container,false)
+        binding = FragmentSignUp1Binding.inflate(inflater, container, false)
         val view = binding.root
 
 
-            binding.btnNext.setOnClickListener {
-                Navigation.findNavController(it).navigate(R.id.toSignUp2)
-            }
+        binding.btnNext.setOnClickListener {
+            Navigation.findNavController(it).navigate(R.id.toSignUp2)
+        }
 
         binding.navBack.setOnClickListener {
-            val navController = Navigation.findNavController(requireActivity(),
+            val navController = Navigation.findNavController(
+                requireActivity(),
                 R.id.fragmentContainerView
             )
             navController.popBackStack(R.id.startFragment, false)

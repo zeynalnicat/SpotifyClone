@@ -14,7 +14,6 @@ import android.text.TextWatcher
 import com.example.spotifyclone.databinding.FragmentSignUp1Binding
 
 
-
 class SignUp2 : Fragment() {
 
     private lateinit var binding: FragmentSignUp1Binding
@@ -23,14 +22,44 @@ class SignUp2 : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSignUp1Binding.inflate(inflater,container,false)
+        binding = FragmentSignUp1Binding.inflate(inflater, container, false)
         val view = binding.root
         adaptLayout()
-        binding.btnNext.setOnClickListener{
-            if(binding.edtEmail.text.toString().length>=8){
-                binding.btnNext.setBackgroundColor(ContextCompat.getColor(requireContext(),
-                    R.color.white
-                ))
+        setNavigation()
+        setInput()
+
+        return view
+    }
+
+    private fun adaptLayout() {
+        binding.edtEmail.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
+        binding.txtNeed.text = "Use at least 8 characters."
+        binding.labelEdt.text = "Create a password"
+        binding.edtEmail.inputType =
+            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+    }
+
+
+    private fun setNavigation() {
+        binding.navBack.setOnClickListener {
+            val navController = Navigation.findNavController(
+                requireActivity(),
+                R.id.fragmentContainerView
+            )
+            navController.popBackStack(R.id.signUp1, false)
+        }
+
+    }
+
+    private fun setInput() {
+        binding.btnNext.setOnClickListener {
+            if (binding.edtEmail.text.toString().length >= 8) {
+                binding.btnNext.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.white
+                    )
+                )
                 Navigation.findNavController(it).navigate(R.id.toSignUp3)
             }
 
@@ -44,28 +73,10 @@ class SignUp2 : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                binding.txtNeed.visibility = if (s?.length ?: 0 >= 8) View.INVISIBLE else View.VISIBLE
+                binding.txtNeed.visibility =
+                    if (s?.length ?: 0 >= 8) View.INVISIBLE else View.VISIBLE
             }
 
         })
-
-        binding.navBack.setOnClickListener {
-            val navController = Navigation.findNavController(requireActivity(),
-                R.id.fragmentContainerView
-            )
-            navController.popBackStack(R.id.signUp1, false)
-        }
-
-
-        return view
     }
-
-    private fun adaptLayout(){
-        binding.edtEmail.inputType=InputType.TYPE_TEXT_VARIATION_PASSWORD
-        binding.txtNeed.text = "Use at least 8 characters."
-        binding.labelEdt.text = "Create a password"
-        binding.edtEmail.inputType =InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-    }
-
-
 }

@@ -45,16 +45,9 @@ class ArtistsAdapter(private val artistList: MutableList<Artists>, private val f
             binding.imgArtist.setImageResource(current.imgSrc)
             binding.root.setOnClickListener {
                 current.isSelected = !current.isSelected
-                if (current.isSelected) {
-                    ChooseArtist.count ++
-                    Log.d("CountDebug", "Count: ${ChooseArtist.count}")
-                }else{
-                    ChooseArtist.count--
-                }
 
-                if (fragment is ChooseArtist) {
-                    fragment.updateButtonVisibility()
-                }
+
+
                 notifyDataSetChanged()
             }
 
