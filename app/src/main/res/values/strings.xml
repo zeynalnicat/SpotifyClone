@@ -38,7 +38,7 @@
     <string name="home_btn_music">Music</string>
     <string name="home_btn_podcast">Podcasts</string>
     <string name="home_txt_recently">Recently Played</string>
-    <string name="home_txt_try">Try Something Else</string>
+    <string name="home_txt_try">Because you love</string>
 
 
     <string name="search_txt_search">Artists,songs, or podcasts</string>

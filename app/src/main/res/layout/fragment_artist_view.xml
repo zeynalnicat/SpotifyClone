@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary"
-    tools:context=".ui.fragments.others.AlbumViewFragment">
+  >
+
 
 
     <androidx.constraintlayout.widget.Guideline
@@ -39,7 +40,7 @@
 
     <ImageView
         android:id="@+id/imgAlbum"
-        android:layout_width="234dp"
+        android:layout_width="0dp"
         android:layout_height="234dp"
         android:layout_marginTop="24dp"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
@@ -52,102 +53,87 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
         android:text="TextView"
         android:textColor="@color/white"
         android:textSize="25sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintEnd_toStartOf="@+id/textView"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toBottomOf="@+id/imgAlbum" />
 
-    <ImageView
-        android:id="@+id/imgArtist"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/img_artist"
-        android:clipToOutline="true"
-        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/txtAlbumName"
-        tools:src="@tools:sample/avatars" />
+    <TextView
+        android:id="@+id/txtFollowers"
+        android:layout_width="wrap_content"
+        android:textColor="@color/gray"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/txtAlbumName"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintTop_toTopOf="@+id/txtAlbumName" />
 
     <TextView
-        android:id="@+id/txtArtistName"
+        android:id="@+id/txtPopular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Popularity:"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/txtAlbumName" />
+
+    <TextView
+        android:id="@+id/txtPopularity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="TextView"
+        android:textColor="@color/gray"
+        app:layout_constraintBottom_toBottomOf="@+id/txtPopular"
+        app:layout_constraintStart_toEndOf="@+id/txtPopular"
+        app:layout_constraintTop_toTopOf="@+id/txtPopular" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Genres:"
         android:textColor="@color/white"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/imgArtist"
-        app:layout_constraintStart_toEndOf="@+id/imgArtist"
-        app:layout_constraintTop_toTopOf="@+id/imgArtist" />
+        app:layout_constraintBottom_toBottomOf="@+id/txtGenres"
+        app:layout_constraintStart_toStartOf="@+id/txtPopular"
+        app:layout_constraintTop_toTopOf="@+id/txtGenres" />
 
     <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Album"
-        android:textColor="@color/txt_gray"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/imgArtist" />
-
-    <TextView
-        android:id="@+id/txtAlbumYear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="TextView"
-        android:textColor="@color/txt_gray"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/textView4"
-        app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toTopOf="@+id/textView4" />
-
-    <ImageView
-        android:id="@+id/imgLike"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:src="@drawable/icon_like"
-        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/icon_album_pause"
-        app:layout_constraintBottom_toBottomOf="@+id/imgLike"
-        app:layout_constraintEnd_toStartOf="@+id/rightGuideline" />
-
-    <ScrollView
+        android:id="@+id/txtGenres"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        android:textColor="@color/gray"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintStart_toEndOf="@+id/textView6"
+        app:layout_constraintTop_toBottomOf="@+id/txtPopular" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="0dp"
+        android:layout_height="471dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/imgLike">
+        app:layout_constraintTop_toBottomOf="@+id/txtGenres" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="Followers:"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/txtFollowers"
+        app:layout_constraintEnd_toStartOf="@+id/txtFollowers"
+        app:layout_constraintTop_toTopOf="@+id/txtFollowers" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

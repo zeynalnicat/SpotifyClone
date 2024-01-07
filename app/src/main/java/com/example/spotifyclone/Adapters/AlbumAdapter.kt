@@ -1,5 +1,6 @@
 package com.example.spotifyclone.adapters
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -14,17 +15,18 @@ import com.example.spotifyclone.databinding.TrackListviewBinding
 import com.example.spotifyclone.model.PlayedTracks
 import com.example.spotifyclone.model.album.newrelease.Item
 import com.example.spotifyclone.model.album.trysomething.Album
+import com.example.spotifyclone.model.artist.Artist
 
 class AlbumAdapter(
-    private val nav: () -> Unit
+    private val nav: (Bundle) -> Unit
 ) : RecyclerView.Adapter<AlbumAdapter.ViewHolder>() {
 
-    private val diffCallBack = object : DiffUtil.ItemCallback<Album>() {
-        override fun areItemsTheSame(oldItem: Album, newItem: Album): Boolean {
+    private val diffCallBack = object : DiffUtil.ItemCallback<Artist>() {
+        override fun areItemsTheSame(oldItem: Artist, newItem: Artist): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: Album, newItem: Album): Boolean {
+        override fun areContentsTheSame(oldItem: Artist, newItem: Artist): Boolean {
             return oldItem == newItem
         }
 
@@ -48,7 +50,7 @@ class AlbumAdapter(
 
     inner class ViewHolder(private val binding: TrackListviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(current: Album) {
+        fun bind(current: Artist) {
             Glide.with(binding.root)
                 .load(current.images[0].url)
                 .into(binding.imgArtist)
@@ -58,12 +60,19 @@ class AlbumAdapter(
             params.rightMargin = 30
             binding.root.layoutParams = params
             itemView.setOnClickListener {
-                nav()
+                val bundle = Bundle()
+                val genres = current.genres.joinToString { it + "" }
+                bundle.putString("artistId",current.id)
+                bundle.putString("img",current.images[0].url)
+                bundle.putString("popularity",current.popularity.toString())
+                bundle.putString("followers",current.followers.total.toString())
+                bundle.putString("genres",genres)
+                nav(bundle)
             }
         }
     }
 
-    fun submitList(list: List<Album>) {
+    fun submitList(list: List<Artist>) {
         diffUtil.submitList(list)
     }
 

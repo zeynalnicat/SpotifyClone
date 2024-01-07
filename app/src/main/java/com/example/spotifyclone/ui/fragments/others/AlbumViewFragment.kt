@@ -49,7 +49,7 @@ class AlbumViewFragment : Fragment() {
     private fun getAlbum() {
         albumViewModel.getAlbum(albumId)
         albumViewModel.album.observe(viewLifecycleOwner) {
-            val artistNames = it.artists.joinToString { artist: Artist -> artist.name + "," }
+            val artistNames = it.artists.joinToString { artist: Artist -> artist.name + " " }
             binding.txtArtistName.text = artistNames
             binding.txtAlbumYear.text = it.release_date
             binding.txtAlbumName.text = it.name

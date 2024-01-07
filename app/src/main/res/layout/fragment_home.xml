@@ -12,16 +12,17 @@
         android:layout_marginTop="15dp"
     tools:context=".ui.fragments.home.HomeFragment">
 
-    <TextView
-        android:id="@+id/txtNewRelease"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Release"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerTrySomething" />
+        <TextView
+            android:id="@+id/txtNewRelease"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="New Release"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerTrySomething" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewNewRelease"

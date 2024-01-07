@@ -71,7 +71,12 @@ class HomeFragment : Fragment() {
         homeViewModel.getNewRelease()
         homeViewModel.newReleases.observe(viewLifecycleOwner) {
             val adapter =
-                TrackAdapter { findNavController().navigate(R.id.action_homeFragment_to_albumViewFragment,it) }
+                TrackAdapter {
+                    findNavController().navigate(
+                        R.id.action_homeFragment_to_albumViewFragment,
+                        it
+                    )
+                }
             adapter.submitList(it)
             binding.recyclerViewNewRelease.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -81,17 +86,14 @@ class HomeFragment : Fragment() {
     }
 
     private fun setTrySomethingElse() {
-
-        homeViewModel.trySomething.observe(viewLifecycleOwner) {
-            homeViewModel.getTrySomething()
+        homeViewModel.getRoomArtistAlbum(requireContext())
+        homeViewModel.artists.observe(viewLifecycleOwner) {
             val adapter =
-                AlbumAdapter { findNavController().navigate(R.id.action_homeFragment_to_albumViewFragment) }
-            it?.let {
-                adapter.submitList(it)
-                binding.recyclerTrySomething.layoutManager =
-                    LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-                binding.recyclerTrySomething.adapter = adapter
-            }
+                AlbumAdapter { findNavController().navigate(R.id.action_homeFragment_to_artistViewFragment,it) }
+            adapter.submitList(it)
+            binding.recyclerTrySomething.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            binding.recyclerTrySomething.adapter = adapter
 
         }
     }

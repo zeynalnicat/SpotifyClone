@@ -12,4 +12,7 @@ interface ArtistDao {
 
     @Query("Select * from artists")
     suspend fun getAll(): List<ArtistsEntity>
+
+    @Query("Select artistId from artists")
+    suspend fun getArtistId():List<String>
 }
