@@ -9,10 +9,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
-import com.example.spotifyclone.R
 import com.example.spotifyclone.adapters.SingleAlbumTracksAdapter
 import com.example.spotifyclone.databinding.FragmentAlbumViewBinding
-import com.example.spotifyclone.model.album.newrelease.Item
 import com.example.spotifyclone.model.album.singlealbum.Artist
 import com.example.spotifyclone.viewmodels.AlbumViewModel
 

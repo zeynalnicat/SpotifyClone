@@ -7,10 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.room.util.joinIntoString
+import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
+import com.example.spotifyclone.R
+import com.example.spotifyclone.adapters.TrackAdapter
 import com.example.spotifyclone.databinding.FragmentArtistViewBinding
-import com.example.spotifyclone.model.album.newrelease.Item
 import com.example.spotifyclone.viewmodels.ArtistViewModel
 
 
@@ -20,7 +21,7 @@ class ArtistViewFragment : Fragment() {
     private var img = ""
     private var popularity = ""
     private var followers = ""
-    private var genres  = ""
+    private var genres = ""
     private lateinit var artistViewModel: ArtistViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,10 +45,10 @@ class ArtistViewFragment : Fragment() {
     private fun getAllArguments() {
         arguments?.let {
             artistId = it.getString("artistId", "")
-            img = it.getString("img","")
-            popularity = it.getString("popularity","0")
-            followers = it.getString("followers","0")
-            genres = it.getString("genres","")
+            img = it.getString("img", "")
+            popularity = it.getString("popularity", "0")
+            followers = it.getString("followers", "0")
+            genres = it.getString("genres", "")
         }
     }
 
@@ -61,11 +62,14 @@ class ArtistViewFragment : Fragment() {
             binding.txtPopularity.text = popularity
             binding.txtFollowers.text = followers
             binding.txtGenres.text = genres
-
+            val adapter = TrackAdapter { findNavController().navigate(R.id.action_artistViewFragment_to_albumViewFragment,it) }
+            adapter.submitList(it)
+            binding.recyclerView.layoutManager = GridLayoutManager(requireContext(),2)
+            binding.recyclerView.adapter = adapter
         }
     }
 
-    private fun setNavigation(){
+    private fun setNavigation() {
         binding.imgBack.setOnClickListener {
             findNavController().popBackStack()
         }

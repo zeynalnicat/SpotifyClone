@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.example.spotifyclone.R
@@ -15,6 +16,7 @@ import com.example.spotifyclone.adapters.AlbumAdapter
 
 import com.example.spotifyclone.adapters.TrackAdapter
 import com.example.spotifyclone.databinding.FragmentHomeBinding
+import com.example.spotifyclone.model.album.newrelease.Item
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.viewmodels.HomeViewModel
 
@@ -28,32 +30,13 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(inflater)
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         setBottom()
-
         setNewRelease()
         setTrySomethingElse()
-        setAdapter()
         setTextHeader()
-
-
+        setPopularAlbums()
         return binding.root
     }
 
-    private fun setAdapter() {
-
-//
-//        val recentAdapter =
-//            RecentlyPlayedAdapter(recentTracks) { findNavController().navigate(R.id.action_homeFragment_to_albumViewFragment) }
-//        binding.recyclerRecentlyPlayed.layoutManager =
-//            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-//        binding.recyclerRecentlyPlayed.adapter = recentAdapter
-//
-//        val trySomethingAdapter =
-//            TrackAdapter(somethingNewTracks) { findNavController().navigate(R.id.action_homeFragment_to_albumViewFragment) }
-//        binding.recyclerTrySomething.layoutManager =
-//            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-//        binding.recyclerTrySomething.adapter = trySomethingAdapter
-//
-    }
 
     private fun setBottom() {
         val activity = requireActivity() as? MainActivity
@@ -89,12 +72,51 @@ class HomeFragment : Fragment() {
         homeViewModel.getRoomArtistAlbum(requireContext())
         homeViewModel.artists.observe(viewLifecycleOwner) {
             val adapter =
-                AlbumAdapter { findNavController().navigate(R.id.action_homeFragment_to_artistViewFragment,it) }
+                AlbumAdapter {
+                    findNavController().navigate(
+                        R.id.action_homeFragment_to_artistViewFragment,
+                        it
+                    )
+                }
             adapter.submitList(it)
             binding.recyclerTrySomething.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             binding.recyclerTrySomething.adapter = adapter
 
+        }
+    }
+
+    private fun setPopularAlbums() {
+        homeViewModel.getPopularAlbums()
+        homeViewModel.popularAlbums.observe(viewLifecycleOwner) {
+            val album = it.map {
+                Item(
+                    album_type = it.album_type,
+                    artists = it.artists,
+                    available_markets = it.available_markets,
+                    external_urls = it.external_urls,
+                    href = it.href,
+                    id = it.id,
+                    images = it.images,
+                    name = it.name,
+                    release_date = it.release_date,
+                    release_date_precision = it.release_date_precision,
+                    total_tracks = it.total_tracks,
+                    type = it.type,
+                    uri = it.uri
+                )
+            }
+            val adapter =
+                TrackAdapter {
+                    findNavController().navigate(
+                        R.id.action_homeFragment_to_albumViewFragment,
+                        it
+                    )
+                }
+            adapter.submitList(album)
+            binding.recyclerViewPopular.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            binding.recyclerViewPopular.adapter = adapter
         }
     }
 }

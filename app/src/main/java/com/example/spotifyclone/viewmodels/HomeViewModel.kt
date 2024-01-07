@@ -20,7 +20,7 @@ class HomeViewModel : ViewModel() {
 
     private val _date = MutableLiveData<String>()
     private val _newReleases = MutableLiveData<List<Item>>()
-    private val _trySomething = MutableLiveData<List<Album>>()
+    private val _popularAlbums = MutableLiveData<List<com.example.spotifyclone.model.album.popularalbums.Album>>()
     private val _artists = MutableLiveData<List<Artist>>()
     private val albumApi = RetrofitInstance.albumApi.value
     private val artistApi = RetrofitInstance.artistsApi.value
@@ -31,8 +31,8 @@ class HomeViewModel : ViewModel() {
     val newReleases: LiveData<List<Item>>
         get() = _newReleases
 
-    val trySomething: LiveData<List<Album>>
-        get() = _trySomething
+    val popularAlbums: LiveData<List<com.example.spotifyclone.model.album.popularalbums.Album>>
+        get() = _popularAlbums
 
     val artists: LiveData<List<Artist>>
         get() = _artists
@@ -61,12 +61,12 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    fun getTrySomething() {
+    fun getPopularAlbums() {
         viewModelScope.launch {
-            val query = "382ObEPsp2rxGrnsizN5TX%2C1A2GTWGtFfWp7KSQTwWOyo%2C2noRn2Aes5aoNVsU6iWThc"
+            val query = "7bPTIw59JU8w3NntSpmEzo,78bpIziExqiI9qztvNFlQu,5pSk3c3wVwnb2arb6ohCPU,5VoeRuTrGhTbKelUfwymwu,0ODLCdHBFVvKwJGeSfd1jy"
             val response = albumApi.getSomeAlbums(query)
             if (response.isSuccessful) {
-                _trySomething.postValue(response.body()?.albums)
+                _popularAlbums.postValue(response.body()?.albums)
             }
         }
     }

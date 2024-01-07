@@ -2,5 +2,5 @@ package com.example.spotifyclone.retrofit.consts
 
 
 object ConstValues {
-    const val token = "BQCo3yqaVbonxX2kVWWD-vsjdmlo-5SwPSSeNzm8MZlosX9XVxIyLpF4Oo-lURZ8mI8QXWdYs3K5xppKDoc96Fxu4YJZv-iLzhQWbgNcv5xM-FqujTZFWkPUU8U9gn_EnHhMhMa9mBQBwlhMd-rGqQJMrM6DtYZskz4DvOTxl7gDSmpe91TPD1n8LIm90yBblH6Z7GdM03CXJ5U4CMdn-NH3D6ERgih-3JrIQNJglxZYAZXy3JEShiKsr5Ni84OB-LYCV2OHrybjow"
+    const val token = "BQBRJZOXV5YAjv0BYaSuYcX2I44kokG3TjL3EIV51DRzp2qYhNiiXhy7R2STJOugYM6ZaWTeC1eKAN4cXgzftsjF1EHXhqSW2ruGSZicsucPnj-EhFwEGANfKx2_iVexLTFAJUynx3Oj_MVbqSGJPQYru2lEmXkUo54v0I4XgfbRGk-aF1dv3s1scaUEtRYU4gKrf9yRqfde6ylAkXTRk4WkxaJYtiOjLjydr0Vr14uL3jDRV-6y-UOxRtQOPhLqG29Ji-7IG0Phrw"
 }

@@ -116,8 +116,9 @@
         app:layout_constraintTop_toBottomOf="@+id/txtPopular" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="0dp"
-        android:layout_height="471dp"
+        android:layout_height="0dp"
         android:layout_marginTop="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"

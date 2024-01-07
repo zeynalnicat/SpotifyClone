@@ -130,7 +130,11 @@
         android:id="@+id/artistViewFragment"
         tools:layout="@layout/fragment_artist_view"
         android:name="com.example.spotifyclone.ui.fragments.others.ArtistViewFragment"
-        android:label="ArtistViewFragment" />
+        android:label="ArtistViewFragment" >
+        <action
+            android:id="@+id/action_artistViewFragment_to_albumViewFragment"
+            app:destination="@id/albumViewFragment" />
+    </fragment>
 
 
 </navigation>

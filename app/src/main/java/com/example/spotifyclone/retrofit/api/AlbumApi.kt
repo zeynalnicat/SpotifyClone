@@ -11,7 +11,7 @@ interface AlbumApi {
     suspend fun getNewReleases(): Response<Albums>
 
     @GET("albums")
-    suspend fun getSomeAlbums(@retrofit2.http.Query("ids") query: String): Response<com.example.spotifyclone.model.album.trysomething.Albums>
+    suspend fun getSomeAlbums(@retrofit2.http.Query("ids") query: String): Response<com.example.spotifyclone.model.album.popularalbums.Albums>
 
     @GET("albums/{id}")
     suspend fun getAlbum(@Path("id") id:String):Response<Album>

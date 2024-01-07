@@ -24,22 +24,22 @@
             app:layout_constraintStart_toStartOf="@+id/leftGuideline"
             app:layout_constraintTop_toBottomOf="@+id/recyclerTrySomething" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewNewRelease"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/txtNewRelease" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewNewRelease"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+            app:layout_constraintTop_toBottomOf="@+id/txtNewRelease" />
 
     <TextView
         android:id="@+id/txtRecent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:visibility="gone"
         android:text="@string/home_txt_recently"
         android:textColor="@color/white"
         android:textSize="20sp"
@@ -50,6 +50,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerRecentlyPlayed"
         android:layout_width="0dp"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
@@ -168,5 +169,29 @@
        app:layout_constraintBottom_toBottomOf="@+id/btnMusic"
        app:layout_constraintStart_toEndOf="@+id/btnMusic"
        app:layout_constraintTop_toTopOf="@+id/btnMusic" />
+
+        <TextView
+            android:id="@+id/txtPopularAlbums"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Popular Albums"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerViewNewRelease" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewPopular"
+            android:layout_marginBottom="20dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+            app:layout_constraintTop_toBottomOf="@+id/txtPopularAlbums" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

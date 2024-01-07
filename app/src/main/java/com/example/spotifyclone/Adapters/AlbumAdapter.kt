@@ -8,13 +8,8 @@ import androidx.recyclerview.widget.DiffUtil
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-
-import com.example.spotifyclone.databinding.ArtistsListviewBinding
-import com.example.spotifyclone.databinding.RecentTracksListviewBinding
 import com.example.spotifyclone.databinding.TrackListviewBinding
-import com.example.spotifyclone.model.PlayedTracks
-import com.example.spotifyclone.model.album.newrelease.Item
-import com.example.spotifyclone.model.album.trysomething.Album
+
 import com.example.spotifyclone.model.artist.Artist
 
 class AlbumAdapter(
@@ -52,7 +47,7 @@ class AlbumAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(current: Artist) {
             Glide.with(binding.root)
-                .load(current.images[0].url)
+                .load(current.images?.get(0)?.url)
                 .into(binding.imgArtist)
 
             binding.txtArtistName.text = current.name
@@ -61,12 +56,12 @@ class AlbumAdapter(
             binding.root.layoutParams = params
             itemView.setOnClickListener {
                 val bundle = Bundle()
-                val genres = current.genres.joinToString { it + "" }
-                bundle.putString("artistId",current.id)
-                bundle.putString("img",current.images[0].url)
-                bundle.putString("popularity",current.popularity.toString())
-                bundle.putString("followers",current.followers.total.toString())
-                bundle.putString("genres",genres)
+                val genres = current.genres?.joinToString { it + "" }
+                bundle.putString("artistId", current.id)
+                bundle.putString("img", current.images?.get(0)?.url)
+                bundle.putString("popularity", current.popularity.toString())
+                bundle.putString("followers", current.followers?.total.toString())
+                bundle.putString("genres", genres)
                 nav(bundle)
             }
         }
