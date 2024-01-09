@@ -47,7 +47,7 @@ class ChooseArtistAdapter(val fragment: ChooseArtist) :
         fun bind(current: Artist) {
             binding.txtArtistName.text = current.name
             Glide.with(binding.root)
-                .load(current.images[0].url)
+                .load(current.images?.get(0)?.url)
                 .into(binding.imgArtist)
 
             var isClicked = false
