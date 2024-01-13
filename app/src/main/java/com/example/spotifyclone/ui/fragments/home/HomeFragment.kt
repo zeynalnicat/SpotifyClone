@@ -32,7 +32,7 @@ class HomeFragment : Fragment() {
         setBottom()
         setAdapter()
         setTextHeader()
-
+        setNavigation()
 
         return binding.root
     }
@@ -90,5 +90,11 @@ class HomeFragment : Fragment() {
             else -> "Good night"
         }
         binding.txtGood.text = greeting
+    }
+
+    private fun setNavigation(){
+        binding.imgSettings.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
+        }
     }
 }
