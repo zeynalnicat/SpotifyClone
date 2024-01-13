@@ -7,23 +7,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.example.spotifyclone.R
-import com.example.spotifyclone.databinding.FragmentLibraryBinding
+import com.example.spotifyclone.databinding.FragmentUserLibraryBinding
 
-class LibraryFragment : Fragment() {
-      private lateinit var binding:FragmentLibraryBinding
+class UserLibraryFragment : Fragment() {
+    private lateinit var binding:FragmentUserLibraryBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentLibraryBinding.inflate(inflater)
+        binding = FragmentUserLibraryBinding.inflate(inflater)
         setNavigation()
         return binding.root
     }
 
     private fun setNavigation(){
-        binding.imgProfileAccount.setOnClickListener {
-            findNavController().navigate(R.id.action_libraryFragment_to_userLibraryFragment)
+        binding.imgBack.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
+
 }

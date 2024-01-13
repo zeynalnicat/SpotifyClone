@@ -34,6 +34,8 @@ class HomeFragment : Fragment() {
         setTrySomethingElse()
         setTextHeader()
         setPopularAlbums()
+        setNavigation()
+
         return binding.root
     }
 
@@ -83,6 +85,12 @@ class HomeFragment : Fragment() {
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             binding.recyclerTrySomething.adapter = adapter
 
+        }
+    }
+
+    private fun setNavigation(){
+        binding.imgSettings.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
         }
     }
 

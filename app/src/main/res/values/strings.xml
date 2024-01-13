@@ -49,4 +49,12 @@
 
 
     <string name="library_txt_header">Your Library</string>
+    <string name="library_txt_liked_songs">Liked Songs</string>
+
+
+    <string name="library_txt_playlist">Playlist</string>
+    <string name="library_txt_songs">songs</string>
+
+    <string name="settings_txt_header">Settings</string>
+    <string name="settings_txt_view_profile">View Profile</string>
 </resources>
