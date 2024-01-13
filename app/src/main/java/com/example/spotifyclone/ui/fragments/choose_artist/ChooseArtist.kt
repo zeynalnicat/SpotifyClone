@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.spotifyclone.R
@@ -59,7 +60,7 @@ class ChooseArtist : Fragment() {
         binding.btnNext.setOnClickListener {
             selectedArtists = adapter.getSelectedArtists()
             val roomDB = RoomDB.accessDb(requireContext())
-            CoroutineScope(Dispatchers.IO).launch {
+            lifecycleScope.launch(Dispatchers.IO) {
                 selectedArtists.forEach {
                     roomDB?.artistDao()?.insert(ArtistsEntity(0, it.name, it.id))
                 }
@@ -82,15 +83,18 @@ class ChooseArtist : Fragment() {
 
     private fun setAdapter() {
         chooseArtistViewModel.artists.observe(viewLifecycleOwner) {
-            adapter = ChooseArtistAdapter(this@ChooseArtist)
-            adapter.submitList(it)
-            binding.artistRecycle.adapter = adapter
-            val layoutManager = FlexboxLayoutManager(requireContext())
-            layoutManager.flexDirection = FlexDirection.ROW
-            layoutManager.justifyContent = JustifyContent.SPACE_BETWEEN
-            layoutManager.flexWrap = FlexWrap.WRAP
-            layoutManager.alignItems = AlignItems.FLEX_START
-            binding.artistRecycle.layoutManager = layoutManager
+            if(!it.isNullOrEmpty()){
+                adapter = ChooseArtistAdapter(this@ChooseArtist)
+                val layoutManager = FlexboxLayoutManager(requireContext())
+                layoutManager.flexDirection = FlexDirection.ROW
+                layoutManager.justifyContent = JustifyContent.SPACE_BETWEEN
+                layoutManager.flexWrap = FlexWrap.WRAP
+                layoutManager.alignItems = AlignItems.FLEX_START
+                binding.artistRecycle.layoutManager = layoutManager
+                adapter.submitList(it)
+                binding.artistRecycle.adapter = adapter
+
+            }
         }
 
 
