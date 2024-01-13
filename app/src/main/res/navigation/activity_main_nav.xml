@@ -11,7 +11,11 @@
         android:label="LibraryFragment"
         tools:layout="@layout/fragment_library"
 
-        />
+        >
+        <action
+            android:id="@+id/action_libraryFragment_to_userLibraryFragment"
+            app:destination="@id/userLibraryFragment" />
+    </fragment>
     <action
         android:id="@+id/toLibrary"
         app:destination="@id/libraryFragment" />
@@ -130,7 +134,16 @@
         android:id="@+id/settingsFragment"
         android:name="com.example.spotifyclone.ui.fragments.settings.SettingsFragment"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_userLibraryFragment"
+            app:destination="@id/userLibraryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userLibraryFragment"
+        android:name="com.example.spotifyclone.ui.fragments.library.UserLibraryFragment"
+        android:label="fragment_user_library"
+        tools:layout="@layout/fragment_user_library" />
 
 
 </navigation>

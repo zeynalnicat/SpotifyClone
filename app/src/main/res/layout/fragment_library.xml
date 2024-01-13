@@ -64,30 +64,23 @@
         android:id="@+id/imgPlaylistLiked"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:src="@drawable/icon_library_liked"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-        app:layout_constraintTop_toTopOf="@+id/topGuideline2" />
+        app:layout_constraintTop_toTopOf="@+id/divider2" />
 
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/topGuideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.3" />
 
     <TextView
         android:id="@+id/txtLikedSongs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
         android:text="@string/library_txt_liked_songs"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/imgPlaylistLiked"
-        app:layout_constraintTop_toTopOf="@+id/topGuideline2" />
+        app:layout_constraintTop_toTopOf="@+id/imgPlaylistLiked" />
 
     <ImageView
         android:id="@+id/imgPin"
@@ -135,5 +128,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="imgPlaylistLiked,txtLikedSongs,imgPin,txtPlaylist,txtNumberSongs,txtSongs" />
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:backgroundTint="@color/txt_gray"
+        android:layout_marginTop="24dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/imgProfileAccount" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

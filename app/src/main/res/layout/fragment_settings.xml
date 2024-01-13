@@ -8,8 +8,6 @@
     tools:context=".ui.fragments.settings.SettingsFragment">
 
 
-
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/leftGuideline"
         android:layout_width="wrap_content"
@@ -29,7 +27,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-
         android:background="#191919"
         android:minHeight="80dp"
         android:theme="@style/toolbarMenuTheme"
@@ -42,9 +39,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
             android:text="@string/settings_txt_header"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -86,9 +83,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:textStyle="bold"
         android:text="@string/settings_txt_view_profile"
         android:textColor="@color/txt_gray"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/txtAccountName"
         app:layout_constraintTop_toBottomOf="@+id/txtAccountName" />
 
@@ -100,6 +97,25 @@
         app:layout_constraintBottom_toBottomOf="@+id/txtViewProfile"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintTop_toTopOf="@+id/txtAccountName" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/imgProfile" />
+
+    <View
+        android:id="@+id/viewAccount"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@id/imgProfile"
+        app:layout_constraintEnd_toEndOf="@+id/imgView"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toTopOf="@+id/imgProfile" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
