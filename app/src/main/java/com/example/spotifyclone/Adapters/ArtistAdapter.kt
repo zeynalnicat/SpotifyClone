@@ -8,13 +8,13 @@ import androidx.recyclerview.widget.DiffUtil
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.spotifyclone.databinding.TrackListviewBinding
+import com.example.spotifyclone.databinding.ArtistsListviewBinding
 
 import com.example.spotifyclone.model.artist.Artist
 
-class AlbumAdapter(
+class ArtistAdapter(
     private val nav: (Bundle) -> Unit
-) : RecyclerView.Adapter<AlbumAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<ArtistAdapter.ViewHolder>() {
 
     private val diffCallBack = object : DiffUtil.ItemCallback<Artist>() {
         override fun areItemsTheSame(oldItem: Artist, newItem: Artist): Boolean {
@@ -31,7 +31,7 @@ class AlbumAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            TrackListviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ArtistsListviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -43,7 +43,7 @@ class AlbumAdapter(
         return holder.bind(diffUtil.currentList[position])
     }
 
-    inner class ViewHolder(private val binding: TrackListviewBinding) :
+    inner class ViewHolder(private val binding: ArtistsListviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(current: Artist) {
             Glide.with(binding.root)

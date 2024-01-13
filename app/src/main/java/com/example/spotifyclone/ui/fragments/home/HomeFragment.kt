@@ -8,12 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-
 import com.example.spotifyclone.R
-import com.example.spotifyclone.adapters.AlbumAdapter
-
+import com.example.spotifyclone.adapters.ArtistAdapter
 import com.example.spotifyclone.adapters.TrackAdapter
 import com.example.spotifyclone.databinding.FragmentHomeBinding
 import com.example.spotifyclone.model.album.newrelease.Item
@@ -74,7 +71,7 @@ class HomeFragment : Fragment() {
         homeViewModel.getRoomArtistAlbum(requireContext())
         homeViewModel.artists.observe(viewLifecycleOwner) {
             val adapter =
-                AlbumAdapter {
+                ArtistAdapter {
                     findNavController().navigate(
                         R.id.action_homeFragment_to_artistViewFragment,
                         it
