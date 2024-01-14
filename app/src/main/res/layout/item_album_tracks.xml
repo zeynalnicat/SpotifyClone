@@ -14,11 +14,13 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="16dp"
         android:text="TextView"
+        android:layout_marginStart="8dp"
+        app:layout_goneMarginLeft="0dp"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/imgMore"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/musicIcon"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
@@ -27,9 +29,8 @@
         android:layout_height="12dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/img_artist"
-
         android:clipToOutline="true"
-        app:layout_constraintStart_toStartOf="@+id/txtTrackName"
+        app:layout_constraintStart_toStartOf="@+id/musicIcon"
         app:layout_constraintTop_toBottomOf="@+id/txtTrackName"
         tools:srcCompat="@tools:sample/avatars" />
 
@@ -51,4 +52,14 @@
         app:layout_constraintBottom_toBottomOf="@+id/txtTrackName"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/icon_more" />
+
+    <ImageView
+        android:id="@+id/musicIcon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+       android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/txtTrackName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/txtTrackName"
+        app:srcCompat="@drawable/icon_track_more" />
 </androidx.constraintlayout.widget.ConstraintLayout>

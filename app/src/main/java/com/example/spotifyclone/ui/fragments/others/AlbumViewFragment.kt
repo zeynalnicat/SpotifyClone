@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.example.spotifyclone.adapters.SingleAlbumTracksAdapter
 import com.example.spotifyclone.databinding.FragmentAlbumViewBinding
 import com.example.spotifyclone.model.album.singlealbum.Artist
+import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.viewmodels.AlbumViewModel
 
 class AlbumViewFragment : Fragment() {
@@ -65,11 +66,23 @@ class AlbumViewFragment : Fragment() {
         img: String,
         tracks: List<com.example.spotifyclone.model.album.singlealbum.Item>
     ) {
-        val adapter = SingleAlbumTracksAdapter(img)
+        val adapter = SingleAlbumTracksAdapter(img,
+            { setMusicTrack() },
+            { url, name -> setMusicAttrs(url, name) })
         adapter.submitList(tracks)
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerView.adapter = adapter
 
+    }
+
+    private fun setMusicTrack() {
+        val activity = requireActivity() as MainActivity
+        activity.setMusicPlayer(true)
+    }
+
+    private fun setMusicAttrs(url: String, name: String) {
+        val activity = requireActivity() as MainActivity
+        activity.setMusicAttrs(url, name)
     }
 
 }
