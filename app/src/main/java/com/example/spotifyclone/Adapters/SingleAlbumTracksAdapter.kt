@@ -18,8 +18,8 @@ import com.example.spotifyclone.model.pseudo_models.MusicItem
 class SingleAlbumTracksAdapter(
     private val img: String,
     private val setMusicLayout: () -> Unit,
-    private val setMusicAttrs: (url: String, name: String) -> Unit,
     private val saveSharedPreference: (key: String, value: String) -> Unit,
+    private val saveSharedPreferenceBool : (value:Boolean) -> Unit,
     private val isInSP: (value: String) -> Boolean
 ) : RecyclerView.Adapter<SingleAlbumTracksAdapter.ViewHolder>() {
 
@@ -72,9 +72,9 @@ class SingleAlbumTracksAdapter(
                 saveSharedPreference("PlayingMusic",track.item.name)
                 saveSharedPreference("PlayingMusicArtist",track.item.artists[0].name)
                 saveSharedPreference("PlayingMusicImg",img)
+                saveSharedPreferenceBool(true)
                 track.isPlayed = true
                 setMusicLayout()
-                setMusicAttrs(img, track.item.name)
                 notifyDataSetChanged()
             }
         }
