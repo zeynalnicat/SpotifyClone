@@ -22,11 +22,13 @@ class AlbumViewFragment : Fragment() {
     private lateinit var binding: FragmentAlbumViewBinding
     private var albumId = ""
     private lateinit var albumViewModel: AlbumViewModel
+    private lateinit var sharedPreference : SharedPreference
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAlbumViewBinding.inflate(inflater)
+        sharedPreference = SharedPreference(requireContext())
         setNavigation()
         getAlbumId()
         albumViewModel = ViewModelProvider(this)[AlbumViewModel::class.java]
@@ -71,7 +73,7 @@ class AlbumViewFragment : Fragment() {
     ) {
         val adapter = SingleAlbumTracksAdapter(img,
             { setMusicTrack() },
-            { url, name -> setMusicAttrs(url, name) },{key,value->saveSharedPreference(key,value)},{value-> isInSP(value)})
+            {key,value->saveSharedPreference(key,value)},{value-> saveSharedPreference(value)},{value-> isInSP(value)})
         val musicTracks = tracks.map { MusicItem(it, isPlayed = false)}
         adapter.submitList(musicTracks)
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
@@ -84,18 +86,16 @@ class AlbumViewFragment : Fragment() {
         activity.setMusicPlayer(true)
     }
 
-    private fun setMusicAttrs(url: String, name: String) {
-        val activity = requireActivity() as MainActivity
-        activity.setMusicAttrs(url, name)
-    }
 
     private fun saveSharedPreference(key:String,value:String){
-        val sharedPreference = SharedPreference(requireContext())
         sharedPreference.saveValue(key,value)
     }
 
+    private fun saveSharedPreference(value: Boolean){
+        sharedPreference.saveIsPlaying(value)
+    }
+
     private fun isInSP(value: String):Boolean{
-        val sharedPreference = SharedPreference(requireContext())
         return sharedPreference.containsValue(value)
     }
 

@@ -32,7 +32,8 @@ class HomeFragment : Fragment() {
         setTextHeader()
         setPopularAlbums()
         setNavigation()
-
+        val activity = requireActivity() as MainActivity
+        activity.checkVisibility()
         return binding.root
     }
 

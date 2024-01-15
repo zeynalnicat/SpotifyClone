@@ -9,10 +9,12 @@ import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ActivityMainBinding
+import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.fragments.others.TrackViewFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +27,15 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(binding.bottomNav, navController)
         setNavigation()
 
+
+
+    }
+
+    fun checkVisibility(){
+        val sharedPreference = SharedPreference(this)
+        if(sharedPreference.getValue("isPlaying",false)){
+            setMusicPlayer(true)
+        }
     }
 
     fun setBottomNavigation(visibility: Boolean) {
@@ -40,17 +51,22 @@ class MainActivity : AppCompatActivity() {
     fun setMusicPlayer(visibility: Boolean){
         if(visibility){
             binding.musicPlayer.visibility = View.VISIBLE
+            setMusicAttrs()
         }else{
             binding.musicPlayer.visibility = View.GONE
         }
     }
 
-    fun setMusicAttrs(imgUrl:String, name:String ){
+    fun setMusicAttrs(){
+        val sharedPreference = SharedPreference(this)
+        val musicName = sharedPreference.getValue("PlayingMusic","")
+        val musicImg = sharedPreference.getValue("PlayingMusicImg","")
+
         Glide.with(binding.root)
-            .load(imgUrl)
+            .load(musicImg)
             .into(binding.imgTrack)
 
-        binding.txtMusicName.text = name
+        binding.txtMusicName.text = musicName
         var isPlayed = true
         binding.imgPause.setOnClickListener {
             isPlayed = !isPlayed

@@ -35,4 +35,14 @@ class SharedPreference(context: Context) {
     fun getValue(key: String, defaultValue: String): String {
         return sharedPreferences.getString(key, defaultValue) ?: defaultValue
     }
+
+    fun saveIsPlaying(isPlaying:Boolean){
+        editor.putBoolean("isPlaying",isPlaying)
+        editor.apply()
+    }
+
+    fun getValue(key: String,defaultValue: Boolean):Boolean{
+        return sharedPreferences.getBoolean(key,defaultValue)?:defaultValue
+    }
+
 }
