@@ -5,16 +5,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.spotifyclone.R
 import com.example.spotifyclone.adapters.SearchCardAdapter
-import com.example.spotifyclone.model.SearchCard
 import com.example.spotifyclone.databinding.FragmentSearchBinding
+import com.example.spotifyclone.viewmodels.SearchViewModel
 
 class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
+    private lateinit var searchViewModel: SearchViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        searchViewModel = ViewModelProvider(this)[SearchViewModel::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,42 +33,20 @@ class SearchFragment : Fragment() {
     }
 
     private fun setAdapter() {
-        val cards = listOf(
-            SearchCard("Pop"),
-            SearchCard("Indie"),
-            SearchCard("Comedy")
-        )
 
-        val adapter = SearchCardAdapter()
-        adapter.submitList(cards)
-        binding.recyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.recyclerView.adapter = adapter
+        searchViewModel.getCategories()
+        searchViewModel.categories.observe(viewLifecycleOwner) {
+            val adapter = SearchCardAdapter()
+            adapter.submitList(it)
+            binding.recyclerView.layoutManager =
+                GridLayoutManager(requireContext(), 2)
+            binding.recyclerView.adapter = adapter
+        }
 
 
-        val popularCards = listOf(
-            SearchCard("News & Politics"),
-            SearchCard("Comedy")
-        )
-        val adapterPopular = SearchCardAdapter()
-        adapterPopular.submitList(popularCards)
-        binding.recyclerViewPopular.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.recyclerViewPopular.adapter = adapterPopular
-
-        val allCards = listOf(
-            SearchCard("Pop"),
-            SearchCard("Indie"),
-            SearchCard("Comedy"),
-            SearchCard("News & Politics"),
-        )
-        val adapterAll = SearchCardAdapter()
-        adapterAll.submitList(allCards)
-        binding.recyclerViewAll.layoutManager = GridLayoutManager(requireContext(),2,GridLayoutManager.HORIZONTAL,false)
-        binding.recyclerViewAll.adapter = adapterAll
     }
 
-    private fun setNavigation(){
+    private fun setNavigation() {
         binding.edtSearch.setOnClickListener {
             findNavController().navigate(R.id.action_searchFragment_to_searchNextFragment)
         }

@@ -1,144 +1,258 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary"
-    tools:context=".ui.fragments.home.HomeFragment">
+    tools:openDrawer="start">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/leftGuideline"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/primary"
+        tools:context=".ui.fragments.home.HomeFragment">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/leftGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.06" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/rightGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.94" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.08" />
+
+        <ImageView
+            android:id="@+id/imgProfileAccount"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/img_artist"
+            android:clipToOutline="true"
+            app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+            app:layout_constraintTop_toTopOf="@+id/guideline"
+            tools:src="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/txtLibraryHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="@string/library_txt_header"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/imgProfileAccount"
+            app:layout_constraintStart_toEndOf="@+id/imgProfileAccount"
+            app:layout_constraintTop_toTopOf="@+id/imgProfileAccount" />
+
+        <ImageView
+            android:id="@+id/imgAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_library_add"
+            app:layout_constraintBottom_toBottomOf="@+id/txtLibraryHeader"
+            app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+            app:layout_constraintTop_toTopOf="@+id/txtLibraryHeader" />
+
+
+        <ImageView
+            android:id="@+id/imgPlaylistLiked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:src="@drawable/icon_library_liked"
+            app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+            app:layout_constraintTop_toTopOf="@+id/divider2" />
+
+
+        <TextView
+            android:id="@+id/txtLikedSongs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/library_txt_liked_songs"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/imgPlaylistLiked"
+            app:layout_constraintTop_toTopOf="@+id/imgPlaylistLiked" />
+
+        <ImageView
+            android:id="@+id/imgPin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/icon_library_pin"
+            app:layout_constraintStart_toStartOf="@+id/txtLikedSongs"
+            app:layout_constraintTop_toBottomOf="@+id/txtLikedSongs" />
+
+        <TextView
+            android:id="@+id/txtPlaylist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/library_txt_playlist"
+            android:textColor="@color/txt_gray"
+            app:layout_constraintBottom_toBottomOf="@+id/imgPin"
+            app:layout_constraintStart_toEndOf="@+id/imgPin"
+            app:layout_constraintTop_toTopOf="@+id/imgPin" />
+
+        <TextView
+            android:id="@+id/txtNumberSongs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="0"
+            android:textColor="@color/txt_gray"
+            app:layout_constraintStart_toEndOf="@+id/txtPlaylist"
+            app:layout_constraintTop_toTopOf="@+id/txtPlaylist" />
+
+        <TextView
+            android:id="@+id/txtSongs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="@string/library_txt_songs"
+            android:textColor="@color/txt_gray"
+            app:layout_constraintBottom_toBottomOf="@+id/txtNumberSongs"
+            app:layout_constraintStart_toEndOf="@+id/txtNumberSongs"
+            app:layout_constraintTop_toTopOf="@+id/txtNumberSongs" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/groupPlaylistLikedSongs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="imgPlaylistLiked,txtLikedSongs,imgPin,txtPlaylist,txtNumberSongs,txtSongs" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="24dp"
+            android:background="?android:attr/listDivider"
+            android:backgroundTint="@color/txt_gray"
+            app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+            app:layout_constraintTop_toBottomOf="@+id/imgProfileAccount" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.06" />
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="#202020"
+        android:padding="20dp">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/rightGuideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.94" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.08" />
+            <ImageView
+                android:id="@+id/imgProfileDrawer"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/img_artist"
+                android:clipToOutline="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@tools:sample/avatars" />
 
-    <ImageView
-        android:id="@+id/imgProfileAccount"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@drawable/img_artist"
-        android:clipToOutline="true"
-        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-        app:layout_constraintTop_toTopOf="@+id/guideline"
-        tools:src="@tools:sample/avatars" />
+            <TextView
+                android:id="@+id/txtNameDrawer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="TextView"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imgProfileDrawer"
+                app:layout_constraintTop_toTopOf="@+id/imgProfileDrawer" />
 
-    <TextView
-        android:id="@+id/txtLibraryHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:text="@string/library_txt_header"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imgProfileAccount"
-        app:layout_constraintStart_toEndOf="@+id/imgProfileAccount"
-        app:layout_constraintTop_toTopOf="@+id/imgProfileAccount" />
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/settings_txt_view_profile"
+                android:textColor="@color/gray"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="@+id/txtNameDrawer"
+                app:layout_constraintTop_toBottomOf="@+id/txtNameDrawer" />
 
-    <ImageView
-        android:id="@+id/imgAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/icon_library_add"
-        app:layout_constraintBottom_toBottomOf="@+id/txtLibraryHeader"
-        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
-        app:layout_constraintTop_toTopOf="@+id/txtLibraryHeader" />
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:backgroundTint="@color/white"
+                android:layout_marginTop="16dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
+            <View
+                android:id="@+id/viewProfile"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/divider3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
 
-    <ImageView
-        android:id="@+id/imgPlaylistLiked"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:src="@drawable/icon_library_liked"
-        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-        app:layout_constraintTop_toTopOf="@+id/divider2" />
+            <ImageView
+                android:id="@+id/iconSetting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/baseline_settings_24"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/divider3" />
 
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:text="@string/settings_txt_header"
+                app:layout_constraintBottom_toBottomOf="@+id/iconSetting"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/iconSetting"
+                app:layout_constraintTop_toTopOf="@+id/iconSetting" />
 
-    <TextView
-        android:id="@+id/txtLikedSongs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="@string/library_txt_liked_songs"
-        android:textColor="@color/white"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/imgPlaylistLiked"
-        app:layout_constraintTop_toTopOf="@+id/imgPlaylistLiked" />
+            <View
+                android:id="@+id/viewSetting"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@+id/iconSetting"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/iconSetting" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.navigation.NavigationView>
 
-    <ImageView
-        android:id="@+id/imgPin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/icon_library_pin"
-        app:layout_constraintStart_toStartOf="@+id/txtLikedSongs"
-        app:layout_constraintTop_toBottomOf="@+id/txtLikedSongs" />
-
-    <TextView
-        android:id="@+id/txtPlaylist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="@string/library_txt_playlist"
-        android:textColor="@color/txt_gray"
-        app:layout_constraintBottom_toBottomOf="@+id/imgPin"
-        app:layout_constraintStart_toEndOf="@+id/imgPin"
-        app:layout_constraintTop_toTopOf="@+id/imgPin" />
-
-    <TextView
-        android:id="@+id/txtNumberSongs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="0"
-        android:textColor="@color/txt_gray"
-        app:layout_constraintStart_toEndOf="@+id/txtPlaylist"
-        app:layout_constraintTop_toTopOf="@+id/txtPlaylist" />
-
-    <TextView
-        android:id="@+id/txtSongs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="@string/library_txt_songs"
-        android:textColor="@color/txt_gray"
-        app:layout_constraintBottom_toBottomOf="@+id/txtNumberSongs"
-        app:layout_constraintStart_toEndOf="@+id/txtNumberSongs"
-        app:layout_constraintTop_toTopOf="@+id/txtNumberSongs" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/groupPlaylistLikedSongs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="imgPlaylistLiked,txtLikedSongs,imgPin,txtPlaylist,txtNumberSongs,txtSongs" />
-
-    <View
-        android:id="@+id/divider2"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:backgroundTint="@color/txt_gray"
-        android:layout_marginTop="24dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/imgProfileAccount" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

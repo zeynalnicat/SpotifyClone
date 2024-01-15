@@ -20,6 +20,8 @@ class TrackViewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentTrackViewBinding.inflate(inflater)
+        val activity = activity as MainActivity
+        activity.setBottomNavigation(false)
         setNavigation()
         setLayout()
         return binding.root
@@ -29,6 +31,7 @@ class TrackViewFragment : Fragment() {
         binding.imgShrink.setOnClickListener {
             val activity = activity as MainActivity
             activity.setMusicPlayer(true)
+            activity.setBottomNavigation(true)
             activity.supportFragmentManager.popBackStack()
         }
     }

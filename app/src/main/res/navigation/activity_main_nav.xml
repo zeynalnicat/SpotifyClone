@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_libraryFragment_to_userLibraryFragment"
             app:destination="@id/userLibraryFragment" />
+        <action
+            android:id="@+id/action_libraryFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <action
         android:id="@+id/toLibrary"

@@ -151,4 +151,13 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.07" />
 
+    <ImageView
+        android:id="@+id/iconLike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_like"
+        app:layout_constraintBottom_toBottomOf="@+id/txtArtistName"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintTop_toTopOf="@+id/txtTrackHeader" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

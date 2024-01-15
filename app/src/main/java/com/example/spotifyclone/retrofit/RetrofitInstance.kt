@@ -2,6 +2,7 @@ package com.example.spotifyclone.retrofit
 
 import com.example.spotifyclone.retrofit.api.AlbumApi
 import com.example.spotifyclone.retrofit.api.ArtistsApi
+import com.example.spotifyclone.retrofit.api.CategoriesApi
 import com.example.spotifyclone.retrofit.consts.ConstValues
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -39,6 +40,19 @@ object RetrofitInstance {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(AlbumApi::class.java)
+    }
+
+    val categoryApi = lazy {
+
+        val okHttpClient =
+            OkHttpClient().newBuilder().addInterceptor(TokenInterceptor(token)).build()
+
+        Retrofit.Builder()
+            .baseUrl(url)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(CategoriesApi::class.java)
     }
 }
 

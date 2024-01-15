@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="200dp"
-    android:layout_height="150dp"
-    android:backgroundTint="@color/purple"
+    android:layout_width="169dp"
+    android:layout_height="109dp"
+    android:backgroundTint="@color/card_green"
     android:layout_marginEnd="10dp"
     android:layout_marginTop="8dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -20,18 +20,18 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:text="TextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.cardview.widget.CardView
-            android:layout_width="80dp"
+            android:layout_width="66dp"
             android:rotation="20"
             android:backgroundTint="@color/card_black"
             android:layout_marginEnd="-7dp"
-            android:layout_height="80dp"
+            android:layout_height="66dp"
             android:elevation="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" >
@@ -45,6 +45,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Album"
+                    android:visibility="gone"
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -54,9 +55,8 @@
 
                 <ImageView
                     android:id="@+id/imgCard"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
