@@ -13,24 +13,32 @@ import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ItemAlbumTracksBinding
 import com.example.spotifyclone.model.album.singlealbum.Item
 import com.example.spotifyclone.model.album.singlealbum.Tracks
+import com.example.spotifyclone.model.pseudo_models.MusicItem
 
-class SingleAlbumTracksAdapter(private val img:String, private val setMusicLayout: ()->Unit,private val setMusicAttrs:(url:String,name:String)->Unit):RecyclerView.Adapter<SingleAlbumTracksAdapter.ViewHolder>() {
+class SingleAlbumTracksAdapter(
+    private val img: String,
+    private val setMusicLayout: () -> Unit,
+    private val setMusicAttrs: (url: String, name: String) -> Unit,
+    private val saveSharedPreference: (key: String, value: String) -> Unit,
+    private val isInSP: (value: String) -> Boolean
+) : RecyclerView.Adapter<SingleAlbumTracksAdapter.ViewHolder>() {
 
-    private val diffCallBack = object : DiffUtil.ItemCallback<Item>(){
-        override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
-            return oldItem===newItem
+    private val diffCallBack = object : DiffUtil.ItemCallback<MusicItem>() {
+        override fun areItemsTheSame(oldItem: MusicItem, newItem: MusicItem): Boolean {
+            return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
-           return oldItem==newItem
+        override fun areContentsTheSame(oldItem: MusicItem, newItem: MusicItem): Boolean {
+            return oldItem == newItem
         }
     }
 
-    private val diffUtil = AsyncListDiffer(this,diffCallBack)
+    private val diffUtil = AsyncListDiffer(this, diffCallBack)
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = ItemAlbumTracksBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val view =
+            ItemAlbumTracksBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(view)
     }
 
@@ -42,24 +50,37 @@ class SingleAlbumTracksAdapter(private val img:String, private val setMusicLayou
         return holder.bind(diffUtil.currentList[position])
     }
 
-    inner class ViewHolder(private val binding:ItemAlbumTracksBinding):RecyclerView.ViewHolder(binding.root){
-            fun bind(track:Item){
-                    binding.txtTrackName.text = track.name
-                    binding.txtAlbumName.text = track.artists[0].name
-                    Glide.with(binding.root)
-                        .load(img)
-                        .into(binding.imgAlbum)
+    inner class ViewHolder(private val binding: ItemAlbumTracksBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(track: MusicItem) {
+            binding.txtTrackName.text = track.item.name
+            binding.txtAlbumName.text = track.item.artists[0].name
+            Glide.with(binding.root)
+                .load(img)
+                .into(binding.imgAlbum)
 
-                itemView.setOnClickListener {
-                    binding.musicIcon.visibility = View.VISIBLE
-                    binding.txtTrackName.setTextColor(ContextCompat.getColor(itemView.context,R.color.green))
-                    setMusicLayout()
-                    setMusicAttrs(img,track.name)
-                }
+            track.isPlayed = isInSP(track.item.name)
+            binding.txtTrackName.setTextColor(
+                if (track.isPlayed) ContextCompat.getColor(
+                    itemView.context,
+                    R.color.green
+                ) else ContextCompat.getColor(itemView.context, R.color.white)
+            )
+            binding.musicIcon.visibility = if (track.isPlayed) View.VISIBLE else View.GONE
+
+            itemView.setOnClickListener {
+                saveSharedPreference("PlayingMusic",track.item.name)
+                saveSharedPreference("PlayingMusicArtist",track.item.artists[0].name)
+                saveSharedPreference("PlayingMusicImg",img)
+                track.isPlayed = true
+                setMusicLayout()
+                setMusicAttrs(img, track.item.name)
+                notifyDataSetChanged()
             }
+        }
     }
 
-    fun submitList(tracks:List<Item>){
+    fun submitList(tracks: List<MusicItem>) {
         diffUtil.submitList(tracks)
     }
 }

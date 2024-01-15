@@ -8,10 +8,13 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.room.util.copy
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.adapters.SingleAlbumTracksAdapter
 import com.example.spotifyclone.databinding.FragmentAlbumViewBinding
 import com.example.spotifyclone.model.album.singlealbum.Artist
+import com.example.spotifyclone.model.pseudo_models.MusicItem
+import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.viewmodels.AlbumViewModel
 
@@ -68,8 +71,9 @@ class AlbumViewFragment : Fragment() {
     ) {
         val adapter = SingleAlbumTracksAdapter(img,
             { setMusicTrack() },
-            { url, name -> setMusicAttrs(url, name) })
-        adapter.submitList(tracks)
+            { url, name -> setMusicAttrs(url, name) },{key,value->saveSharedPreference(key,value)},{value-> isInSP(value)})
+        val musicTracks = tracks.map { MusicItem(it, isPlayed = false)}
+        adapter.submitList(musicTracks)
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerView.adapter = adapter
 
@@ -83,6 +87,16 @@ class AlbumViewFragment : Fragment() {
     private fun setMusicAttrs(url: String, name: String) {
         val activity = requireActivity() as MainActivity
         activity.setMusicAttrs(url, name)
+    }
+
+    private fun saveSharedPreference(key:String,value:String){
+        val sharedPreference = SharedPreference(requireContext())
+        sharedPreference.saveValue(key,value)
+    }
+
+    private fun isInSP(value: String):Boolean{
+        val sharedPreference = SharedPreference(requireContext())
+        return sharedPreference.containsValue(value)
     }
 
 }
