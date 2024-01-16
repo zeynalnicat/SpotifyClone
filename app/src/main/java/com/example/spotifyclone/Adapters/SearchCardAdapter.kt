@@ -5,17 +5,19 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.spotifyclone.model.SearchCard
 import com.example.spotifyclone.databinding.ItemSearchCardBinding
+import com.example.spotifyclone.model.categories.Item
 
 class SearchCardAdapter : RecyclerView.Adapter<SearchCardAdapter.ViewHolder>() {
 
-    val diffCallBack = object : DiffUtil.ItemCallback<SearchCard>() {
-        override fun areItemsTheSame(oldItem: SearchCard, newItem: SearchCard): Boolean {
+    val diffCallBack = object : DiffUtil.ItemCallback<Item>() {
+        override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: SearchCard, newItem: SearchCard): Boolean {
+        override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
             return oldItem == newItem
         }
 
@@ -37,17 +39,17 @@ class SearchCardAdapter : RecyclerView.Adapter<SearchCardAdapter.ViewHolder>() {
         return holder.bind(diffUtil.currentList[position])
     }
 
-    fun submitList(list: List<SearchCard>) {
+    fun submitList(list: List<Item>) {
         diffUtil.submitList(list)
     }
 
     inner class ViewHolder(private val binding: ItemSearchCardBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(current: SearchCard) {
-            binding.txtCardTitle.text = current.title
-            current.imgView?.let {
-                binding.imgCard.setImageResource(it)
-            }
+        fun bind(current: Item) {
+            binding.txtCardTitle.text = current.name
+            Glide.with(binding.root)
+                .load(current.icons[0].url)
+                .into(binding.imgCard)
 
         }
     }
