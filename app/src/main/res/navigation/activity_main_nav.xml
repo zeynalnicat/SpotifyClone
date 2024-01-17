@@ -169,7 +169,13 @@
         android:id="@+id/newPlaylistFragment"
         android:name="com.example.spotifyclone.ui.fragments.others.NewPlaylistFragment"
         android:label="fragment_new_playlist"
-        tools:layout="@layout/fragment_new_playlist" />
+        tools:layout="@layout/fragment_new_playlist" >
+        <action
+            android:id="@+id/action_newPlaylistFragment_to_userLibraryFragment"
+            app:destination="@id/userLibraryFragment"
+            app:popUpTo="@id/libraryFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 
 
 </navigation>

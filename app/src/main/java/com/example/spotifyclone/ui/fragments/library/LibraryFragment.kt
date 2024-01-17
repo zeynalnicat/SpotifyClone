@@ -13,6 +13,7 @@ import com.example.spotifyclone.R
 import com.example.spotifyclone.adapters.LibraryAlbumAdapter
 import com.example.spotifyclone.databinding.FragmentLibraryBinding
 import com.example.spotifyclone.db.RoomDB
+import com.example.spotifyclone.model.pseudo_models.LibraryAlbum
 import com.example.spotifyclone.viewmodels.LibraryViewModel
 
 class LibraryFragment : Fragment() {
@@ -72,7 +73,8 @@ class LibraryFragment : Fragment() {
     private fun setAdapter(){
         libraryViewModel.likedAlbums.observe(viewLifecycleOwner){
             val adapter = LibraryAlbumAdapter{findNavController().navigate(R.id.action_libraryFragment_to_albumViewFragment,it)}
-            adapter.submitList(it)
+            val albums = it.map { LibraryAlbum(it.id,it.name,it.images[0].url) }
+            adapter.submitList(albums)
             binding.recyclerView.layoutManager = GridLayoutManager(requireContext(),1)
             binding.recyclerView.adapter = adapter
         }

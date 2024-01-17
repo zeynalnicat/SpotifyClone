@@ -10,15 +10,16 @@ import com.bumptech.glide.Glide
 import com.example.spotifyclone.databinding.ItemLibraryAlbumBinding
 import com.example.spotifyclone.model.album.newrelease.Item
 import com.example.spotifyclone.model.album.popularalbums.Album
+import com.example.spotifyclone.model.pseudo_models.LibraryAlbum
 
 class LibraryAlbumAdapter(private val nav :(Bundle)->Unit) : RecyclerView.Adapter<LibraryAlbumAdapter.ViewHolder>() {
 
-    private val diffCallBack = object : DiffUtil.ItemCallback<Album>() {
-        override fun areItemsTheSame(oldItem: Album, newItem: Album): Boolean {
+    private val diffCallBack = object : DiffUtil.ItemCallback<LibraryAlbum>() {
+        override fun areItemsTheSame(oldItem: LibraryAlbum, newItem: LibraryAlbum): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: Album, newItem: Album): Boolean {
+        override fun areContentsTheSame(oldItem: LibraryAlbum, newItem: LibraryAlbum): Boolean {
             return oldItem == newItem
         }
 
@@ -43,23 +44,23 @@ class LibraryAlbumAdapter(private val nav :(Bundle)->Unit) : RecyclerView.Adapte
 
     inner class ViewHolder(private val binding: ItemLibraryAlbumBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(album: Album) {
+        fun bind(album: LibraryAlbum) {
             Glide.with(binding.root)
-                .load(album.images[0].url)
+                .load(album.albumImg)
                 .into(binding.imgAlbum)
-            binding.txtAlbumName.text = album.name
+            binding.txtAlbumName.text = album.albumName
 
             itemView.setOnClickListener {
                 itemView.setOnClickListener {
                     val bundle = Bundle()
-                    bundle.putString("albumId",album.id)
+                    bundle.putString("albumId",album.albumId)
                     nav(bundle)
                 }
             }
         }
     }
 
-    fun submitList(list: List<Album>) {
+    fun submitList(list: List<LibraryAlbum>) {
         diffUtil.submitList(list)
     }
 

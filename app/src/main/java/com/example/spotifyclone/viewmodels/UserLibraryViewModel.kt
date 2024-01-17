@@ -1,0 +1,30 @@
+package com.example.spotifyclone.viewmodels
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.spotifyclone.db.RoomDB
+import com.example.spotifyclone.model.pseudo_models.PlaylistModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
+class UserLibraryViewModel(private val roomDB: RoomDB) : ViewModel() {
+    private val _playlists = MutableLiveData<List<PlaylistModel>>()
+
+    val playlists: LiveData<List<PlaylistModel>>
+        get() = _playlists
+
+    fun getPlaylists() {
+        val playlistDao = roomDB.playlistDao()
+        viewModelScope.launch(Dispatchers.IO) {
+            val playlistDb = playlistDao.getAll()
+            val playlistModel = playlistDb.map {
+                PlaylistModel(it.id, it.playlistName)
+            }
+            _playlists.postValue(playlistModel)
+
+        }
+    }
+}

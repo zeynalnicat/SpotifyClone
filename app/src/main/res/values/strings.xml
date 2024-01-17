@@ -60,4 +60,5 @@
 
     <string name="playlist_txt_header">Give your playlist a name</string>
     <string name="playlist_txt_create">Create</string>
+    <string name="playlist_txt_saves">saves</string>
 </resources>
