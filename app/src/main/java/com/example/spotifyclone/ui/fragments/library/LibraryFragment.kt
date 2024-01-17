@@ -6,24 +6,45 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.spotifyclone.R
+import com.example.spotifyclone.adapters.LibraryAlbumAdapter
 import com.example.spotifyclone.databinding.FragmentLibraryBinding
+import com.example.spotifyclone.db.RoomDB
+import com.example.spotifyclone.viewmodels.LibraryViewModel
 
 class LibraryFragment : Fragment() {
-      private lateinit var binding:FragmentLibraryBinding
+    private lateinit var binding: FragmentLibraryBinding
+    private lateinit var libraryViewModel: LibraryViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentLibraryBinding.inflate(inflater)
-        setNavigation()
-        setDrawer()
+
         return binding.root
     }
 
-    private fun setNavigation(){
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        libraryViewModel = ViewModelProvider(this)[LibraryViewModel::class.java]
+        val room = RoomDB.accessDb(requireContext())
+        room?.let {
+            libraryViewModel.getFromDB(it)
+        }
+        libraryViewModel.roomAlbums.observe(viewLifecycleOwner){
+            libraryViewModel.getAlbumsFromApi(it)
+        }
+
+        setAdapter()
+        setNavigation()
+        setDrawer()
+    }
+
+    private fun setNavigation() {
 
         binding.viewProfile.setOnClickListener {
             findNavController().navigate(R.id.action_libraryFragment_to_userLibraryFragment)
@@ -34,14 +55,23 @@ class LibraryFragment : Fragment() {
         }
     }
 
-    private fun setDrawer(){
-       binding.imgProfileAccount.setOnClickListener {
-           if (binding.drawer.isDrawerOpen(GravityCompat.START)) {
-               binding.drawer.closeDrawer(GravityCompat.START)
-           } else {
-               binding.drawer.openDrawer(GravityCompat.START)
-           }
-       }
+    private fun setDrawer() {
+        binding.imgProfileAccount.setOnClickListener {
+            if (binding.drawer.isDrawerOpen(GravityCompat.START)) {
+                binding.drawer.closeDrawer(GravityCompat.START)
+            } else {
+                binding.drawer.openDrawer(GravityCompat.START)
+            }
+        }
+    }
+
+    private fun setAdapter(){
+        libraryViewModel.likedAlbums.observe(viewLifecycleOwner){
+            val adapter = LibraryAlbumAdapter{findNavController().navigate(R.id.action_libraryFragment_to_albumViewFragment,it)}
+            adapter.submitList(it)
+            binding.recyclerView.layoutManager = GridLayoutManager(requireContext(),1)
+            binding.recyclerView.adapter = adapter
+        }
     }
 
 

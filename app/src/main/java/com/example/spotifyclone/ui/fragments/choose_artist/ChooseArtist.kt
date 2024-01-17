@@ -16,14 +16,13 @@ import com.example.spotifyclone.adapters.ChooseArtistAdapter
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.example.spotifyclone.databinding.FragmentChooseArtistBinding
-import com.example.spotifyclone.db.ArtistsEntity
+import com.example.spotifyclone.db.artist.ArtistsEntity
 import com.example.spotifyclone.db.RoomDB
 import com.example.spotifyclone.model.artist.Artist
 import com.example.spotifyclone.viewmodels.ChoseArtistViewModel
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.JustifyContent
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

@@ -10,8 +10,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.room.util.copy
 import com.bumptech.glide.Glide
+import com.example.spotifyclone.R
 import com.example.spotifyclone.adapters.SingleAlbumTracksAdapter
 import com.example.spotifyclone.databinding.FragmentAlbumViewBinding
+import com.example.spotifyclone.db.RoomDB
 import com.example.spotifyclone.model.album.singlealbum.Artist
 import com.example.spotifyclone.model.pseudo_models.MusicItem
 import com.example.spotifyclone.sp.SharedPreference
@@ -23,19 +25,31 @@ class AlbumViewFragment : Fragment() {
     private var albumId = ""
     private lateinit var albumViewModel: AlbumViewModel
     private lateinit var sharedPreference : SharedPreference
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAlbumViewBinding.inflate(inflater)
-        sharedPreference = SharedPreference(requireContext())
-        setNavigation()
-        getAlbumId()
-        albumViewModel = ViewModelProvider(this)[AlbumViewModel::class.java]
-        getAlbum()
+
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        albumViewModel = ViewModelProvider(this)[AlbumViewModel::class.java]
+        sharedPreference = SharedPreference(requireContext())
+        val roomDB = RoomDB.accessDb(requireContext())
+        setNavigation()
+        getAlbumId()
+        roomDB?.let {
+            albumViewModel.checkInDB(it, albumId)
+        }
+        setLayoutButton()
+        saveAlbumDb()
+        getAlbum()
+    }
 
     private fun setNavigation() {
         binding.imgBack.setOnClickListener {
@@ -97,6 +111,27 @@ class AlbumViewFragment : Fragment() {
 
     private fun isInSP(value: String):Boolean{
         return sharedPreference.containsValue(value)
+    }
+
+    private fun saveAlbumDb(){
+        val roomDB = RoomDB.accessDb(requireContext())
+        binding.imgLike.setOnClickListener {
+            roomDB?.let {
+                albumViewModel.saveDB(it, albumId)
+            }
+        }
+
+    }
+
+    private fun setLayoutButton(){
+        albumViewModel.isInDB.observe(viewLifecycleOwner){
+            binding.imgLike.setImageResource(
+                when(it){
+                    true -> R.drawable.icon_filled_heart
+                    false -> R.drawable.icon_like
+                }
+            )
+        }
     }
 
 }

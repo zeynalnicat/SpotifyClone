@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
-import com.example.spotifyclone.adapters.TrackAdapter
+import com.example.spotifyclone.adapters.AlbumAdapter
 import com.example.spotifyclone.databinding.FragmentArtistViewBinding
 import com.example.spotifyclone.viewmodels.ArtistViewModel
 
@@ -62,7 +62,7 @@ class ArtistViewFragment : Fragment() {
             binding.txtPopularity.text = popularity
             binding.txtFollowers.text = followers
             binding.txtGenres.text = genres
-            val adapter = TrackAdapter { findNavController().navigate(R.id.action_artistViewFragment_to_albumViewFragment,it) }
+            val adapter = AlbumAdapter { findNavController().navigate(R.id.action_artistViewFragment_to_albumViewFragment,it) }
             adapter.submitList(it)
             binding.recyclerView.layoutManager = GridLayoutManager(requireContext(),2)
             binding.recyclerView.adapter = adapter

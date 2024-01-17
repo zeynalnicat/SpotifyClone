@@ -1,8 +1,9 @@
-package com.example.spotifyclone.db
+package com.example.spotifyclone.db.artist
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.example.spotifyclone.db.artist.ArtistsEntity
 
 
 @Dao

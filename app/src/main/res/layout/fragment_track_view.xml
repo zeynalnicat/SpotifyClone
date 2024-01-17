@@ -116,8 +116,8 @@
 
     <ImageView
         android:id="@+id/imgPause"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_marginTop="24dp"
         android:src="@drawable/icon_music_view_pause"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
@@ -153,8 +153,8 @@
 
     <ImageView
         android:id="@+id/iconLike"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:src="@drawable/icon_like"
         app:layout_constraintBottom_toBottomOf="@+id/txtArtistName"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"

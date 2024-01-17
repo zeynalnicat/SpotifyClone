@@ -11,8 +11,8 @@ import com.bumptech.glide.Glide
 import com.example.spotifyclone.databinding.TrackListviewBinding
 import com.example.spotifyclone.model.album.newrelease.Item
 
-class TrackAdapter(private val nav: (Bundle) -> Unit) :
-    RecyclerView.Adapter<TrackAdapter.TrackAdapterHolder>() {
+class AlbumAdapter(private val nav: (Bundle) -> Unit) :
+    RecyclerView.Adapter<AlbumAdapter.TrackAdapterHolder>() {
 
     private val diffCallBack = object : DiffUtil.ItemCallback<Item>() {
         override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {

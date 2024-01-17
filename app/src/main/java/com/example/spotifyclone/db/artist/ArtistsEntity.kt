@@ -1,4 +1,4 @@
-package com.example.spotifyclone.db
+package com.example.spotifyclone.db.artist
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

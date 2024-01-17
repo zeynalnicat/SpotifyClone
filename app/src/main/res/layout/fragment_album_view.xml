@@ -52,7 +52,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="TextView"
+        tools:text="TextView"
         android:textColor="@color/white"
         android:textSize="25sp"
         android:textStyle="bold"
@@ -76,7 +76,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="TextView"
+        tools:text="TextView"
         android:textColor="@color/white"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/imgArtist"
@@ -100,7 +100,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="TextView"
+        tools:text="TextView"
         android:textColor="@color/txt_gray"
         android:textSize="12sp"
         android:textStyle="bold"
@@ -110,8 +110,8 @@
 
     <ImageView
         android:id="@+id/imgLike"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginTop="16dp"
         android:src="@drawable/icon_like"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
@@ -119,8 +119,8 @@
 
     <ImageView
         android:id="@+id/imageView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:src="@drawable/icon_play"
         app:layout_constraintBottom_toBottomOf="@+id/imgLike"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline" />

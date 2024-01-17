@@ -11,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.spotifyclone.R
 import com.example.spotifyclone.adapters.ArtistAdapter
-import com.example.spotifyclone.adapters.TrackAdapter
+import com.example.spotifyclone.adapters.AlbumAdapter
 import com.example.spotifyclone.databinding.FragmentHomeBinding
 import com.example.spotifyclone.model.album.newrelease.Item
 import com.example.spotifyclone.ui.activity.MainActivity
@@ -54,7 +54,7 @@ class HomeFragment : Fragment() {
         homeViewModel.getNewRelease()
         homeViewModel.newReleases.observe(viewLifecycleOwner) {
             val adapter =
-                TrackAdapter {
+                AlbumAdapter {
                     findNavController().navigate(
                         R.id.action_homeFragment_to_albumViewFragment,
                         it
@@ -113,7 +113,7 @@ class HomeFragment : Fragment() {
                 )
             }
             val adapter =
-                TrackAdapter {
+                AlbumAdapter {
                     findNavController().navigate(
                         R.id.action_homeFragment_to_albumViewFragment,
                         it
