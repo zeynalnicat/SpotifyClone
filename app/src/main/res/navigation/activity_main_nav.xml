@@ -21,6 +21,9 @@
         <action
             android:id="@+id/action_libraryFragment_to_albumViewFragment"
             app:destination="@id/albumViewFragment" />
+        <action
+            android:id="@+id/action_libraryFragment_to_newPlaylistFragment"
+            app:destination="@id/newPlaylistFragment" />
     </fragment>
     <action
         android:id="@+id/toLibrary"
@@ -162,6 +165,11 @@
             android:id="@+id/action_artistViewFragment_to_albumViewFragment"
             app:destination="@id/albumViewFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/newPlaylistFragment"
+        android:name="com.example.spotifyclone.ui.fragments.others.NewPlaylistFragment"
+        android:label="fragment_new_playlist"
+        tools:layout="@layout/fragment_new_playlist" />
 
 
 </navigation>

@@ -57,4 +57,7 @@
 
     <string name="settings_txt_header">Settings</string>
     <string name="settings_txt_view_profile">View Profile</string>
+
+    <string name="playlist_txt_header">Give your playlist a name</string>
+    <string name="playlist_txt_create">Create</string>
 </resources>

@@ -53,6 +53,10 @@ class LibraryFragment : Fragment() {
         binding.viewSetting.setOnClickListener {
             findNavController().navigate(R.id.action_libraryFragment_to_settingsFragment)
         }
+
+        binding.imgAdd.setOnClickListener {
+            findNavController().navigate(R.id.action_libraryFragment_to_newPlaylistFragment)
+        }
     }
 
     private fun setDrawer() {
