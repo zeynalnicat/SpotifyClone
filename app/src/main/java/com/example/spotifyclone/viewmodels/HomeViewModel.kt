@@ -11,6 +11,8 @@ import com.example.spotifyclone.model.album.newrelease.Item
 import com.example.spotifyclone.model.album.trysomething.Album
 import com.example.spotifyclone.model.artist.Artist
 import com.example.spotifyclone.retrofit.RetrofitInstance
+import com.example.spotifyclone.retrofit.api.AlbumApi
+import com.example.spotifyclone.retrofit.api.ArtistsApi
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -22,8 +24,8 @@ class HomeViewModel : ViewModel() {
     private val _newReleases = MutableLiveData<List<Item>>()
     private val _popularAlbums = MutableLiveData<List<com.example.spotifyclone.model.album.popularalbums.Album>>()
     private val _artists = MutableLiveData<List<Artist>>()
-    private val albumApi = RetrofitInstance.albumApi.value
-    private val artistApi = RetrofitInstance.artistsApi.value
+    private val albumApi =  RetrofitInstance.getInstance()?.create(AlbumApi::class.java)!!
+    private val artistApi =  RetrofitInstance.getInstance()?.create(ArtistsApi::class.java)!!
 
     val date: LiveData<String>
         get() = _date

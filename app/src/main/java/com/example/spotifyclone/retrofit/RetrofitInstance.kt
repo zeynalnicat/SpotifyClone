@@ -15,45 +15,21 @@ const val url = "https://api.spotify.com/v1/"
 
 object RetrofitInstance {
     private var token = ConstValues.token
+    private var retrofitInstance: Retrofit? = null
 
-
-    val artistsApi = lazy {
-        val okHttpClient =
-            OkHttpClient().newBuilder().addInterceptor(TokenInterceptor(token)).build()
-
-        Retrofit.Builder()
-            .baseUrl(url)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(ArtistsApi::class.java)
+    fun getInstance(): Retrofit? {
+        if (retrofitInstance == null) {
+            val okHttpClient =
+                OkHttpClient().newBuilder().addInterceptor(TokenInterceptor(token)).build()
+            retrofitInstance = Retrofit.Builder()
+                .baseUrl(url)
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+        }
+        return retrofitInstance
     }
 
-    val albumApi = lazy {
-
-        val okHttpClient =
-            OkHttpClient().newBuilder().addInterceptor(TokenInterceptor(token)).build()
-
-        Retrofit.Builder()
-            .baseUrl(url)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(AlbumApi::class.java)
-    }
-
-    val categoryApi = lazy {
-
-        val okHttpClient =
-            OkHttpClient().newBuilder().addInterceptor(TokenInterceptor(token)).build()
-
-        Retrofit.Builder()
-            .baseUrl(url)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(CategoriesApi::class.java)
-    }
 }
 
 class TokenInterceptor(private val token: String) : Interceptor {

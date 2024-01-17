@@ -10,14 +10,16 @@ import com.example.spotifyclone.db.album.AlbumEntity
 import com.example.spotifyclone.model.album.singlealbum.Album
 import com.example.spotifyclone.resource.Resource
 import com.example.spotifyclone.retrofit.RetrofitInstance
+import com.example.spotifyclone.retrofit.api.AlbumApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.create
 import kotlin.Exception
 
 class AlbumViewModel : ViewModel() {
     private val _album = MutableLiveData<Album>()
-    private val albumApi = RetrofitInstance.albumApi.value
+    private val albumApi = RetrofitInstance.getInstance()?.create(AlbumApi::class.java)!!
     private val _insertion = MutableLiveData<Resource<Long>>()
     private val _isInDB = MutableLiveData<Boolean>(false)
 

@@ -6,12 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.spotifyclone.model.artist.Artist
 import com.example.spotifyclone.retrofit.RetrofitInstance
+import com.example.spotifyclone.retrofit.api.ArtistsApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ChoseArtistViewModel : ViewModel() {
     private val _artists = MutableLiveData<List<Artist>>()
-    private val artistApi = RetrofitInstance.artistsApi.value
+    private val artistApi =  RetrofitInstance.getInstance()?.create(ArtistsApi::class.java)!!
 
 
     val artists: LiveData<List<Artist>>

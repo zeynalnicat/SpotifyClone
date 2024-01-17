@@ -8,6 +8,8 @@ import com.example.spotifyclone.db.RoomDB
 import com.example.spotifyclone.model.album.newrelease.Item
 import com.example.spotifyclone.model.album.popularalbums.Album
 import com.example.spotifyclone.retrofit.RetrofitInstance
+import com.example.spotifyclone.retrofit.api.AlbumApi
+import com.example.spotifyclone.retrofit.api.ArtistsApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -15,7 +17,7 @@ class LibraryViewModel : ViewModel() {
 
     private val _likedAlbums = MutableLiveData<List<Album>>()
     private val _roomAlbums = MutableLiveData<List<String>>()
-    private val albumApi = RetrofitInstance.albumApi.value
+    private val albumApi =  RetrofitInstance.getInstance()?.create(AlbumApi::class.java)!!
 
     val likedAlbums: LiveData<List<Album>>
         get() = _likedAlbums
