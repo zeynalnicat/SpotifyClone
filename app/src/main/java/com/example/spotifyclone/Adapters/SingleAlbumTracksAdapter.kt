@@ -20,7 +20,8 @@ class SingleAlbumTracksAdapter(
     private val setMusicLayout: () -> Unit,
     private val saveSharedPreference: (key: String, value: String) -> Unit,
     private val saveSharedPreferenceBool : (value:Boolean) -> Unit,
-    private val isInSP: (value: String) -> Boolean
+    private val isInSP: (value: String) -> Boolean,
+    private val setBottom : (img:String , track:String , artist:String) -> Unit
 ) : RecyclerView.Adapter<SingleAlbumTracksAdapter.ViewHolder>() {
 
     private val diffCallBack = object : DiffUtil.ItemCallback<MusicItem>() {
@@ -52,6 +53,13 @@ class SingleAlbumTracksAdapter(
 
     inner class ViewHolder(private val binding: ItemAlbumTracksBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+
+            init {
+                binding.imgMore.setOnClickListener {
+
+                }
+            }
         fun bind(track: MusicItem) {
             binding.txtTrackName.text = track.item.name
             binding.txtAlbumName.text = track.item.artists[0].name
@@ -77,6 +85,12 @@ class SingleAlbumTracksAdapter(
                 setMusicLayout()
                 notifyDataSetChanged()
             }
+
+            binding.imgMore.setOnClickListener {
+                setBottom(img,track.item.name,track.item.artists[0].name)
+            }
+
+
         }
     }
 

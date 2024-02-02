@@ -12,6 +12,7 @@ import androidx.room.util.copy
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.adapters.SingleAlbumTracksAdapter
+import com.example.spotifyclone.databinding.BottomSheetTrackBinding
 import com.example.spotifyclone.databinding.FragmentAlbumViewBinding
 import com.example.spotifyclone.db.RoomDB
 import com.example.spotifyclone.model.album.singlealbum.Artist
@@ -19,12 +20,13 @@ import com.example.spotifyclone.model.pseudo_models.MusicItem
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.viewmodels.AlbumViewModel
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class AlbumViewFragment : Fragment() {
     private lateinit var binding: FragmentAlbumViewBinding
     private var albumId = ""
     private lateinit var albumViewModel: AlbumViewModel
-    private lateinit var sharedPreference : SharedPreference
+    private lateinit var sharedPreference: SharedPreference
 
 
     override fun onCreateView(
@@ -87,8 +89,11 @@ class AlbumViewFragment : Fragment() {
     ) {
         val adapter = SingleAlbumTracksAdapter(img,
             { setMusicTrack() },
-            {key,value->saveSharedPreference(key,value)},{value-> saveSharedPreference(value)},{value-> isInSP(value)})
-        val musicTracks = tracks.map { MusicItem(it, isPlayed = false)}
+            { key, value -> saveSharedPreference(key, value) },
+            { value -> saveSharedPreference(value) },
+            { value -> isInSP(value) },
+            { img, track, artist -> setBottomSheet(img, track, artist) })
+        val musicTracks = tracks.map { MusicItem(it, isPlayed = false) }
         adapter.submitList(musicTracks)
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerView.adapter = adapter
@@ -100,20 +105,42 @@ class AlbumViewFragment : Fragment() {
         activity.setMusicPlayer(true)
     }
 
+    private fun setBottomSheet(img: String, track: String, artist: String) {
+        val dialog = BottomSheetDialog(requireContext())
+        val view = BottomSheetTrackBinding.inflate(layoutInflater)
 
-    private fun saveSharedPreference(key:String,value:String){
-        sharedPreference.saveValue(key,value)
+        dialog.setCancelable(true)
+        dialog.setContentView(view.root)
+
+        Glide.with(binding.root)
+            .load(img)
+            .into(view.imgAlbum)
+
+        view.txtArtistName.text = artist
+        view.txtTrackName.text = track
+
+        view.viewAddPlaylist.setOnClickListener {
+            findNavController().navigate(R.id.action_albumViewFragment_to_addPlaylistFragment)
+            dialog.hide()
+        }
+        dialog.show()
+
     }
 
-    private fun saveSharedPreference(value: Boolean){
+
+    private fun saveSharedPreference(key: String, value: String) {
+        sharedPreference.saveValue(key, value)
+    }
+
+    private fun saveSharedPreference(value: Boolean) {
         sharedPreference.saveIsPlaying(value)
     }
 
-    private fun isInSP(value: String):Boolean{
+    private fun isInSP(value: String): Boolean {
         return sharedPreference.containsValue(value)
     }
 
-    private fun saveAlbumDb(){
+    private fun saveAlbumDb() {
         val roomDB = RoomDB.accessDb(requireContext())
         binding.imgLike.setOnClickListener {
             roomDB?.let {
@@ -123,10 +150,10 @@ class AlbumViewFragment : Fragment() {
 
     }
 
-    private fun setLayoutButton(){
-        albumViewModel.isInDB.observe(viewLifecycleOwner){
+    private fun setLayoutButton() {
+        albumViewModel.isInDB.observe(viewLifecycleOwner) {
             binding.imgLike.setImageResource(
-                when(it){
+                when (it) {
                     true -> R.drawable.icon_filled_heart
                     false -> R.drawable.icon_like
                 }

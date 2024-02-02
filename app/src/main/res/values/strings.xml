@@ -61,4 +61,11 @@
     <string name="playlist_txt_header">Give your playlist a name</string>
     <string name="playlist_txt_create">Create</string>
     <string name="playlist_txt_saves">saves</string>
+
+    <string name="bottom_sheet_txt_liked">Add to Liked Songs</string>
+    <string name="bottom_sheet_txt_playlist">Add to playlist</string>
+
+    <string name="add_playlist_txt">Add to playlist</string>
+    <string name="add_playlist_txt_find">Find playlist</string>
+    <string name="add_playlist_btn_done">Done</string>
 </resources>

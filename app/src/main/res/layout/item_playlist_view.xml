@@ -25,6 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
             android:text="TextView"
             android:textColor="@color/white"
             android:textSize="16sp"
@@ -53,5 +54,14 @@
             app:layout_constraintBottom_toBottomOf="@+id/txtCountMusic"
             app:layout_constraintStart_toEndOf="@+id/txtCountMusic"
             app:layout_constraintTop_toTopOf="@+id/txtCountMusic" />
+
+        <RadioButton
+            android:id="@+id/radioBtnSelect"
+            android:layout_width="wrap_content"
+            android:background="@drawable/radio_btn_playlist"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
