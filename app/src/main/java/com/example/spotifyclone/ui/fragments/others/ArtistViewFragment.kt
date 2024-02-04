@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.adapters.AlbumAdapter
 import com.example.spotifyclone.databinding.FragmentArtistViewBinding
+import com.example.spotifyclone.model.pseudo_models.Album
 import com.example.spotifyclone.viewmodels.ArtistViewModel
 
 
@@ -63,7 +64,8 @@ class ArtistViewFragment : Fragment() {
             binding.txtFollowers.text = followers
             binding.txtGenres.text = genres
             val adapter = AlbumAdapter { findNavController().navigate(R.id.action_artistViewFragment_to_albumViewFragment,it) }
-            adapter.submitList(it)
+            val album = it.map { Album(it.images[0].url,it.id,it.name , emptyList()) }
+            adapter.submitList(album)
             binding.recyclerView.layoutManager = GridLayoutManager(requireContext(),2)
             binding.recyclerView.adapter = adapter
         }

@@ -10,16 +10,17 @@ import com.bumptech.glide.Glide
 
 import com.example.spotifyclone.databinding.TrackListviewBinding
 import com.example.spotifyclone.model.album.newrelease.Item
+import com.example.spotifyclone.model.pseudo_models.Album
 
 class AlbumAdapter(private val nav: (Bundle) -> Unit) :
     RecyclerView.Adapter<AlbumAdapter.TrackAdapterHolder>() {
 
-    private val diffCallBack = object : DiffUtil.ItemCallback<Item>() {
-        override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
+    private val diffCallBack = object : DiffUtil.ItemCallback<Album>() {
+        override fun areItemsTheSame(oldItem: Album, newItem: Album): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
+        override fun areContentsTheSame(oldItem: Album, newItem: Album): Boolean {
             return oldItem == newItem
         }
 
@@ -43,9 +44,9 @@ class AlbumAdapter(private val nav: (Bundle) -> Unit) :
 
     inner class TrackAdapterHolder(private val binding: TrackListviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(current: Item) {
+        fun bind(current: Album) {
             Glide.with(binding.root)
-                .load(current.images[0].url)
+                .load(current.coverImg)
                 .into(binding.imgArtist)
 
             binding.txtArtistName.text = current.name
@@ -54,13 +55,13 @@ class AlbumAdapter(private val nav: (Bundle) -> Unit) :
             binding.root.layoutParams = params
             itemView.setOnClickListener {
                 val bundle = Bundle()
-                bundle.putString("albumId",current.id)
+                bundle.putSerializable("album",current)
                 nav(bundle)
             }
         }
     }
 
-    fun submitList(list: List<Item>) {
+    fun submitList(list: List<Album>) {
         diffUtil.submitList(list)
     }
 

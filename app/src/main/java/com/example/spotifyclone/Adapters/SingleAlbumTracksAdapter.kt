@@ -19,9 +19,9 @@ class SingleAlbumTracksAdapter(
     private val img: String,
     private val setMusicLayout: () -> Unit,
     private val saveSharedPreference: (key: String, value: String) -> Unit,
-    private val saveSharedPreferenceBool : (value:Boolean) -> Unit,
+    private val saveSharedPreferenceBool: (value: Boolean) -> Unit,
     private val isInSP: (value: String) -> Boolean,
-    private val setBottom : (img:String , track:String , artist:String) -> Unit
+    private val setBottom: (img: String, track: String, artist: String) -> Unit
 ) : RecyclerView.Adapter<SingleAlbumTracksAdapter.ViewHolder>() {
 
     private val diffCallBack = object : DiffUtil.ItemCallback<MusicItem>() {
@@ -55,19 +55,20 @@ class SingleAlbumTracksAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
 
-            init {
-                binding.imgMore.setOnClickListener {
+        init {
+            binding.imgMore.setOnClickListener {
 
-                }
             }
+        }
+
         fun bind(track: MusicItem) {
-            binding.txtTrackName.text = track.item.name
-            binding.txtAlbumName.text = track.item.artists[0].name
+            binding.txtTrackName.text = track.name
+            binding.txtAlbumName.text = track.artist
             Glide.with(binding.root)
                 .load(img)
                 .into(binding.imgAlbum)
 
-            track.isPlayed = isInSP(track.item.name)
+            track.isPlayed = isInSP(track.name)
             binding.txtTrackName.setTextColor(
                 if (track.isPlayed) ContextCompat.getColor(
                     itemView.context,
@@ -77,9 +78,10 @@ class SingleAlbumTracksAdapter(
             binding.musicIcon.visibility = if (track.isPlayed) View.VISIBLE else View.GONE
 
             itemView.setOnClickListener {
-                saveSharedPreference("PlayingMusic",track.item.name)
-                saveSharedPreference("PlayingMusicArtist",track.item.artists[0].name)
-                saveSharedPreference("PlayingMusicImg",img)
+                saveSharedPreference("PlayingMusic", track.name)
+                saveSharedPreference("PlayingMusicArtist", track.artist)
+                saveSharedPreference("PlayingMusicImg", img)
+                saveSharedPreference("PlayingMusicUri", track.trackUri)
                 saveSharedPreferenceBool(true)
                 track.isPlayed = true
                 setMusicLayout()
@@ -87,7 +89,7 @@ class SingleAlbumTracksAdapter(
             }
 
             binding.imgMore.setOnClickListener {
-                setBottom(img,track.item.name,track.item.artists[0].name)
+                setBottom(img, track.name, track.artist)
             }
 
 

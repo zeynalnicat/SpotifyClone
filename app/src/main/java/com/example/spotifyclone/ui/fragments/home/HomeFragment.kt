@@ -1,6 +1,7 @@
 package com.example.spotifyclone.ui.fragments.home
 
 import android.os.Bundle
+import android.util.Log
 
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,8 +15,18 @@ import com.example.spotifyclone.adapters.ArtistAdapter
 import com.example.spotifyclone.adapters.AlbumAdapter
 import com.example.spotifyclone.databinding.FragmentHomeBinding
 import com.example.spotifyclone.model.album.newrelease.Item
+import com.example.spotifyclone.model.firebase.Albums
+import com.example.spotifyclone.model.firebase.Tracks
+import com.example.spotifyclone.model.pseudo_models.Album
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.viewmodels.HomeViewModel
+import com.google.firebase.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
+import com.google.firebase.database.getValue
 
 
 class HomeFragment : Fragment() {
@@ -31,6 +42,7 @@ class HomeFragment : Fragment() {
         setTrySomethingElse()
         setTextHeader()
         setPopularAlbums()
+        setRecommended()
         setNavigation()
         val activity = requireActivity() as MainActivity
         activity.checkVisibility()
@@ -60,7 +72,9 @@ class HomeFragment : Fragment() {
                         it
                     )
                 }
-            adapter.submitList(it)
+
+            val albums = it.map { Album(it.images[0].url, it.id, it.name, emptyList()) }
+            adapter.submitList(albums)
             binding.recyclerViewNewRelease.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             binding.recyclerViewNewRelease.adapter = adapter
@@ -86,7 +100,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setNavigation(){
+    private fun setNavigation() {
         binding.imgSettings.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
         }
@@ -119,10 +133,76 @@ class HomeFragment : Fragment() {
                         it
                     )
                 }
-            adapter.submitList(album)
+            val albums = it.map { Album(it.images[0].url, it.id, it.name, emptyList()) }
+            adapter.submitList(albums)
             binding.recyclerViewPopular.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             binding.recyclerViewPopular.adapter = adapter
         }
+    }
+
+    private fun setRecommended() {
+        val database = FirebaseDatabase.getInstance()
+        val refAlbums = database.getReference("albums")
+        val listAlbums = mutableListOf<Albums>()
+
+        refAlbums.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(ds: DataSnapshot) {
+                for (v in ds.children) {
+                    val albumMap = v.value as HashMap<*, *>
+                    val tracksMap = albumMap["tracks"] as HashMap<*, *>
+
+                    val trackList = tracksMap.map { (key, value) ->
+                        val trackMap = value as HashMap<*, *>
+                        Tracks(
+                            trackMap["artist"] as String?,
+                            key as String?,
+                            trackMap["name"] as String?,
+                            trackMap["trackUri"] as String?
+                        )
+                    }
+
+                    val album = Albums(
+                        albumMap["coverImg"] as String?,
+                        albumMap["id"] as String?,
+                        albumMap["name"] as String?,
+                        trackList
+                    )
+
+                    listAlbums.add(album)
+
+                }
+                val adapter = AlbumAdapter {
+                    findNavController().navigate(
+                        R.id.action_homeFragment_to_albumViewFragment,
+                        it
+                    )
+                }
+
+                Log.i("Firebase", listAlbums.toString())
+                val albums =
+                    listAlbums.map {
+                        Album(
+                            coverImg = it.coverImg!!,
+                            id = it.id!!,
+                            name = it.name!!,
+                            it.tracks!!,
+                            true
+                        )
+                    }
+                adapter.submitList(albums)
+                binding.recyclerViewRecommended.layoutManager =
+                    LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+                binding.recyclerViewRecommended.adapter = adapter
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+
+        })
+
+
     }
 }

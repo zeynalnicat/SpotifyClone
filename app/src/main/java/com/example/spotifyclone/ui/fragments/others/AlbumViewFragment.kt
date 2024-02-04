@@ -16,6 +16,7 @@ import com.example.spotifyclone.databinding.BottomSheetTrackBinding
 import com.example.spotifyclone.databinding.FragmentAlbumViewBinding
 import com.example.spotifyclone.db.RoomDB
 import com.example.spotifyclone.model.album.singlealbum.Artist
+import com.example.spotifyclone.model.pseudo_models.Album
 import com.example.spotifyclone.model.pseudo_models.MusicItem
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
@@ -24,7 +25,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class AlbumViewFragment : Fragment() {
     private lateinit var binding: FragmentAlbumViewBinding
-    private var albumId = ""
+    private lateinit var album: Album
+
     private lateinit var albumViewModel: AlbumViewModel
     private lateinit var sharedPreference: SharedPreference
 
@@ -46,11 +48,12 @@ class AlbumViewFragment : Fragment() {
         setNavigation()
         getAlbumId()
         roomDB?.let {
-            albumViewModel.checkInDB(it, albumId)
+            albumViewModel.checkInDB(it, album.id)
         }
         setLayoutButton()
         saveAlbumDb()
         getAlbum()
+
     }
 
     private fun setNavigation() {
@@ -62,30 +65,53 @@ class AlbumViewFragment : Fragment() {
 
     private fun getAlbumId() {
         arguments?.let {
-            albumId = it.getString("albumId", "")
+            album = it.getSerializable("album") as Album
         }
     }
 
     private fun getAlbum() {
-        albumViewModel.getAlbum(albumId)
-        albumViewModel.album.observe(viewLifecycleOwner) {
-            val artistNames = it.artists.joinToString { artist: Artist -> artist.name + " " }
-            binding.txtArtistName.text = artistNames
-            binding.txtAlbumYear.text = it.release_date
-            binding.txtAlbumName.text = it.name
+        if (album.isFirebase) {
+            binding.txtAlbumName.text = album.name
+            binding.txtArtistName.text = album.tracks[0].artist
             Glide.with(binding.root)
-                .load(it.images[0].url)
+                .load(album.coverImg)
                 .into(binding.imgAlbum)
             Glide.with(binding.root)
-                .load(it.images[1].url)
+                .load(album.coverImg)
                 .into(binding.imgArtist)
-            setAdapter(it.images[0].url, it.tracks.items)
+            val music = album.tracks.map {
+                MusicItem(it.artist!!, it.id!!, it.name!!, it.trackUri!!)
+            }
+            setAdapter(album.coverImg, music)
+        } else {
+            albumViewModel.getAlbum(album.id)
+            albumViewModel.album.observe(viewLifecycleOwner) {
+                val artistNames = it.artists.joinToString { artist: Artist -> artist.name + " " }
+                binding.txtArtistName.text = artistNames
+                binding.txtAlbumYear.text = it.release_date
+                binding.txtAlbumName.text = it.name
+                Glide.with(binding.root)
+                    .load(it.images[0].url)
+                    .into(binding.imgAlbum)
+                Glide.with(binding.root)
+                    .load(it.images[1].url)
+                    .into(binding.imgArtist)
+                val music = it.tracks.items.map {
+                    MusicItem(
+                        it.artists[0].name,
+                        it.id,
+                        it.name,
+                        "https://firebasestorage.googleapis.com/v0/b/spotify-42372.appspot.com/o/tracks%2FAlan%20Walker%20-%20Intro.mp3?alt=media&token=34d259fc-8828-4587-8182-37bf4c994ea5"
+                    )
+                }
+                setAdapter(it.images[0].url, music)
+            }
         }
     }
 
     private fun setAdapter(
         img: String,
-        tracks: List<com.example.spotifyclone.model.album.singlealbum.Item>
+        tracks: List<MusicItem>
     ) {
         val adapter = SingleAlbumTracksAdapter(img,
             { setMusicTrack() },
@@ -93,8 +119,8 @@ class AlbumViewFragment : Fragment() {
             { value -> saveSharedPreference(value) },
             { value -> isInSP(value) },
             { img, track, artist -> setBottomSheet(img, track, artist) })
-        val musicTracks = tracks.map { MusicItem(it, isPlayed = false) }
-        adapter.submitList(musicTracks)
+
+        adapter.submitList(tracks)
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerView.adapter = adapter
 
@@ -144,7 +170,7 @@ class AlbumViewFragment : Fragment() {
         val roomDB = RoomDB.accessDb(requireContext())
         binding.imgLike.setOnClickListener {
             roomDB?.let {
-                albumViewModel.saveDB(it, albumId)
+                albumViewModel.saveDB(it, album.id)
             }
         }
 
