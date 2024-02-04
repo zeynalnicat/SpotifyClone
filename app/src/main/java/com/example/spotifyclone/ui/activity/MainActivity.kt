@@ -1,6 +1,9 @@
 package com.example.spotifyclone.ui.activity
 
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Looper
+import android.os.Looper.getMainLooper
 import android.view.View
 
 import androidx.appcompat.app.AppCompatActivity
@@ -12,10 +15,13 @@ import com.example.spotifyclone.databinding.ActivityMainBinding
 import com.example.spotifyclone.musicplayer.MusicPlayer
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.fragments.others.TrackViewFragment
+import java.util.logging.Handler
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    var totalTime = 0
+    private lateinit var handler: android.os.Handler
+    private var music: MediaPlayer? = null
+    private var totalTime: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,21 +69,28 @@ class MainActivity : AppCompatActivity() {
         val musicImg = sharedPreference.getValue("PlayingMusicImg", "")
         val musicUri = sharedPreference.getValue("PlayingMusicUri", "")
 
-        MusicPlayer.initialize(this,musicUri)
-        val music = MusicPlayer.getMediaPlayer()
-        music?.start()
+        MusicPlayer.initialize(this, musicUri)
+        music = MusicPlayer.getMediaPlayer()
 
-            binding.imgPause.setOnClickListener {
-                if(music?.isPlaying==true){
-                    music.pause()
+        music?.let {
+            it.start()
+            totalTime = it.duration
+            handler = android.os.Handler(Looper.getMainLooper())
+            updateProgress()
+
+
+            binding.imgPause.setOnClickListener { view ->
+                if (it.isPlaying) {
+                    it.pause()
+
                     binding.imgPause.setImageResource(R.drawable.icon_music_play)
-                }else{
-                    music?.start()
+                } else {
+                    it.start()
                     binding.imgPause.setImageResource(R.drawable.icon_music_pause)
                 }
             }
 
-
+        }
 
         Glide.with(binding.root)
             .load(musicImg)
@@ -87,7 +100,18 @@ class MainActivity : AppCompatActivity() {
         binding.txtMusicName.text = musicName
 
 
+    }
 
+    private fun updateProgress() {
+        music?.let {
+            handler.postDelayed({
+                val currentDuration = it.currentPosition
+                val progress = (currentDuration.toFloat() / totalTime * 100).toInt()
+                binding.progressBar.progress = progress
+
+                updateProgress()
+            }, 100)
+        }
     }
 
     private fun setNavigation() {
