@@ -8,8 +8,11 @@ object MusicPlayer {
     private var mediaPlayer: MediaPlayer? = null
 
     fun initialize(context: Context, musicUriString: String) {
-        mediaPlayer = MediaPlayer.create(context, Uri.parse(musicUriString))
-        mediaPlayer?.setVolume(0.5f, 0.5f)
+        if (mediaPlayer == null) {
+            mediaPlayer = MediaPlayer.create(context, Uri.parse(musicUriString))
+            mediaPlayer?.setVolume(0.5f, 0.5f)
+        }
+
 
     }
 
@@ -18,7 +21,11 @@ object MusicPlayer {
     }
 
     fun releaseMediaPlayer() {
-        mediaPlayer?.release()
+        mediaPlayer?.stop()
         mediaPlayer = null
+    }
+
+    fun prepare(){
+        mediaPlayer?.prepare()
     }
 }

@@ -20,7 +20,6 @@ import java.util.logging.Handler
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var handler: android.os.Handler
-    private var music: MediaPlayer? = null
     private var totalTime: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,14 +68,14 @@ class MainActivity : AppCompatActivity() {
         val musicImg = sharedPreference.getValue("PlayingMusicImg", "")
         val musicUri = sharedPreference.getValue("PlayingMusicUri", "")
 
-        MusicPlayer.initialize(this, musicUri)
-        music = MusicPlayer.getMediaPlayer()
 
+        MusicPlayer.initialize(this, musicUri)
+        val music = MusicPlayer.getMediaPlayer()
         music?.let {
             it.start()
             totalTime = it.duration
             handler = android.os.Handler(Looper.getMainLooper())
-            updateProgress()
+            updateProgress(it)
 
 
             binding.imgPause.setOnClickListener { view ->
@@ -102,16 +101,17 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun updateProgress() {
+    private fun updateProgress(music: MediaPlayer?) {
         music?.let {
-            handler.postDelayed({
-                val currentDuration = it.currentPosition
-                val progress = (currentDuration.toFloat() / totalTime * 100).toInt()
-                binding.progressBar.progress = progress
+                handler.postDelayed({
+                    val currentDuration = it.currentPosition
+                    val progress = (currentDuration.toFloat() / totalTime * 100).toInt()
+                    binding.progressBar.progress = progress
 
-                updateProgress()
-            }, 100)
-        }
+                    updateProgress(it)
+                }, 100)
+            }
+
     }
 
     private fun setNavigation() {
@@ -126,9 +126,5 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        MusicPlayer.releaseMediaPlayer()
-    }
 
 }
