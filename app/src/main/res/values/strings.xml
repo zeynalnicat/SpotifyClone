@@ -71,4 +71,7 @@
     <string name="add_playlist_txt">Add to playlist</string>
     <string name="add_playlist_txt_find">Find playlist</string>
     <string name="add_playlist_btn_done">Done</string>
+
+    <string name="liked_songs_txt_find">Find in liked songs</string>
+    <string name="liked_songs_txt_header">Liked Songs</string>
 </resources>

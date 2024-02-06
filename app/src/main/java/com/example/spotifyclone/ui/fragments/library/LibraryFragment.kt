@@ -13,7 +13,7 @@ import com.example.spotifyclone.R
 import com.example.spotifyclone.adapters.LibraryAlbumAdapter
 import com.example.spotifyclone.databinding.FragmentLibraryBinding
 import com.example.spotifyclone.db.RoomDB
-import com.example.spotifyclone.model.pseudo_models.LibraryAlbum
+import com.example.spotifyclone.model.dto.LibraryAlbum
 import com.example.spotifyclone.viewmodels.LibraryViewModel
 
 class LibraryFragment : Fragment() {
@@ -57,6 +57,10 @@ class LibraryFragment : Fragment() {
 
         binding.imgAdd.setOnClickListener {
             findNavController().navigate(R.id.action_libraryFragment_to_newPlaylistFragment)
+        }
+
+        binding.viewLikedSongs.setOnClickListener {
+            findNavController().navigate(R.id.action_libraryFragment_to_likedSongsFragment)
         }
     }
 

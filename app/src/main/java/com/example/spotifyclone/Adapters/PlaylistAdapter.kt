@@ -5,11 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ItemPlaylistViewBinding
-import com.example.spotifyclone.model.pseudo_models.PlaylistModel
+import com.example.spotifyclone.model.dto.PlaylistModel
 
 class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
     private val diffCall = object : DiffUtil.ItemCallback<PlaylistModel>() {

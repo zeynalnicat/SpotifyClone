@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.adapters.AlbumAdapter
 import com.example.spotifyclone.databinding.FragmentArtistViewBinding
-import com.example.spotifyclone.model.pseudo_models.Album
+import com.example.spotifyclone.model.dto.Album
 import com.example.spotifyclone.viewmodels.ArtistViewModel
 
 

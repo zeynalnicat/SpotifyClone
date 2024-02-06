@@ -8,11 +8,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.spotifyclone.R
 import com.example.spotifyclone.adapters.PlaylistAdapter
 import com.example.spotifyclone.databinding.FragmentUserLibraryBinding
 import com.example.spotifyclone.db.RoomDB
-import com.example.spotifyclone.model.pseudo_models.PlaylistModel
+import com.example.spotifyclone.model.dto.PlaylistModel
 import com.example.spotifyclone.viewmodels.UserLibraryViewModel
 import com.example.spotifyclone.viewmodels.factories.UserLibraryFactory
 

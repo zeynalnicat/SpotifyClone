@@ -1,16 +1,12 @@
 package com.example.spotifyclone.ui.fragments.home
 
 import android.os.Bundle
-import android.util.Log
 
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.compose.ui.res.booleanResource
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.spotifyclone.R
@@ -20,20 +16,11 @@ import com.example.spotifyclone.databinding.FragmentHomeBinding
 import com.example.spotifyclone.db.RoomDB
 import com.example.spotifyclone.model.album.newrelease.Item
 import com.example.spotifyclone.model.artist.Artist
-import com.example.spotifyclone.model.firebase.Albums
-import com.example.spotifyclone.model.firebase.Tracks
-import com.example.spotifyclone.model.pseudo_models.Album
+import com.example.spotifyclone.model.dto.Album
 import com.example.spotifyclone.resource.Resource
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.viewmodels.HomeViewModel
 import com.example.spotifyclone.viewmodels.factories.HomeFactory
-import com.google.firebase.Firebase
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.database
-import com.google.firebase.database.getValue
 
 
 class HomeFragment : Fragment() {

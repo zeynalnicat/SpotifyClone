@@ -8,17 +8,19 @@ import com.example.spotifyclone.db.album.AlbumDao
 import com.example.spotifyclone.db.album.AlbumEntity
 import com.example.spotifyclone.db.artist.ArtistDao
 import com.example.spotifyclone.db.artist.ArtistsEntity
+import com.example.spotifyclone.db.likedsongs.LikedSongsDao
+import com.example.spotifyclone.db.likedsongs.LikedSongsEntity
 import com.example.spotifyclone.db.playlist.PlaylistDao
 import com.example.spotifyclone.db.playlist.PlaylistEntity
 
 
-@Database(entities = [ArtistsEntity::class,AlbumEntity::class,PlaylistEntity::class], version = 1)
+@Database(entities = [ArtistsEntity::class,AlbumEntity::class,PlaylistEntity::class,LikedSongsEntity::class], version = 1)
 abstract class RoomDB : RoomDatabase() {
 
     abstract fun artistDao(): ArtistDao
     abstract fun albumDao():AlbumDao
-
     abstract fun playlistDao():PlaylistDao
+    abstract fun likedSongsDao():LikedSongsDao
 
     companion object {
         private var INSTANCE: RoomDB? = null

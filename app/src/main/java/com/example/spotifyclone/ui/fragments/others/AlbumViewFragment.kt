@@ -5,10 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import android.widget.Toast
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.room.util.copy
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.adapters.SingleAlbumTracksAdapter
@@ -16,18 +16,19 @@ import com.example.spotifyclone.databinding.BottomSheetTrackBinding
 import com.example.spotifyclone.databinding.FragmentAlbumViewBinding
 import com.example.spotifyclone.db.RoomDB
 import com.example.spotifyclone.model.album.singlealbum.Artist
-import com.example.spotifyclone.model.pseudo_models.Album
-import com.example.spotifyclone.model.pseudo_models.MusicItem
+import com.example.spotifyclone.model.dto.Album
+import com.example.spotifyclone.model.dto.MusicItem
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.viewmodels.AlbumViewModel
+import com.example.spotifyclone.viewmodels.factories.AlbumFactory
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class AlbumViewFragment : Fragment() {
     private lateinit var binding: FragmentAlbumViewBinding
     private lateinit var album: Album
-
-    private lateinit var albumViewModel: AlbumViewModel
+    private lateinit var roomDB: RoomDB
+    private val albumViewModel: AlbumViewModel by viewModels { AlbumFactory(roomDB) }
     private lateinit var sharedPreference: SharedPreference
 
 
@@ -42,14 +43,20 @@ class AlbumViewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        albumViewModel = ViewModelProvider(this)[AlbumViewModel::class.java]
+        roomDB = RoomDB.accessDb(requireContext())!!
         sharedPreference = SharedPreference(requireContext())
         val roomDB = RoomDB.accessDb(requireContext())
         setNavigation()
         getAlbumId()
-        roomDB?.let {
-            albumViewModel.checkInDB(it, album.id)
+
+        albumViewModel.insertionLiked.observe(viewLifecycleOwner){
+            if(it!=-1L){
+                Toast.makeText(requireContext(),"Added",Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(requireContext(),"Something wrong!",Toast.LENGTH_SHORT).show()
+            }
         }
+        albumViewModel.checkInDB(album.id)
         setLayoutButton()
         saveAlbumDb()
         getAlbum()
@@ -118,7 +125,7 @@ class AlbumViewFragment : Fragment() {
             { key, value -> saveSharedPreference(key, value) },
             { value -> saveSharedPreference(value) },
             { value -> isInSP(value) },
-            { img, track, artist -> setBottomSheet(img, track, artist) })
+            { img, track, artist, trackUri -> setBottomSheet(img, track, artist, trackUri) })
 
         adapter.submitList(tracks)
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
@@ -131,7 +138,7 @@ class AlbumViewFragment : Fragment() {
         activity.setMusicPlayer(true)
     }
 
-    private fun setBottomSheet(img: String, track: String, artist: String) {
+    private fun setBottomSheet(img: String, track: String, artist: String, trackUri: String) {
         val dialog = BottomSheetDialog(requireContext())
         val view = BottomSheetTrackBinding.inflate(layoutInflater)
 
@@ -144,6 +151,11 @@ class AlbumViewFragment : Fragment() {
 
         view.txtArtistName.text = artist
         view.txtTrackName.text = track
+
+        view.viewAddLiked.setOnClickListener {
+            albumViewModel.insertLikedSongs(track, artist, img, trackUri)
+
+        }
 
         view.viewAddPlaylist.setOnClickListener {
             findNavController().navigate(R.id.action_albumViewFragment_to_addPlaylistFragment)
@@ -167,11 +179,8 @@ class AlbumViewFragment : Fragment() {
     }
 
     private fun saveAlbumDb() {
-        val roomDB = RoomDB.accessDb(requireContext())
         binding.imgLike.setOnClickListener {
-            roomDB?.let {
-                albumViewModel.saveDB(it, album.id)
-            }
+            albumViewModel.saveDB(album.id)
         }
 
     }

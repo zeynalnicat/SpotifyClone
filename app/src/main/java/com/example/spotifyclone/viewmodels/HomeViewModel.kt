@@ -1,19 +1,11 @@
 package com.example.spotifyclone.viewmodels
 
-import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.spotifyclone.R
-import com.example.spotifyclone.adapters.AlbumAdapter
 import com.example.spotifyclone.db.RoomDB
-import com.example.spotifyclone.model.album.newrelease.AlbumsX
 import com.example.spotifyclone.model.album.newrelease.Item
-import com.example.spotifyclone.model.album.trysomething.Album
 import com.example.spotifyclone.model.artist.Artist
 import com.example.spotifyclone.model.firebase.Albums
 import com.example.spotifyclone.model.firebase.Tracks
@@ -40,7 +32,7 @@ class HomeViewModel(private val roomDB: RoomDB) : ViewModel() {
     private val albumApi = RetrofitInstance.getInstance()?.create(AlbumApi::class.java)!!
     private val artistApi = RetrofitInstance.getInstance()?.create(ArtistsApi::class.java)!!
     private val _recommended =
-        MutableLiveData<Resource<List<com.example.spotifyclone.model.pseudo_models.Album>>>()
+        MutableLiveData<Resource<List<com.example.spotifyclone.model.dto.Album>>>()
 
     val date: LiveData<String>
         get() = _date
@@ -54,7 +46,7 @@ class HomeViewModel(private val roomDB: RoomDB) : ViewModel() {
     val artists: LiveData<Resource<List<Artist>>>
         get() = _artists
 
-    val recommended: LiveData<Resource<List<com.example.spotifyclone.model.pseudo_models.Album>>>
+    val recommended: LiveData<Resource<List<com.example.spotifyclone.model.dto.Album>>>
         get() = _recommended
 
 
@@ -176,7 +168,7 @@ class HomeViewModel(private val roomDB: RoomDB) : ViewModel() {
                     }
 
                     val albumModel = listAlbums.map {
-                        com.example.spotifyclone.model.pseudo_models.Album(
+                        com.example.spotifyclone.model.dto.Album(
                             it.coverImg ?: "",
                             it.id ?: "",
                             it.name ?: "",

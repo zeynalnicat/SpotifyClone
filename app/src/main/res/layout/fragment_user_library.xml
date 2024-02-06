@@ -48,10 +48,10 @@
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintVertical_bias="0.3"
         app:layout_constraintBottom_toBottomOf="@+id/imgProfile"
         app:layout_constraintStart_toEndOf="@+id/imgProfile"
-        app:layout_constraintTop_toTopOf="@+id/imgProfile" />
+        app:layout_constraintTop_toTopOf="@+id/imgProfile"
+        app:layout_constraintVertical_bias="0.3" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnEdit"

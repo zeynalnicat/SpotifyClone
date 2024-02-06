@@ -24,6 +24,9 @@
         <action
             android:id="@+id/action_libraryFragment_to_newPlaylistFragment"
             app:destination="@id/newPlaylistFragment" />
+        <action
+            android:id="@+id/action_libraryFragment_to_likedSongsFragment"
+            app:destination="@id/likedSongsFragment" />
     </fragment>
     <action
         android:id="@+id/toLibrary"
@@ -185,6 +188,11 @@
         android:name="com.example.spotifyclone.ui.fragments.others.AddPlaylistFragment"
         android:label="fragment_add_playlist"
         tools:layout="@layout/fragment_add_playlist" />
+    <fragment
+        android:id="@+id/likedSongsFragment"
+        android:name="com.example.spotifyclone.ui.fragments.others.LikedSongsFragment"
+        android:label="fragment_liked_songs"
+        tools:layout="@layout/fragment_liked_songs" />
 
 
 </navigation>

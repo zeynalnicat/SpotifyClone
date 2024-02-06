@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spotifyclone.db.RoomDB
 import com.example.spotifyclone.db.album.AlbumEntity
+import com.example.spotifyclone.db.likedsongs.LikedSongsEntity
 import com.example.spotifyclone.model.album.singlealbum.Album
 import com.example.spotifyclone.resource.Resource
 import com.example.spotifyclone.retrofit.RetrofitInstance
@@ -17,11 +18,13 @@ import kotlinx.coroutines.withContext
 import retrofit2.create
 import kotlin.Exception
 
-class AlbumViewModel : ViewModel() {
+class AlbumViewModel(private val roomDB: RoomDB) : ViewModel() {
     private val _album = MutableLiveData<Album>()
     private val albumApi = RetrofitInstance.getInstance()?.create(AlbumApi::class.java)!!
     private val _insertion = MutableLiveData<Resource<Long>>()
     private val _isInDB = MutableLiveData<Boolean>(false)
+
+    private val _insertionLiked = MutableLiveData<Long>()
 
     val album: LiveData<Album>
         get() = _album
@@ -33,6 +36,9 @@ class AlbumViewModel : ViewModel() {
         get() = _isInDB
 
 
+    val insertionLiked: LiveData<Long> get() = _insertionLiked
+
+
     fun getAlbum(id: String) {
         viewModelScope.launch {
             val response = albumApi.getAlbum(id)
@@ -42,10 +48,10 @@ class AlbumViewModel : ViewModel() {
         }
     }
 
-    fun saveDB(roomDB: RoomDB, albumId: String) {
+    fun saveDB(albumId: String) {
         val albumDao = roomDB.albumDao()
-        checkInDB(roomDB, albumId)
-        if(_isInDB.value==true){
+        checkInDB(albumId)
+        if (_isInDB.value == true) {
             _insertion.postValue(Resource.Loading)
             viewModelScope.launch(Dispatchers.IO) {
                 try {
@@ -56,8 +62,7 @@ class AlbumViewModel : ViewModel() {
                     _insertion.postValue(Resource.Error(e))
                 }
             }
-        }
-        else {
+        } else {
             viewModelScope.launch(Dispatchers.IO) {
                 try {
                     val insert = albumDao.insert(AlbumEntity(albumId = albumId))
@@ -75,13 +80,29 @@ class AlbumViewModel : ViewModel() {
     }
 
 
-    fun checkInDB(roomDB: RoomDB, albumId: String) {
+    fun checkInDB(albumId: String) {
         val albumDao = roomDB.albumDao()
         viewModelScope.launch(Dispatchers.IO) {
             val count = albumDao.checkInDB(albumId)
             _isInDB.postValue(count > 0)
 
         }
+    }
+
+    fun insertLikedSongs(name: String, artist: String, img: String, uri: String) {
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val likedSongsDao = roomDB.likedSongsDao()
+                val check = likedSongsDao.insert(LikedSongsEntity(0, name, artist, img, uri))
+                _insertionLiked.postValue(check)
+
+            } catch (e: Exception) {
+                _insertionLiked.postValue(-1L)
+            }
+
+        }
+
     }
 
 }

@@ -1,23 +1,33 @@
 package com.example.spotifyclone.adapters
 
-import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ItemLibraryAlbumBinding
-import com.example.spotifyclone.model.dto.LibraryAlbum
+import com.example.spotifyclone.db.likedsongs.LikedSongsEntity
+import com.example.spotifyclone.model.dto.LikedSongs
 
-class LibraryAlbumAdapter(private val nav :(Bundle)->Unit) : RecyclerView.Adapter<LibraryAlbumAdapter.ViewHolder>() {
+class LikedSongsAdapter() : RecyclerView.Adapter<LikedSongsAdapter.ViewHolder>() {
 
-    private val diffCallBack = object : DiffUtil.ItemCallback<LibraryAlbum>() {
-        override fun areItemsTheSame(oldItem: LibraryAlbum, newItem: LibraryAlbum): Boolean {
+
+    private val diffCallBack = object : DiffUtil.ItemCallback<LikedSongs>() {
+        override fun areItemsTheSame(
+            oldItem: LikedSongs,
+            newItem: LikedSongs
+        ): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: LibraryAlbum, newItem: LibraryAlbum): Boolean {
+        override fun areContentsTheSame(
+            oldItem: LikedSongs,
+            newItem: LikedSongs
+        ): Boolean {
             return oldItem == newItem
         }
 
@@ -30,6 +40,7 @@ class LibraryAlbumAdapter(private val nav :(Bundle)->Unit) : RecyclerView.Adapte
         val view =
             ItemLibraryAlbumBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(view)
+
     }
 
     override fun getItemCount(): Int {
@@ -42,25 +53,24 @@ class LibraryAlbumAdapter(private val nav :(Bundle)->Unit) : RecyclerView.Adapte
 
     inner class ViewHolder(private val binding: ItemLibraryAlbumBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(album: LibraryAlbum) {
+        fun bind(track: LikedSongs) {
+            binding.cardView.setCardBackgroundColor(
+                ContextCompat.getColor(
+                    itemView.context,
+                    R.color.txt_gray
+                )
+            )
+            binding.txtAlbumName.text = track.name
             Glide.with(binding.root)
-                .load(album.albumImg)
+                .load(track.imgUri)
                 .into(binding.imgAlbum)
-            binding.txtAlbumName.text = album.albumName
 
-            itemView.setOnClickListener {
-                itemView.setOnClickListener {
-                    val bundle = Bundle()
-                    bundle.putString("albumId",album.albumId)
-                    nav(bundle)
-                }
-            }
+            binding.album.text = track.artist
         }
     }
 
-    fun submitList(list: List<LibraryAlbum>) {
+    fun submitList(list: List<LikedSongs>) {
         diffUtil.submitList(list)
     }
-
 
 }

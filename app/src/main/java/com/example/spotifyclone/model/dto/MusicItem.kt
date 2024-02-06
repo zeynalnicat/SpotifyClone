@@ -1,4 +1,4 @@
-package com.example.spotifyclone.model.pseudo_models
+package com.example.spotifyclone.model.dto
 
 
 

@@ -4,9 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spotifyclone.db.RoomDB
-import com.example.spotifyclone.model.pseudo_models.PlaylistModel
+import com.example.spotifyclone.model.dto.PlaylistModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
