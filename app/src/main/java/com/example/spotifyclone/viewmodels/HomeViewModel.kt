@@ -30,13 +30,13 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(private val roomDB: RoomDB) : ViewModel() {
 
     private val _date = MutableLiveData<String>()
-    private val _newReleases = MutableLiveData<List<Item>>()
+    private val _newReleases = MutableLiveData<Resource<List<Item>>>()
     private val _popularAlbums =
-        MutableLiveData<List<com.example.spotifyclone.model.album.popularalbums.Album>>()
-    private val _artists = MutableLiveData<List<Artist>>()
+        MutableLiveData<Resource<List<com.example.spotifyclone.model.album.popularalbums.Album>>>()
+    private val _artists = MutableLiveData<Resource<List<Artist>>>()
     private val albumApi = RetrofitInstance.getInstance()?.create(AlbumApi::class.java)!!
     private val artistApi = RetrofitInstance.getInstance()?.create(ArtistsApi::class.java)!!
     private val _recommended =
@@ -45,13 +45,13 @@ class HomeViewModel : ViewModel() {
     val date: LiveData<String>
         get() = _date
 
-    val newReleases: LiveData<List<Item>>
+    val newReleases: LiveData<Resource<List<Item>>>
         get() = _newReleases
 
-    val popularAlbums: LiveData<List<com.example.spotifyclone.model.album.popularalbums.Album>>
+    val popularAlbums: LiveData<Resource<List<com.example.spotifyclone.model.album.popularalbums.Album>>>
         get() = _popularAlbums
 
-    val artists: LiveData<List<Artist>>
+    val artists: LiveData<Resource<List<Artist>>>
         get() = _artists
 
     val recommended: LiveData<Resource<List<com.example.spotifyclone.model.pseudo_models.Album>>>
@@ -74,39 +74,72 @@ class HomeViewModel : ViewModel() {
 
     fun getNewRelease() {
         viewModelScope.launch {
-            val response = albumApi.getNewReleases()
-            if (response.isSuccessful) {
-                _newReleases.postValue(response.body()?.albums?.items)
+            try {
+                val response = albumApi.getNewReleases()
+                if (response.isSuccessful) {
+                    val result = response.body()?.albums?.items
+                    result?.let {
+                        _newReleases.postValue(Resource.Success(it))
+                    }
+
+                } else {
+                    _newReleases.postValue(Resource.Error(Exception("There was an error")))
+                }
+            } catch (e: Exception) {
+                _newReleases.postValue(Resource.Error(e))
             }
+
         }
     }
 
     fun getPopularAlbums() {
         viewModelScope.launch {
-            val query =
-                "7bPTIw59JU8w3NntSpmEzo,78bpIziExqiI9qztvNFlQu,5pSk3c3wVwnb2arb6ohCPU,5VoeRuTrGhTbKelUfwymwu,0ODLCdHBFVvKwJGeSfd1jy"
-            val response = albumApi.getSomeAlbums(query)
-            if (response.isSuccessful) {
-                _popularAlbums.postValue(response.body()?.albums)
+            try {
+                val query =
+                    "7bPTIw59JU8w3NntSpmEzo,78bpIziExqiI9qztvNFlQu,5pSk3c3wVwnb2arb6ohCPU,5VoeRuTrGhTbKelUfwymwu,0ODLCdHBFVvKwJGeSfd1jy"
+                val response = albumApi.getSomeAlbums(query)
+                if (response.isSuccessful) {
+                    val result = response.body()?.albums
+                    result?.let {
+                        _popularAlbums.postValue(Resource.Success(it))
+                    }
+
+                } else {
+                    _popularAlbums.postValue(Resource.Error(Exception("There was an error")))
+                }
+
+            } catch (e: Exception) {
+                _popularAlbums.postValue(Resource.Error(e))
             }
+
         }
     }
 
 
-    fun getRoomArtistAlbum(context: Context) {
-        val artistDao = RoomDB.accessDb(context)?.artistDao()
+    fun getRoomArtistAlbum() {
+        val artistDao = roomDB.artistDao()
         viewModelScope.launch {
-            val allArtistId = artistDao?.getArtistId()
-            val artistIDs = allArtistId?.toSet()
-            var artists = mutableListOf<Artist>()
-            artistIDs?.forEach {
-                val response = artistApi.getArtists(it)
-                if (response.isSuccessful) {
-                    val artist = response.body()?.artists?.get(0)
-                    artists.add(artist!!)
+            try {
+                val allArtistId = artistDao?.getArtistId()
+                val artistIDs = allArtistId?.toSet()
+                val artists = mutableListOf<Artist>()
+                artistIDs?.forEach {
+                    val response = artistApi.getArtists(it)
+                    if (response.isSuccessful) {
+                        val artist = response.body()?.artists?.get(0)
+                        artist?.let { artist ->
+                            artists.add(artist)
+                        }
+                    }
                 }
+                if (artists.size > 0) {
+                    _artists.postValue(Resource.Success(artists))
+                } else {
+                    _artists.postValue(Resource.Error(Exception("There was an error ")))
+                }
+            } catch (e: Exception) {
+                _artists.postValue(Resource.Error(e))
             }
-            _artists.postValue(artists)
         }
     }
 

@@ -16,7 +16,6 @@
         android:layout_marginBottom="16dp"
         android:background="#40121212"
         android:visibility="gone"
-        android:alpha="0.5"
         app:itemIconTint="#777777"
         app:itemTextColor="#777777"
         app:layout_constraintBottom_toBottomOf="parent"
