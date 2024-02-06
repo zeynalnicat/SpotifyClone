@@ -14,6 +14,7 @@ import com.example.spotifyclone.databinding.ItemAlbumTracksBinding
 import com.example.spotifyclone.model.album.singlealbum.Item
 import com.example.spotifyclone.model.album.singlealbum.Tracks
 import com.example.spotifyclone.model.pseudo_models.MusicItem
+import com.example.spotifyclone.musicplayer.MusicPlayer
 
 class SingleAlbumTracksAdapter(
     private val img: String,
@@ -78,12 +79,15 @@ class SingleAlbumTracksAdapter(
             binding.musicIcon.visibility = if (track.isPlayed) View.VISIBLE else View.GONE
 
             itemView.setOnClickListener {
+                MusicPlayer.releaseMediaPlayer()
+                MusicPlayer.prepare()
                 saveSharedPreference("PlayingMusic", track.name)
                 saveSharedPreference("PlayingMusicArtist", track.artist)
                 saveSharedPreference("PlayingMusicImg", img)
                 saveSharedPreference("PlayingMusicUri", track.trackUri)
                 saveSharedPreferenceBool(true)
                 track.isPlayed = true
+
                 setMusicLayout()
                 notifyDataSetChanged()
             }

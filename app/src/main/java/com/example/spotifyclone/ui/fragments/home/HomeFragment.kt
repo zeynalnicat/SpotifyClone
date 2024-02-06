@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,6 +19,7 @@ import com.example.spotifyclone.model.album.newrelease.Item
 import com.example.spotifyclone.model.firebase.Albums
 import com.example.spotifyclone.model.firebase.Tracks
 import com.example.spotifyclone.model.pseudo_models.Album
+import com.example.spotifyclone.resource.Resource
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.viewmodels.HomeViewModel
 import com.google.firebase.Firebase
@@ -38,17 +40,41 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(inflater)
         homeViewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         setBottom()
-        setNewRelease()
-        setTrySomethingElse()
-        setTextHeader()
-        setPopularAlbums()
-        setRecommended()
-        setNavigation()
+
         val activity = requireActivity() as MainActivity
         activity.checkVisibility()
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setNewRelease()
+        setTrySomethingElse()
+        setTextHeader()
+        setPopularAlbums()
+
+        setNavigation()
+
+        homeViewModel.recommended.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Success -> {
+                    setRecommended(it.data)
+                }
+
+                is Resource.Error -> {
+                    Toast.makeText(requireContext(), it.exception.message ?: "", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+                is Resource.Loading -> {}
+
+
+            }
+        }
+
+        homeViewModel.setRecommended()
+
+    }
 
     private fun setBottom() {
         val activity = requireActivity() as? MainActivity
@@ -141,67 +167,17 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setRecommended() {
-        val database = FirebaseDatabase.getInstance()
-        val refAlbums = database.getReference("albums")
-        val listAlbums = mutableListOf<Albums>()
-
-        refAlbums.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(ds: DataSnapshot) {
-                for (v in ds.children) {
-                    val albumMap = v.value as HashMap<*, *>
-                    val tracksMap = albumMap["tracks"] as HashMap<*, *>
-
-                    val trackList = tracksMap.map { (key, value) ->
-                        val trackMap = value as HashMap<*, *>
-                        Tracks(
-                            trackMap["artist"] as String?,
-                            key as String?,
-                            trackMap["name"] as String?,
-                            trackMap["trackUri"] as String?
-                        )
-                    }
-
-                    val album = Albums(
-                        albumMap["coverImg"] as String?,
-                        albumMap["id"] as String?,
-                        albumMap["name"] as String?,
-                        trackList
-                    )
-
-                    listAlbums.add(album)
-
-                }
-                val adapter = AlbumAdapter {
-                    findNavController().navigate(
-                        R.id.action_homeFragment_to_albumViewFragment,
-                        it
-                    )
-                }
-
-                Log.i("Firebase", listAlbums.toString())
-                val albums =
-                    listAlbums.map {
-                        Album(
-                            coverImg = it.coverImg!!,
-                            id = it.id!!,
-                            name = it.name!!,
-                            it.tracks!!,
-                            true
-                        )
-                    }
-                adapter.submitList(albums)
-                binding.recyclerViewRecommended.layoutManager =
-                    LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-                binding.recyclerViewRecommended.adapter = adapter
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-
-
-        })
+    private fun setRecommended(list: List<Album>) {
+        val adapter = AlbumAdapter {
+            findNavController().navigate(
+                R.id.action_homeFragment_to_albumViewFragment,
+                it
+            )
+        }
+        adapter.submitList(list)
+        binding.recyclerViewRecommended.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.recyclerViewRecommended.adapter = adapter
 
 
     }

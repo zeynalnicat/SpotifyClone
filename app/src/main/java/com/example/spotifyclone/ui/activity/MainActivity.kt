@@ -103,14 +103,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateProgress(music: MediaPlayer?) {
         music?.let {
-                handler.postDelayed({
-                    val currentDuration = it.currentPosition
-                    val progress = (currentDuration.toFloat() / totalTime * 100).toInt()
-                    binding.progressBar.progress = progress
+            handler.postDelayed({
+                val currentDuration = it.currentPosition
+                val progress = (currentDuration.toFloat() / totalTime * 100).toInt()
+                binding.progressBar.progress = progress
 
-                    updateProgress(it)
-                }, 100)
-            }
+                updateProgress(it)
+            }, 100)
+        }
 
     }
 
@@ -121,6 +121,7 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainerView, trackViewFragment)
                 .addToBackStack(null)
+                .setCustomAnimations(R.anim.slide_in, R.anim.slide_out)
                 .commit()
             setMusicPlayer(false)
         }

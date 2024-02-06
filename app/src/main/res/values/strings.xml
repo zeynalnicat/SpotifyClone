@@ -41,6 +41,7 @@
     <string name="home_txt_try">Because you love</string>
     <string name="home_txt_popular">Popular Albums</string>
     <string name="home_txt_recommended">Recommended Albums</string>
+    <string name="home_txt_new">New Release</string>
 
 
     <string name="search_txt_search">Artists,songs, or podcasts</string>
