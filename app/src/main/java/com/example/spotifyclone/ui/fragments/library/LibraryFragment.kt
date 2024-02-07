@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.GravityCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.spotifyclone.R
@@ -17,52 +17,50 @@ import com.example.spotifyclone.model.dto.LibraryAlbum
 
 class LibraryFragment : Fragment() {
     private lateinit var binding: FragmentLibraryBinding
-    private lateinit var libraryViewModel: LibraryViewModel
+    private lateinit var roomDB: RoomDB
+    private val libraryViewModel: LibraryViewModel by viewModels { LibraryFactor(roomDB) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentLibraryBinding.inflate(inflater)
-
         return binding.root
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        libraryViewModel = ViewModelProvider(this)[LibraryViewModel::class.java]
-        val room = RoomDB.accessDb(requireContext())
-        room?.let {
-            libraryViewModel.getFromDB(it)
-        }
-        libraryViewModel.roomAlbums.observe(viewLifecycleOwner){
+        roomDB = RoomDB.accessDb(requireContext())!!
+
+        libraryViewModel.getFromDB()
+        libraryViewModel.roomAlbums.observe(viewLifecycleOwner) {
             libraryViewModel.getAlbumsFromApi(it)
         }
 
+        libraryViewModel.count.observe(viewLifecycleOwner) {
+            binding.txtNumberSongs.text = it.toString()
+        }
+
+        libraryViewModel.setSize()
         setAdapter()
         setNavigation()
         setDrawer()
     }
-
     private fun setNavigation() {
 
         binding.viewProfile.setOnClickListener {
             findNavController().navigate(R.id.action_libraryFragment_to_userLibraryFragment)
         }
-
         binding.viewSetting.setOnClickListener {
             findNavController().navigate(R.id.action_libraryFragment_to_settingsFragment)
         }
-
         binding.imgAdd.setOnClickListener {
             findNavController().navigate(R.id.action_libraryFragment_to_newPlaylistFragment)
         }
-
         binding.viewLikedSongs.setOnClickListener {
             findNavController().navigate(R.id.action_libraryFragment_to_likedSongsFragment)
         }
-    }
 
+    }
     private fun setDrawer() {
         binding.imgProfileAccount.setOnClickListener {
             if (binding.drawer.isDrawerOpen(GravityCompat.START)) {
@@ -72,16 +70,18 @@ class LibraryFragment : Fragment() {
             }
         }
     }
-
-    private fun setAdapter(){
-        libraryViewModel.likedAlbums.observe(viewLifecycleOwner){
-            val adapter = LibraryAlbumAdapter{findNavController().navigate(R.id.action_libraryFragment_to_albumViewFragment,it)}
-            val albums = it.map { LibraryAlbum(it.id,it.name,it.images[0].url) }
+    private fun setAdapter() {
+        libraryViewModel.likedAlbums.observe(viewLifecycleOwner) {
+            val adapter = LibraryAlbumAdapter {
+                findNavController().navigate(
+                    R.id.action_libraryFragment_to_albumViewFragment,
+                    it
+                )
+            }
+            val albums = it.map { LibraryAlbum(it.id, it.name, it.images[0].url) }
             adapter.submitList(albums)
-            binding.recyclerView.layoutManager = GridLayoutManager(requireContext(),1)
+            binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
             binding.recyclerView.adapter = adapter
         }
     }
-
-
 }

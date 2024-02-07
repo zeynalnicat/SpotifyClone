@@ -24,4 +24,7 @@ interface LikedSongsDao {
     @Query("Delete from `liked songs` where name=:name")
     suspend fun delete(name:String)
 
+    @Query("Select count(*) from `liked songs`")
+    suspend fun getSize():Int
+
 }

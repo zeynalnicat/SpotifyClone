@@ -11,19 +11,23 @@ import com.example.spotifyclone.retrofit.api.AlbumApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class LibraryViewModel : ViewModel() {
+class LibraryViewModel(private val roomDB: RoomDB) : ViewModel() {
 
     private val _likedAlbums = MutableLiveData<List<Album>>()
     private val _roomAlbums = MutableLiveData<List<String>>()
-    private val albumApi =  RetrofitInstance.getInstance()?.create(AlbumApi::class.java)!!
+    private val _count = MutableLiveData<Int>(0)
+    private val likedSongsDao = roomDB.likedSongsDao()
+    private val albumApi = RetrofitInstance.getInstance()?.create(AlbumApi::class.java)!!
+
+    val count: LiveData<Int> get() = _count
 
     val likedAlbums: LiveData<List<Album>>
         get() = _likedAlbums
 
-    val roomAlbums:LiveData<List<String>>
+    val roomAlbums: LiveData<List<String>>
         get() = _roomAlbums
 
-    fun getFromDB(roomDB: RoomDB) {
+    fun getFromDB() {
         val albumDao = roomDB.albumDao()
         viewModelScope.launch(Dispatchers.IO) {
             val listAlbums = albumDao.getAll()
@@ -31,15 +35,21 @@ class LibraryViewModel : ViewModel() {
         }
     }
 
-    fun getAlbumsFromApi(albumIDs:List<String>) {
+    fun getAlbumsFromApi(albumIDs: List<String>) {
         viewModelScope.launch(Dispatchers.IO) {
             val query = albumIDs.joinToString(",")
+            val response = albumApi.getSomeAlbums(query)
+            if (response.isSuccessful) {
+                _likedAlbums.postValue(response.body()?.albums)
+            }
 
-                val response = albumApi.getSomeAlbums(query)
-                if (response.isSuccessful) {
-                    _likedAlbums.postValue(response.body()?.albums)
-                }
+        }
+    }
 
+    fun setSize() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val countSongs = likedSongsDao.getSize()
+            _count.postValue(countSongs)
         }
     }
 }
