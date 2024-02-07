@@ -21,7 +21,6 @@ import java.util.Locale
 
 class TrackViewFragment : Fragment() {
     private lateinit var binding: FragmentTrackViewBinding
-    private var music: MediaPlayer? = null
     private lateinit var roomDB: RoomDB
     private val trackViewModel: TrackViewModel by viewModels { TrackFactory(roomDB) }
     private var totalTIme = 0
@@ -74,11 +73,6 @@ class TrackViewFragment : Fragment() {
 
     private fun setLayout() {
         val sharedPreference = SharedPreference(requireContext())
-        var isPlayed = true
-        binding.imgPause.setOnClickListener {
-            isPlayed = !isPlayed
-            binding.imgPause.setImageResource(if (isPlayed) R.drawable.icon_music_view_pause else R.drawable.icon_music_view_resume)
-        }
         val musicName = sharedPreference.getValue("PlayingMusic", "")
         val artistName = sharedPreference.getValue("PlayingMusicArtist", "")
         val musicImg = sharedPreference.getValue("PlayingMusicImg", "")
@@ -100,7 +94,7 @@ class TrackViewFragment : Fragment() {
     }
 
     private fun setMusic() {
-        music = MusicPlayer.getMediaPlayer()
+        val music = MusicPlayer.getMediaPlayer()
         music?.let {
             totalTIme = it.duration
             binding.txtTimeEnd.text = formatDuration(totalTIme)
@@ -109,7 +103,8 @@ class TrackViewFragment : Fragment() {
                     it.pause()
                     binding.imgPause.setImageResource(R.drawable.icon_music_view_resume)
 
-                } else {
+                }
+                else if(!it.isPlaying){
                     it.start()
                     binding.imgPause.setImageResource(R.drawable.icon_music_view_pause)
                 }

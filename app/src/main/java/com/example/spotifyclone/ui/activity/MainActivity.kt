@@ -1,6 +1,7 @@
 package com.example.spotifyclone.ui.activity
 
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import android.os.Looper
 import android.view.View
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var handler: android.os.Handler
     private var totalTime: Int = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,13 +70,15 @@ class MainActivity : AppCompatActivity() {
         val musicImg = sharedPreference.getValue("PlayingMusicImg", "")
         val musicUri = sharedPreference.getValue("PlayingMusicUri", "")
 
-        setMusicLayout(musicName,musicImg,musicUri)
+        setMusicLayout(musicName, musicImg, musicUri)
 
     }
 
-    private fun setMusicLayout(name:String ,img:String , uri:String){
+    private fun setMusicLayout(name: String, img: String, uri: String) {
+
         MusicPlayer.initialize(this, uri)
         val music = MusicPlayer.getMediaPlayer()
+
         music?.let {
             it.start()
             totalTime = it.duration
@@ -85,7 +89,6 @@ class MainActivity : AppCompatActivity() {
             binding.imgPause.setOnClickListener { view ->
                 if (it.isPlaying) {
                     it.pause()
-
                     binding.imgPause.setImageResource(R.drawable.icon_music_play)
                 } else {
                     it.start()
@@ -103,9 +106,14 @@ class MainActivity : AppCompatActivity() {
         binding.txtMusicName.text = name
     }
 
+    fun initializeMusic(musicUri: String) {
+        MusicPlayer.getMediaPlayer()?.setDataSource(this, Uri.parse(musicUri))
+    }
+
     private fun updateProgress(music: MediaPlayer?) {
         music?.let {
             handler.postDelayed({
+
                 val currentDuration = it.currentPosition
                 val progress = (currentDuration.toFloat() / totalTime * 100).toInt()
                 binding.progressBar.progress = progress
@@ -130,7 +138,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun playTracks(list:List<MusicItem>){
+    fun playTracks(list: List<MusicItem>) {
 
     }
 

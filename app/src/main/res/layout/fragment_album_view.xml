@@ -118,9 +118,10 @@
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/imgPlay"
         android:layout_width="64dp"
         android:layout_height="64dp"
+        android:scaleType="fitXY"
         android:src="@drawable/icon_play"
         app:layout_constraintBottom_toBottomOf="@+id/imgLike"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline" />

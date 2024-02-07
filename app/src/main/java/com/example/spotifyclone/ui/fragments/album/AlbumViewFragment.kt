@@ -1,5 +1,7 @@
 package com.example.spotifyclone.ui.fragments.album
 
+import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,6 +20,7 @@ import com.example.spotifyclone.db.RoomDB
 import com.example.spotifyclone.model.album.singlealbum.Artist
 import com.example.spotifyclone.model.dto.Album
 import com.example.spotifyclone.model.dto.MusicItem
+import com.example.spotifyclone.musicplayer.MusicPlayer
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -25,8 +28,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 class AlbumViewFragment : Fragment() {
     private lateinit var binding: FragmentAlbumViewBinding
     private lateinit var album: Album
+    private var mediaPlayer: MediaPlayer? = null
     private lateinit var roomDB: RoomDB
     private val albumViewModel: AlbumViewModel by viewModels { AlbumFactory(roomDB) }
+    private lateinit var tracks: List<MusicItem>
+    private var currentTrackIndex: Int = 0
+    private var imgAlbum = ""
+    private lateinit var adapter: SingleAlbumTracksAdapter
     private lateinit var sharedPreference: SharedPreference
 
     override fun onCreateView(
@@ -51,10 +59,14 @@ class AlbumViewFragment : Fragment() {
                 Toast.makeText(requireContext(), "Something wrong!", Toast.LENGTH_SHORT).show()
             }
         }
+
+
         albumViewModel.checkInDB(album.id)
         setLayoutButton()
         saveAlbumDb()
         getAlbum()
+
+
 
     }
 
@@ -74,6 +86,7 @@ class AlbumViewFragment : Fragment() {
         if (album.isFirebase) {
             binding.txtAlbumName.text = album.name
             binding.txtArtistName.text = album.tracks[0].artist
+            imgAlbum = album.coverImg
             Glide.with(binding.root)
                 .load(album.coverImg)
                 .into(binding.imgAlbum)
@@ -83,6 +96,7 @@ class AlbumViewFragment : Fragment() {
             val music = album.tracks.map {
                 MusicItem(it.artist!!, it.id!!, it.name!!, it.trackUri!!)
             }
+            playAll(music)
             setAdapter(album.coverImg, music)
         } else {
             albumViewModel.getAlbum(album.id)
@@ -91,6 +105,7 @@ class AlbumViewFragment : Fragment() {
                 binding.txtArtistName.text = artistNames
                 binding.txtAlbumYear.text = it.release_date
                 binding.txtAlbumName.text = it.name
+                imgAlbum = it.images[0].url
                 Glide.with(binding.root)
                     .load(it.images[0].url)
                     .into(binding.imgAlbum)
@@ -105,6 +120,7 @@ class AlbumViewFragment : Fragment() {
                         "https://firebasestorage.googleapis.com/v0/b/spotify-42372.appspot.com/o/tracks%2FAlan%20Walker%20-%20Intro.mp3?alt=media&token=34d259fc-8828-4587-8182-37bf4c994ea5"
                     )
                 }
+                playAll(music)
                 setAdapter(it.images[0].url, music)
             }
         }
@@ -114,7 +130,8 @@ class AlbumViewFragment : Fragment() {
         img: String,
         tracks: List<MusicItem>
     ) {
-        val adapter = SingleAlbumTracksAdapter(img,
+        checkSp()
+        adapter = SingleAlbumTracksAdapter(img,
             { setMusicTrack() },
             { key, value -> saveSharedPreference(key, value) },
             { value -> saveSharedPreference(value) },
@@ -160,6 +177,16 @@ class AlbumViewFragment : Fragment() {
     }
 
 
+    private fun checkSp() {
+        val isSP = tracks.any { sharedPreference.containsValue(it.name) }
+        if (mediaPlayer?.isPlaying == true && isSP) {
+            binding.imgPlay.setImageResource(R.drawable.icon_album_pause)
+        } else if (mediaPlayer?.isPlaying == false && isSP) {
+            binding.imgPlay.setImageResource(R.drawable.icon_play)
+        }
+    }
+
+
     private fun saveSharedPreference(key: String, value: String) {
         sharedPreference.saveValue(key, value)
     }
@@ -190,4 +217,48 @@ class AlbumViewFragment : Fragment() {
         }
     }
 
+
+    private fun playAll(tracks: List<MusicItem>) {
+        this.tracks = tracks
+
+        mediaPlayer = MusicPlayer.getMediaPlayer()
+
+        binding.imgPlay.setOnClickListener {
+
+            playNextTrack()
+        }
+    }
+
+    private fun playNextTrack() {
+        if (currentTrackIndex < tracks.size) {
+
+            adapter.notifyDataSetChanged()
+            mediaPlayer?.stop()
+            saveSharedPreference("PlayingMusic", tracks[currentTrackIndex].name)
+            saveSharedPreference("PlayingMusicArtist", tracks[currentTrackIndex].artist)
+            saveSharedPreference("PlayingMusicImg", imgAlbum)
+            saveSharedPreference("PlayingMusicUri", tracks[currentTrackIndex].trackUri)
+            checkSp()
+            val activity = activity as MainActivity
+            activity.setMusicAttrs()
+            MusicPlayer.playNext(requireContext(), tracks[currentTrackIndex].trackUri)
+            binding.imgPlay.setOnClickListener {
+                if (mediaPlayer?.isPlaying == true) {
+                    mediaPlayer?.pause()
+                    checkSp()
+                } else if (mediaPlayer?.isPlaying == false) {
+                    mediaPlayer?.start()
+                    checkSp()
+                }
+            }
+            mediaPlayer?.setOnCompletionListener {
+                currentTrackIndex++
+                playNextTrack()
+            }
+
+
+        } else {
+            currentTrackIndex = 0
+        }
+    }
 }
