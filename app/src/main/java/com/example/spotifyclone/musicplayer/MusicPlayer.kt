@@ -25,7 +25,9 @@ object MusicPlayer {
         mediaPlayer = null
     }
 
-    fun prepare(){
+    fun prepare() {
         mediaPlayer?.prepare()
     }
+
+
 }

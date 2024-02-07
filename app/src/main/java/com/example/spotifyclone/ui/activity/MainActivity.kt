@@ -11,6 +11,8 @@ import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ActivityMainBinding
+import com.example.spotifyclone.model.dto.MusicItem
+import com.example.spotifyclone.model.firebase.Tracks
 import com.example.spotifyclone.musicplayer.MusicPlayer
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.fragments.track.TrackViewFragment
@@ -66,8 +68,12 @@ class MainActivity : AppCompatActivity() {
         val musicImg = sharedPreference.getValue("PlayingMusicImg", "")
         val musicUri = sharedPreference.getValue("PlayingMusicUri", "")
 
+        setMusicLayout(musicName,musicImg,musicUri)
 
-        MusicPlayer.initialize(this, musicUri)
+    }
+
+    private fun setMusicLayout(name:String ,img:String , uri:String){
+        MusicPlayer.initialize(this, uri)
         val music = MusicPlayer.getMediaPlayer()
         music?.let {
             it.start()
@@ -90,13 +96,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         Glide.with(binding.root)
-            .load(musicImg)
+            .load(img)
             .into(binding.imgTrack)
 
 
-        binding.txtMusicName.text = musicName
-
-
+        binding.txtMusicName.text = name
     }
 
     private fun updateProgress(music: MediaPlayer?) {
@@ -123,6 +127,11 @@ class MainActivity : AppCompatActivity() {
                 .commit()
             setMusicPlayer(false)
         }
+    }
+
+
+    fun playTracks(list:List<MusicItem>){
+
     }
 
 

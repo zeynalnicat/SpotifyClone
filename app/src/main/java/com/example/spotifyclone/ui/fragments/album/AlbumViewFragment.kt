@@ -29,13 +29,11 @@ class AlbumViewFragment : Fragment() {
     private val albumViewModel: AlbumViewModel by viewModels { AlbumFactory(roomDB) }
     private lateinit var sharedPreference: SharedPreference
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAlbumViewBinding.inflate(inflater)
-
         return binding.root
     }
 
@@ -43,15 +41,14 @@ class AlbumViewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         roomDB = RoomDB.accessDb(requireContext())!!
         sharedPreference = SharedPreference(requireContext())
-        val roomDB = RoomDB.accessDb(requireContext())
         setNavigation()
         getAlbumId()
 
-        albumViewModel.insertionLiked.observe(viewLifecycleOwner){
-            if(it!=-1L){
-                Toast.makeText(requireContext(),"Added",Toast.LENGTH_SHORT).show()
-            }else{
-                Toast.makeText(requireContext(),"Something wrong!",Toast.LENGTH_SHORT).show()
+        albumViewModel.insertionLiked.observe(viewLifecycleOwner) {
+            if (it != -1L) {
+                Toast.makeText(requireContext(), "Added", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Something wrong!", Toast.LENGTH_SHORT).show()
             }
         }
         albumViewModel.checkInDB(album.id)
@@ -66,7 +63,6 @@ class AlbumViewFragment : Fragment() {
             findNavController().popBackStack()
         }
     }
-
 
     private fun getAlbumId() {
         arguments?.let {
