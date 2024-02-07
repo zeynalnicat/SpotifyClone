@@ -1,9 +1,8 @@
-package com.example.spotifyclone.viewmodels.factories
+package com.example.spotifyclone.ui.fragments.library
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.spotifyclone.db.RoomDB
-import com.example.spotifyclone.viewmodels.UserLibraryViewModel
 
 class UserLibraryFactory(private val roomDB: RoomDB):ViewModelProvider.Factory {
 

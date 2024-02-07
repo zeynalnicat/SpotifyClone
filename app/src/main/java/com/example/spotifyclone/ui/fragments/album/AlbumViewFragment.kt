@@ -1,4 +1,4 @@
-package com.example.spotifyclone.ui.fragments.others
+package com.example.spotifyclone.ui.fragments.album
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -20,8 +20,6 @@ import com.example.spotifyclone.model.dto.Album
 import com.example.spotifyclone.model.dto.MusicItem
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
-import com.example.spotifyclone.viewmodels.AlbumViewModel
-import com.example.spotifyclone.viewmodels.factories.AlbumFactory
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class AlbumViewFragment : Fragment() {

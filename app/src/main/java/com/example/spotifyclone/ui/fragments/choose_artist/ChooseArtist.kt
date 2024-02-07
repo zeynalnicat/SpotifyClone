@@ -19,7 +19,6 @@ import com.example.spotifyclone.databinding.FragmentChooseArtistBinding
 import com.example.spotifyclone.db.artist.ArtistsEntity
 import com.example.spotifyclone.db.RoomDB
 import com.example.spotifyclone.model.artist.Artist
-import com.example.spotifyclone.viewmodels.ChoseArtistViewModel
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.JustifyContent

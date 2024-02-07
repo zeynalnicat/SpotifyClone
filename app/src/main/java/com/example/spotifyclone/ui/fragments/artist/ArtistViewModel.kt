@@ -1,4 +1,4 @@
-package com.example.spotifyclone.viewmodels
+package com.example.spotifyclone.ui.fragments.artist
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,7 +8,6 @@ import com.example.spotifyclone.model.album.newrelease.Item
 import com.example.spotifyclone.retrofit.RetrofitInstance
 import com.example.spotifyclone.retrofit.api.ArtistsApi
 import kotlinx.coroutines.launch
-import retrofit2.create
 
 class ArtistViewModel : ViewModel() {
     private val _albums = MutableLiveData<List<Item>>()

@@ -3,7 +3,6 @@ package com.example.spotifyclone.ui.activity
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Looper
-import android.os.Looper.getMainLooper
 import android.view.View
 
 import androidx.appcompat.app.AppCompatActivity
@@ -14,8 +13,7 @@ import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ActivityMainBinding
 import com.example.spotifyclone.musicplayer.MusicPlayer
 import com.example.spotifyclone.sp.SharedPreference
-import com.example.spotifyclone.ui.fragments.others.TrackViewFragment
-import java.util.logging.Handler
+import com.example.spotifyclone.ui.fragments.track.TrackViewFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding

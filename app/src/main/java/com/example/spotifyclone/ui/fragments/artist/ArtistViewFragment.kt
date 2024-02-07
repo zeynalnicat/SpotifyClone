@@ -1,4 +1,4 @@
-package com.example.spotifyclone.ui.fragments.others
+package com.example.spotifyclone.ui.fragments.artist
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -13,7 +13,6 @@ import com.example.spotifyclone.R
 import com.example.spotifyclone.adapters.AlbumAdapter
 import com.example.spotifyclone.databinding.FragmentArtistViewBinding
 import com.example.spotifyclone.model.dto.Album
-import com.example.spotifyclone.viewmodels.ArtistViewModel
 
 
 class ArtistViewFragment : Fragment() {

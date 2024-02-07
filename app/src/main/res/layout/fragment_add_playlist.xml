@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background= "@color/primary"
-    tools:context=".ui.fragments.others.AddPlaylistFragment">
+    tools:context=".ui.fragments.playlist.AddPlaylistFragment">
 
 
     <androidx.appcompat.widget.Toolbar

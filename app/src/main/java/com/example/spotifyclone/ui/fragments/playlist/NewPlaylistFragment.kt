@@ -1,4 +1,4 @@
-package com.example.spotifyclone.ui.fragments.others
+package com.example.spotifyclone.ui.fragments.playlist
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,9 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.fragment.app.findFragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.FragmentNewPlaylistBinding
@@ -18,9 +16,8 @@ import com.example.spotifyclone.db.RoomDB
 import com.example.spotifyclone.resource.Resource
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
-import com.example.spotifyclone.viewmodels.NewPlaylistViewModel
-import com.example.spotifyclone.viewmodels.factories.NewPlaylistFactory
-import com.google.android.material.snackbar.Snackbar
+import com.example.spotifyclone.ui.fragments.playlist.NewPlaylistViewModel
+import com.example.spotifyclone.ui.fragments.playlist.NewPlaylistFactory
 
 class NewPlaylistFragment : Fragment() {
     private lateinit var binding: FragmentNewPlaylistBinding

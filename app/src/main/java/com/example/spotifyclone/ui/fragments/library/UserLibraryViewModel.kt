@@ -1,4 +1,4 @@
-package com.example.spotifyclone.viewmodels
+package com.example.spotifyclone.ui.fragments.library
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -1,10 +1,9 @@
-package com.example.spotifyclone.viewmodels
+package com.example.spotifyclone.ui.fragments.album
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spotifyclone.db.RoomDB
 import com.example.spotifyclone.db.album.AlbumEntity
 import com.example.spotifyclone.db.likedsongs.LikedSongsEntity
@@ -14,8 +13,6 @@ import com.example.spotifyclone.retrofit.RetrofitInstance
 import com.example.spotifyclone.retrofit.api.AlbumApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import retrofit2.create
 import kotlin.Exception
 
 class AlbumViewModel(private val roomDB: RoomDB) : ViewModel() {

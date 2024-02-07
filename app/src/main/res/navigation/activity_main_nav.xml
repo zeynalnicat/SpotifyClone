@@ -142,7 +142,7 @@
         tools:layout="@layout/fragment_search_next" />
     <fragment
         android:id="@+id/albumViewFragment"
-        android:name="com.example.spotifyclone.ui.fragments.others.AlbumViewFragment"
+        android:name="com.example.spotifyclone.ui.fragments.album.AlbumViewFragment"
         android:label="fragment_album_view"
         tools:layout="@layout/fragment_album_view" >
         <action
@@ -166,7 +166,7 @@
     <fragment
         android:id="@+id/artistViewFragment"
         tools:layout="@layout/fragment_artist_view"
-        android:name="com.example.spotifyclone.ui.fragments.others.ArtistViewFragment"
+        android:name="com.example.spotifyclone.ui.fragments.artist.ArtistViewFragment"
         android:label="ArtistViewFragment" >
         <action
             android:id="@+id/action_artistViewFragment_to_albumViewFragment"
@@ -174,7 +174,7 @@
     </fragment>
     <fragment
         android:id="@+id/newPlaylistFragment"
-        android:name="com.example.spotifyclone.ui.fragments.others.NewPlaylistFragment"
+        android:name="com.example.spotifyclone.ui.fragments.playlist.NewPlaylistFragment"
         android:label="fragment_new_playlist"
         tools:layout="@layout/fragment_new_playlist" >
         <action
@@ -185,7 +185,7 @@
     </fragment>
     <fragment
         android:id="@+id/addPlaylistFragment"
-        android:name="com.example.spotifyclone.ui.fragments.others.AddPlaylistFragment"
+        android:name="com.example.spotifyclone.ui.fragments.playlist.AddPlaylistFragment"
         android:label="fragment_add_playlist"
         tools:layout="@layout/fragment_add_playlist" />
     <fragment

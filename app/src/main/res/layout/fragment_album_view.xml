@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary"
-    tools:context=".ui.fragments.others.AlbumViewFragment">
+    tools:context=".ui.fragments.album.AlbumViewFragment">
 
 
     <androidx.constraintlayout.widget.Guideline
@@ -39,8 +39,8 @@
 
     <ImageView
         android:id="@+id/imgAlbum"
-        android:layout_width="234dp"
-        android:layout_height="234dp"
+        android:layout_width="300dp"
+        android:layout_height="250dp"
         android:layout_marginTop="24dp"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
@@ -130,11 +130,22 @@
         android:id="@+id/recyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toBottomOf="@+id/imgLike" />
+
+    <View
+        android:id="@+id/view4"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/view_album"
+        android:translationZ="-10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgLike"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

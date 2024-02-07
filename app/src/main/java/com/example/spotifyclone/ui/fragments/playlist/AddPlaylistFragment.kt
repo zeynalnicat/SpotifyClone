@@ -1,4 +1,4 @@
-package com.example.spotifyclone.ui.fragments.others
+package com.example.spotifyclone.ui.fragments.playlist
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -14,8 +14,6 @@ import com.example.spotifyclone.databinding.FragmentAddPlaylistBinding
 import com.example.spotifyclone.db.RoomDB
 import com.example.spotifyclone.model.dto.PlaylistModel
 import com.example.spotifyclone.resource.Resource
-import com.example.spotifyclone.viewmodels.AddPlaylistViewModel
-import com.example.spotifyclone.viewmodels.factories.AddPlaylistFactory
 
 class AddPlaylistFragment : Fragment() {
     private lateinit var binding:FragmentAddPlaylistBinding

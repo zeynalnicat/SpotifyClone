@@ -14,8 +14,6 @@ import com.example.spotifyclone.databinding.FragmentLikedSongsBinding
 import com.example.spotifyclone.db.RoomDB
 import com.example.spotifyclone.model.dto.LikedSongs
 import com.example.spotifyclone.resource.Resource
-import com.example.spotifyclone.viewmodels.LikedSongsViewModel
-import com.example.spotifyclone.viewmodels.factories.LikedSongsFactory
 
 
 class LikedSongsFragment : Fragment() {

@@ -1,11 +1,10 @@
-package com.example.spotifyclone.viewmodels
+package com.example.spotifyclone.ui.fragments.others
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.spotifyclone.db.RoomDB
-import com.example.spotifyclone.db.likedsongs.LikedSongsEntity
 import com.example.spotifyclone.model.dto.LikedSongs
 import com.example.spotifyclone.resource.Resource
 import kotlinx.coroutines.Dispatchers

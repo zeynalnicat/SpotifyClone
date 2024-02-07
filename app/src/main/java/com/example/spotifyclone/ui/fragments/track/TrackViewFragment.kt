@@ -1,4 +1,4 @@
-package com.example.spotifyclone.ui.fragments.others
+package com.example.spotifyclone.ui.fragments.track
 
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -8,11 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.activity.OnBackPressedCallback
-import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.FragmentTrackViewBinding
+import com.example.spotifyclone.db.RoomDB
 import com.example.spotifyclone.musicplayer.MusicPlayer
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
@@ -22,6 +22,8 @@ import java.util.Locale
 class TrackViewFragment : Fragment() {
     private lateinit var binding: FragmentTrackViewBinding
     private var music: MediaPlayer? = null
+    private lateinit var roomDB: RoomDB
+    private val trackViewModel: TrackViewModel by viewModels { TrackFactory(roomDB) }
     private var totalTIme = 0
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,12 +33,13 @@ class TrackViewFragment : Fragment() {
         val activity = activity as MainActivity
         activity.setBottomNavigation(false)
         setNavigation()
-        setLayout()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        roomDB = RoomDB.accessDb(requireContext())!!
+        setLayout()
         val callBack = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val activity = activity as MainActivity
@@ -46,6 +49,16 @@ class TrackViewFragment : Fragment() {
             }
 
         }
+
+        trackViewModel.isInDb.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.iconLike.setImageResource(R.drawable.icon_filled_heart)
+            } else {
+                binding.iconLike.setImageResource(R.drawable.icon_like)
+            }
+        }
+
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callBack)
         setMusic()
     }
@@ -69,6 +82,13 @@ class TrackViewFragment : Fragment() {
         val musicName = sharedPreference.getValue("PlayingMusic", "")
         val artistName = sharedPreference.getValue("PlayingMusicArtist", "")
         val musicImg = sharedPreference.getValue("PlayingMusicImg", "")
+        val musicUri = sharedPreference.getValue("PlayingMusicUri", "")
+
+        trackViewModel.check(musicName)
+
+        binding.iconLike.setOnClickListener {
+            trackViewModel.insertLikedSongs(musicName, artistName, musicImg, musicUri)
+        }
 
         binding.txtTrackName.text = musicName
         binding.txtTrackHeader.text = musicName
@@ -98,7 +118,8 @@ class TrackViewFragment : Fragment() {
             binding.seekBar.postDelayed(object : Runnable {
                 override fun run() {
                     binding.txtTimeStart.text = formatDuration(it.currentPosition)
-                    binding.seekBar.progress =(it.currentPosition.toFloat() / totalTIme * 100).toInt()
+                    binding.seekBar.progress =
+                        (it.currentPosition.toFloat() / totalTIme * 100).toInt()
                     binding.seekBar.postDelayed(this, 1000)
 
                 }

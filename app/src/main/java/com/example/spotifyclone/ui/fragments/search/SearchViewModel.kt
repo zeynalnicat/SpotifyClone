@@ -1,13 +1,11 @@
-package com.example.spotifyclone.viewmodels
+package com.example.spotifyclone.ui.fragments.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spotifyclone.model.categories.Item
 import com.example.spotifyclone.retrofit.RetrofitInstance
-import com.example.spotifyclone.retrofit.api.ArtistsApi
 import com.example.spotifyclone.retrofit.api.CategoriesApi
 import kotlinx.coroutines.launch
 

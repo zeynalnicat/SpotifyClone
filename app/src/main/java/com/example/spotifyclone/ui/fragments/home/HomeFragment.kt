@@ -19,8 +19,6 @@ import com.example.spotifyclone.model.artist.Artist
 import com.example.spotifyclone.model.dto.Album
 import com.example.spotifyclone.resource.Resource
 import com.example.spotifyclone.ui.activity.MainActivity
-import com.example.spotifyclone.viewmodels.HomeViewModel
-import com.example.spotifyclone.viewmodels.factories.HomeFactory
 
 
 class HomeFragment : Fragment() {

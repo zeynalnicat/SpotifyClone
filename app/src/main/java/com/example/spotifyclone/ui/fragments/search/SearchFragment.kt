@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.spotifyclone.R
 import com.example.spotifyclone.adapters.SearchCardAdapter
 import com.example.spotifyclone.databinding.FragmentSearchBinding
-import com.example.spotifyclone.viewmodels.SearchViewModel
 
 class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding

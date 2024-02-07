@@ -14,7 +14,6 @@ import com.example.spotifyclone.adapters.LibraryAlbumAdapter
 import com.example.spotifyclone.databinding.FragmentLibraryBinding
 import com.example.spotifyclone.db.RoomDB
 import com.example.spotifyclone.model.dto.LibraryAlbum
-import com.example.spotifyclone.viewmodels.LibraryViewModel
 
 class LibraryFragment : Fragment() {
     private lateinit var binding: FragmentLibraryBinding
