@@ -19,7 +19,7 @@ class SingleAlbumTracksAdapter(
     private val saveSharedPreference: (key: String, value: String) -> Unit,
     private val saveSharedPreferenceBool: (value: Boolean) -> Unit,
     private val isInSP: (value: String) -> Boolean,
-    private val setBottom: (img: String, track: String, artist: String , trackUri:String) -> Unit
+    private val setBottom: (img: String, track: String, artist: String, trackUri: String) -> Unit
 ) : RecyclerView.Adapter<SingleAlbumTracksAdapter.ViewHolder>() {
 
     private val diffCallBack = object : DiffUtil.ItemCallback<MusicItem>() {
@@ -76,21 +76,21 @@ class SingleAlbumTracksAdapter(
             binding.musicIcon.visibility = if (track.isPlayed) View.VISIBLE else View.GONE
 
             itemView.setOnClickListener {
-                MusicPlayer.releaseMediaPlayer()
-                MusicPlayer.prepare()
+
                 saveSharedPreference("PlayingMusic", track.name)
                 saveSharedPreference("PlayingMusicArtist", track.artist)
                 saveSharedPreference("PlayingMusicImg", img)
                 saveSharedPreference("PlayingMusicUri", track.trackUri)
                 saveSharedPreferenceBool(true)
                 track.isPlayed = true
-
-                setMusicLayout()
                 notifyDataSetChanged()
+                setMusicLayout()
+                MusicPlayer.playNext(binding.root.context, track.trackUri)
+
             }
 
             binding.imgMore.setOnClickListener {
-                setBottom(img, track.name, track.artist,track.trackUri)
+                setBottom(img, track.name, track.artist, track.trackUri)
             }
 
 

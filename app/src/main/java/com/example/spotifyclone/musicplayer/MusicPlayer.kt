@@ -3,6 +3,7 @@ package com.example.spotifyclone.musicplayer
 import android.content.Context
 import android.net.Uri
 import android.media.MediaPlayer
+import androidx.compose.runtime.remember
 import com.example.spotifyclone.model.dto.MusicItem
 
 object MusicPlayer {
@@ -20,6 +21,10 @@ object MusicPlayer {
 
     fun setListOfTracks(listOfTracks: List<MusicItem>) {
         this.listOfTracks = listOfTracks
+    }
+
+    fun getListOfTracks(): List<MusicItem>? {
+        return listOfTracks
     }
 
     fun getMediaPlayer(): MediaPlayer? {

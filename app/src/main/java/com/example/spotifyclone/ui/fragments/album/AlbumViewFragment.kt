@@ -67,7 +67,6 @@ class AlbumViewFragment : Fragment() {
         getAlbum()
 
 
-
     }
 
     private fun setNavigation() {
@@ -96,7 +95,7 @@ class AlbumViewFragment : Fragment() {
             val music = album.tracks.map {
                 MusicItem(it.artist!!, it.id!!, it.name!!, it.trackUri!!)
             }
-            playAll(music)
+
             setAdapter(album.coverImg, music)
         } else {
             albumViewModel.getAlbum(album.id)
@@ -120,7 +119,7 @@ class AlbumViewFragment : Fragment() {
                         "https://firebasestorage.googleapis.com/v0/b/spotify-42372.appspot.com/o/tracks%2FAlan%20Walker%20-%20Intro.mp3?alt=media&token=34d259fc-8828-4587-8182-37bf4c994ea5"
                     )
                 }
-                playAll(music)
+
                 setAdapter(it.images[0].url, music)
             }
         }
@@ -130,7 +129,11 @@ class AlbumViewFragment : Fragment() {
         img: String,
         tracks: List<MusicItem>
     ) {
+        MusicPlayer.setListOfTracks(tracks)
+        playAll()
         checkSp()
+
+
         adapter = SingleAlbumTracksAdapter(img,
             { setMusicTrack() },
             { key, value -> saveSharedPreference(key, value) },
@@ -218,8 +221,8 @@ class AlbumViewFragment : Fragment() {
     }
 
 
-    private fun playAll(tracks: List<MusicItem>) {
-        this.tracks = tracks
+    private fun playAll() {
+        this.tracks = MusicPlayer.getListOfTracks() ?: emptyList()
 
         mediaPlayer = MusicPlayer.getMediaPlayer()
 
