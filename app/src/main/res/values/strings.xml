@@ -74,4 +74,9 @@
 
     <string name="liked_songs_txt_find">Find in liked songs</string>
     <string name="liked_songs_txt_header">Liked Songs</string>
+
+
+    <string name="edit_txt_edit">Edit profile</string>
+    <string name="edit_text_save">Save</string>
+    <string name="edit_txt_name">Name</string>
 </resources>

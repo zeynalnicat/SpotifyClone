@@ -172,7 +172,11 @@
         android:id="@+id/userLibraryFragment"
         android:name="com.example.spotifyclone.ui.fragments.library.UserLibraryFragment"
         android:label="fragment_user_library"
-        tools:layout="@layout/fragment_user_library" />
+        tools:layout="@layout/fragment_user_library" >
+        <action
+            android:id="@+id/action_userLibraryFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+    </fragment>
     <fragment
         android:id="@+id/artistViewFragment"
         tools:layout="@layout/fragment_artist_view"
@@ -203,6 +207,11 @@
         android:name="com.example.spotifyclone.ui.fragments.others.LikedSongsFragment"
         android:label="fragment_liked_songs"
         tools:layout="@layout/fragment_liked_songs" />
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.example.spotifyclone.ui.fragments.library.EditProfileFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_profile" />
 
 
 </navigation>
