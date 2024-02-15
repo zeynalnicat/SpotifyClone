@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.ui.adapters.SettingsAdapter
 import com.example.spotifyclone.databinding.FragmentSettingsBinding
@@ -58,10 +59,19 @@ class SettingsFragment : Fragment() {
                 .addOnSuccessListener { querySnapshot ->
                     if (!querySnapshot.isEmpty) {
                         val gender = querySnapshot.documents[0].getString("gender")
+                        val image = querySnapshot.documents[0].getString("img")
                         val name = querySnapshot.documents[0].getString("username")
 
+                        if (image?.isEmpty() == true) {
+                            binding.imgProfile.setImageResource(if (gender == "Men") R.drawable.man_icon else R.drawable.woman_icon)
+                        } else {
+                            Glide.with(binding.root)
+                                .load(image)
+                                .into(binding.imgProfile)
+                        }
+
                         binding.txtAccountName.text = name
-                        binding.imgProfile.setImageResource(if (gender == "Men") R.drawable.man_icon else R.drawable.woman_icon)
+
 
                     } else {
                     }
