@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.ui.adapters.PlaylistAdapter
 import com.example.spotifyclone.databinding.FragmentUserLibraryBinding
@@ -48,7 +49,7 @@ class UserLibraryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         roomDB = RoomDB.accessDb(requireContext())!!
         userLibraryViewModel.getPlaylists()
-        userLibraryViewModel.playlists.observe(viewLifecycleOwner){
+        userLibraryViewModel.playlists.observe(viewLifecycleOwner) {
             setAdapter(it)
         }
 
@@ -65,7 +66,14 @@ class UserLibraryFragment : Fragment() {
                         val name = querySnapshot.documents[0].getString("username")
                         binding.txtName.text = name ?: "N/A"
                         binding.txtEmail.text = firebaseAuth.currentUser?.email
-                        binding.imgProfile.setImageResource(if(gender=="Men") R.drawable.man_icon else R.drawable.woman_icon)
+                        val image = querySnapshot.documents[0].getString("img")
+                        if (image?.isEmpty() == true) {
+                            binding.imgProfile.setImageResource(if (gender == "Men") R.drawable.man_icon else R.drawable.woman_icon)
+                        } else {
+                            Glide.with(binding.root)
+                                .load(image.toString())
+                                .into(binding.imgProfile)
+                        }
 
                     } else {
                         binding.txtName.text = "N/A"
@@ -85,12 +93,15 @@ class UserLibraryFragment : Fragment() {
         binding.imgBack.setOnClickListener {
             findNavController().popBackStack()
         }
+        binding.btnEdit.setOnClickListener {
+            findNavController().navigate(R.id.action_userLibraryFragment_to_editProfileFragment)
+        }
     }
 
-    private fun setAdapter(list:List<PlaylistModel>){
+    private fun setAdapter(list: List<PlaylistModel>) {
         val adapter = PlaylistAdapter()
         adapter.submitList(list)
-        binding.recyclerView.layoutManager = GridLayoutManager(requireContext(),1)
+        binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerView.adapter = adapter
 
     }

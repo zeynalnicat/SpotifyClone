@@ -11,6 +11,7 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.ui.adapters.LibraryAlbumAdapter
 import com.example.spotifyclone.databinding.FragmentLibraryBinding
@@ -93,10 +94,21 @@ class LibraryFragment : Fragment() {
                     if (!querySnapshot.isEmpty) {
                         val gender = querySnapshot.documents[0].getString("gender")
                         val name = querySnapshot.documents[0].getString("username")
+                        val image = querySnapshot.documents[0].getString("img")
 
-                        binding.imgProfileDrawer.setImageResource(if(gender=="Men") R.drawable.man_icon else R.drawable.woman_icon)
-                        binding.imgProfileAccount.setImageResource(if(gender=="Men") R.drawable.man_icon else R.drawable.woman_icon)
                         binding.txtNameDrawer.text = name ?: "N/A"
+                        if (image?.isEmpty() == true) {
+                            binding.imgProfileAccount.setImageResource(if (gender == "Men") R.drawable.man_icon else R.drawable.woman_icon)
+                            binding.imgProfileDrawer.setImageResource(if (gender == "Men") R.drawable.man_icon else R.drawable.woman_icon)
+                        } else {
+                            Glide.with(binding.root)
+                                .load(image.toString())
+                                .into(binding.imgProfileAccount)
+
+                            Glide.with(binding.root)
+                                .load(image.toString())
+                                .into(binding.imgProfileDrawer)
+                        }
                     } else {
                         binding.txtNameDrawer.text = "N/A"
                     }

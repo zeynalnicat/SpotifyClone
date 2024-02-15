@@ -53,6 +53,7 @@ class SignUp4 : Fragment() {
             val username = binding.edtUsername.text.toString()
             val user = hashMapOf(
                 "gender" to gender,
+                "img" to "",
                 "userId" to userId,
                 "username" to username
             )
