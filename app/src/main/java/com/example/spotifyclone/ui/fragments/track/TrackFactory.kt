@@ -2,7 +2,7 @@ package com.example.spotifyclone.ui.fragments.track
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.spotifyclone.db.RoomDB
+import com.example.spotifyclone.network.db.RoomDB
 
 class TrackFactory(private val roomDB: RoomDB):ViewModelProvider.Factory {
 

@@ -13,24 +13,31 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
-import com.example.spotifyclone.adapters.SingleAlbumTracksAdapter
+import com.example.spotifyclone.ui.adapters.SingleAlbumTracksAdapter
 import com.example.spotifyclone.databinding.BottomSheetTrackBinding
 import com.example.spotifyclone.databinding.FragmentAlbumViewBinding
-import com.example.spotifyclone.db.RoomDB
+import com.example.spotifyclone.network.db.RoomDB
 import com.example.spotifyclone.model.album.singlealbum.Artist
 import com.example.spotifyclone.model.dto.Album
 import com.example.spotifyclone.model.dto.MusicItem
 import com.example.spotifyclone.musicplayer.MusicPlayer
+import com.example.spotifyclone.network.retrofit.api.AlbumApi
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AlbumViewFragment : Fragment() {
     private lateinit var binding: FragmentAlbumViewBinding
     private lateinit var album: Album
     private var mediaPlayer: MediaPlayer? = null
     private lateinit var roomDB: RoomDB
-    private val albumViewModel: AlbumViewModel by viewModels { AlbumFactory(roomDB) }
+
+    @Inject
+    lateinit var albumApi: AlbumApi
+    private val albumViewModel: AlbumViewModel by viewModels { AlbumFactory(roomDB,albumApi) }
     private lateinit var tracks: List<MusicItem>
     private var currentTrackIndex: Int = 0
     private var imgAlbum = ""

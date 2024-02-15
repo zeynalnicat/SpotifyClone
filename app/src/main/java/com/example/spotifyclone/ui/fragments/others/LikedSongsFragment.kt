@@ -9,9 +9,9 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.spotifyclone.adapters.LikedSongsAdapter
+import com.example.spotifyclone.ui.adapters.LikedSongsAdapter
 import com.example.spotifyclone.databinding.FragmentLikedSongsBinding
-import com.example.spotifyclone.db.RoomDB
+import com.example.spotifyclone.network.db.RoomDB
 import com.example.spotifyclone.model.dto.LikedSongs
 import com.example.spotifyclone.resource.Resource
 

@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.spotifyclone.adapters.PlaylistAdapter
+import com.example.spotifyclone.ui.adapters.PlaylistAdapter
 import com.example.spotifyclone.databinding.FragmentUserLibraryBinding
-import com.example.spotifyclone.db.RoomDB
+import com.example.spotifyclone.network.db.RoomDB
 import com.example.spotifyclone.model.dto.PlaylistModel
 
 class UserLibraryFragment : Fragment() {

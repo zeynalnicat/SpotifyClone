@@ -10,16 +10,24 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.spotifyclone.R
-import com.example.spotifyclone.adapters.LibraryAlbumAdapter
+import com.example.spotifyclone.ui.adapters.LibraryAlbumAdapter
 import com.example.spotifyclone.databinding.FragmentLibraryBinding
-import com.example.spotifyclone.db.RoomDB
+import com.example.spotifyclone.network.db.RoomDB
 import com.example.spotifyclone.model.dto.LibraryAlbum
+import com.example.spotifyclone.network.retrofit.api.AlbumApi
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class LibraryFragment : Fragment() {
     private lateinit var binding: FragmentLibraryBinding
     private lateinit var roomDB: RoomDB
-    private val libraryViewModel: LibraryViewModel by viewModels { LibraryFactor(roomDB) }
 
+
+    @Inject
+    lateinit var albumApi: AlbumApi
+    private val libraryViewModel: LibraryViewModel by viewModels { LibraryFactor(roomDB, albumApi) }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -27,6 +35,7 @@ class LibraryFragment : Fragment() {
         binding = FragmentLibraryBinding.inflate(inflater)
         return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         roomDB = RoomDB.accessDb(requireContext())!!
@@ -45,6 +54,7 @@ class LibraryFragment : Fragment() {
         setNavigation()
         setDrawer()
     }
+
     private fun setNavigation() {
 
         binding.viewProfile.setOnClickListener {
@@ -61,6 +71,7 @@ class LibraryFragment : Fragment() {
         }
 
     }
+
     private fun setDrawer() {
         binding.imgProfileAccount.setOnClickListener {
             if (binding.drawer.isDrawerOpen(GravityCompat.START)) {
@@ -70,6 +81,7 @@ class LibraryFragment : Fragment() {
             }
         }
     }
+
     private fun setAdapter() {
         libraryViewModel.likedAlbums.observe(viewLifecycleOwner) {
             val adapter = LibraryAlbumAdapter {

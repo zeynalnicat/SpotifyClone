@@ -4,20 +4,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.spotifyclone.db.RoomDB
+import com.example.spotifyclone.network.db.RoomDB
 import com.example.spotifyclone.model.album.popularalbums.Album
-import com.example.spotifyclone.retrofit.RetrofitInstance
-import com.example.spotifyclone.retrofit.api.AlbumApi
+import com.example.spotifyclone.network.retrofit.api.AlbumApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class LibraryViewModel(private val roomDB: RoomDB) : ViewModel() {
+class LibraryViewModel(private val roomDB: RoomDB, private val albumApi: AlbumApi) : ViewModel() {
 
     private val _likedAlbums = MutableLiveData<List<Album>>()
     private val _roomAlbums = MutableLiveData<List<String>>()
     private val _count = MutableLiveData<Int>(0)
     private val likedSongsDao = roomDB.likedSongsDao()
-    private val albumApi = RetrofitInstance.getInstance()?.create(AlbumApi::class.java)!!
+
 
     val count: LiveData<Int> get() = _count
 

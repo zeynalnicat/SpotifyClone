@@ -5,14 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.spotifyclone.model.artist.Artist
-import com.example.spotifyclone.retrofit.RetrofitInstance
-import com.example.spotifyclone.retrofit.api.ArtistsApi
+import com.example.spotifyclone.network.retrofit.api.ArtistsApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ChoseArtistViewModel : ViewModel() {
+class ChoseArtistViewModel(private val artistApi: ArtistsApi) : ViewModel() {
     private val _artists = MutableLiveData<List<Artist>>()
-    private val artistApi =  RetrofitInstance.getInstance()?.create(ArtistsApi::class.java)!!
 
 
     val artists: LiveData<List<Artist>>

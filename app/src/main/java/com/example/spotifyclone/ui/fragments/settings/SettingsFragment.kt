@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.spotifyclone.R
-import com.example.spotifyclone.adapters.SettingsAdapter
+import com.example.spotifyclone.ui.adapters.SettingsAdapter
 import com.example.spotifyclone.databinding.FragmentSettingsBinding
 import com.example.spotifyclone.model.SettingItem
 

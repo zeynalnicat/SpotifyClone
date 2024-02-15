@@ -7,29 +7,38 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.spotifyclone.R
-import com.example.spotifyclone.adapters.ChooseArtistAdapter
+import com.example.spotifyclone.ui.adapters.ChooseArtistAdapter
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.example.spotifyclone.databinding.FragmentChooseArtistBinding
-import com.example.spotifyclone.db.artist.ArtistsEntity
-import com.example.spotifyclone.db.RoomDB
+import com.example.spotifyclone.network.db.artist.ArtistsEntity
+import com.example.spotifyclone.network.db.RoomDB
 import com.example.spotifyclone.model.artist.Artist
+import com.example.spotifyclone.network.retrofit.api.ArtistsApi
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.JustifyContent
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class ChooseArtist : Fragment() {
     private lateinit var binding: FragmentChooseArtistBinding
     private lateinit var adapter: ChooseArtistAdapter
-    private lateinit var chooseArtistViewModel: ChoseArtistViewModel
+
+    @Inject
+    lateinit var artistsApi: ArtistsApi
+    private val chooseArtistViewModel: ChoseArtistViewModel by viewModels { ChooseArtistFactory(artistsApi) }
     private var selectedArtists = mutableListOf<Artist>()
 
     override fun onCreateView(
@@ -37,8 +46,7 @@ class ChooseArtist : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentChooseArtistBinding.inflate(inflater, container, false)
-        chooseArtistViewModel = ViewModelProvider(this)[ChoseArtistViewModel::class.java]
-        chooseArtistViewModel.getArtists()
+
 
 
         search()
@@ -81,7 +89,7 @@ class ChooseArtist : Fragment() {
 
     private fun setAdapter() {
         chooseArtistViewModel.artists.observe(viewLifecycleOwner) {
-            if(!it.isNullOrEmpty()){
+            if (!it.isNullOrEmpty()) {
                 adapter = ChooseArtistAdapter(this@ChooseArtist)
                 val layoutManager = FlexboxLayoutManager(requireContext())
                 layoutManager.flexDirection = FlexDirection.ROW
