@@ -17,7 +17,9 @@ import com.example.spotifyclone.model.firebase.Tracks
 import com.example.spotifyclone.musicplayer.MusicPlayer
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.fragments.track.TrackViewFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var handler: android.os.Handler

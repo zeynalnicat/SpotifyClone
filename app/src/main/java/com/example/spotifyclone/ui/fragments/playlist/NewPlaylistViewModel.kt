@@ -3,8 +3,8 @@ package com.example.spotifyclone.ui.fragments.playlist
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.spotifyclone.db.RoomDB
-import com.example.spotifyclone.db.playlist.PlaylistEntity
+import com.example.spotifyclone.network.db.RoomDB
+import com.example.spotifyclone.network.db.playlist.PlaylistEntity
 import com.example.spotifyclone.resource.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -4,15 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.spotifyclone.db.RoomDB
+import com.example.spotifyclone.network.db.RoomDB
 import com.example.spotifyclone.model.album.newrelease.Item
 import com.example.spotifyclone.model.artist.Artist
 import com.example.spotifyclone.model.firebase.Albums
 import com.example.spotifyclone.model.firebase.Tracks
 import com.example.spotifyclone.resource.Resource
-import com.example.spotifyclone.retrofit.RetrofitInstance
-import com.example.spotifyclone.retrofit.api.AlbumApi
-import com.example.spotifyclone.retrofit.api.ArtistsApi
+import com.example.spotifyclone.network.retrofit.api.AlbumApi
+import com.example.spotifyclone.network.retrofit.api.ArtistsApi
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -22,15 +21,17 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class HomeViewModel(private val roomDB: RoomDB) : ViewModel() {
+class HomeViewModel(
+    private val roomDB: RoomDB,
+    private val albumApi: AlbumApi,
+    private val artistApi: ArtistsApi
+) : ViewModel() {
 
     private val _date = MutableLiveData<String>()
     private val _newReleases = MutableLiveData<Resource<List<Item>>>()
     private val _popularAlbums =
         MutableLiveData<Resource<List<com.example.spotifyclone.model.album.popularalbums.Album>>>()
     private val _artists = MutableLiveData<Resource<List<Artist>>>()
-    private val albumApi = RetrofitInstance.getInstance()?.create(AlbumApi::class.java)!!
-    private val artistApi = RetrofitInstance.getInstance()?.create(ArtistsApi::class.java)!!
     private val _recommended =
         MutableLiveData<Resource<List<com.example.spotifyclone.model.dto.Album>>>()
 

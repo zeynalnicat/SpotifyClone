@@ -10,21 +10,40 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.spotifyclone.R
-import com.example.spotifyclone.adapters.ArtistAdapter
-import com.example.spotifyclone.adapters.AlbumAdapter
+import com.example.spotifyclone.ui.adapters.ArtistAdapter
+import com.example.spotifyclone.ui.adapters.AlbumAdapter
 import com.example.spotifyclone.databinding.FragmentHomeBinding
-import com.example.spotifyclone.db.RoomDB
+import com.example.spotifyclone.network.db.RoomDB
 import com.example.spotifyclone.model.album.newrelease.Item
 import com.example.spotifyclone.model.artist.Artist
 import com.example.spotifyclone.model.dto.Album
+import com.example.spotifyclone.network.retrofit.api.AlbumApi
+import com.example.spotifyclone.network.retrofit.api.ArtistsApi
 import com.example.spotifyclone.resource.Resource
 import com.example.spotifyclone.ui.activity.MainActivity
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
+
+    @Inject
+    lateinit var artistsApi: ArtistsApi
+
+    @Inject
+    lateinit var albumApi: AlbumApi
     private lateinit var roomDB: RoomDB
-    private val homeViewModel: HomeViewModel by viewModels { HomeFactory(roomDB) }
+    private val homeViewModel: HomeViewModel by viewModels {
+        HomeFactory(
+            roomDB,
+            albumApi,
+            artistsApi
+        )
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -108,13 +127,13 @@ class HomeFragment : Fragment() {
         homeViewModel.recommended.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Success -> {
-                    binding.txtRecommend.visibility= View.VISIBLE
+                    binding.txtRecommend.visibility = View.VISIBLE
                     binding.recyclerViewRecommended.visibility = View.VISIBLE
                     setRecommended(it.data)
                 }
 
                 is Resource.Error -> {
-                    binding.txtRecommend.visibility= View.GONE
+                    binding.txtRecommend.visibility = View.GONE
                     binding.recyclerViewRecommended.visibility = View.GONE
 //                    Toast.makeText(requireContext(), it.exception.message ?: "", Toast.LENGTH_SHORT)
 //                        .show()

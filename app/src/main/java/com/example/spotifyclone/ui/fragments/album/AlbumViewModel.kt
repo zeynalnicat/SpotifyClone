@@ -4,20 +4,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.spotifyclone.db.RoomDB
-import com.example.spotifyclone.db.album.AlbumEntity
-import com.example.spotifyclone.db.likedsongs.LikedSongsEntity
+import com.example.spotifyclone.network.db.RoomDB
+import com.example.spotifyclone.network.db.album.AlbumEntity
+import com.example.spotifyclone.network.db.likedsongs.LikedSongsEntity
 import com.example.spotifyclone.model.album.singlealbum.Album
 import com.example.spotifyclone.resource.Resource
-import com.example.spotifyclone.retrofit.RetrofitInstance
-import com.example.spotifyclone.retrofit.api.AlbumApi
+import com.example.spotifyclone.network.retrofit.api.AlbumApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.Exception
 
-class AlbumViewModel(private val roomDB: RoomDB) : ViewModel() {
+class AlbumViewModel(private val roomDB: RoomDB,private val albumApi:AlbumApi) : ViewModel() {
     private val _album = MutableLiveData<Album>()
-    private val albumApi = RetrofitInstance.getInstance()?.create(AlbumApi::class.java)!!
     private val _insertion = MutableLiveData<Resource<Long>>()
     private val _isInDB = MutableLiveData<Boolean>(false)
 
