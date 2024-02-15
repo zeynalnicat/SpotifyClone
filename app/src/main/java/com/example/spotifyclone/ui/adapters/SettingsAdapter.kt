@@ -8,22 +8,23 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.spotifyclone.databinding.ItemSettingsBinding
 import com.example.spotifyclone.model.SettingItem
 
-class SettingsAdapter(private val nav:(Int)->Unit):RecyclerView.Adapter<SettingsAdapter.ViewHolder>() {
+class SettingsAdapter(private val nav: (Int) -> Unit, private val logout: () -> Unit) :
+    RecyclerView.Adapter<SettingsAdapter.ViewHolder>() {
 
-    private val diffCall = object:DiffUtil.ItemCallback<SettingItem>(){
+    private val diffCall = object : DiffUtil.ItemCallback<SettingItem>() {
         override fun areItemsTheSame(oldItem: SettingItem, newItem: SettingItem): Boolean {
-            return oldItem===newItem
+            return oldItem === newItem
         }
 
         override fun areContentsTheSame(oldItem: SettingItem, newItem: SettingItem): Boolean {
-            return oldItem==newItem
+            return oldItem == newItem
         }
     }
 
-    private val diffUtil = AsyncListDiffer(this,diffCall)
+    private val diffUtil = AsyncListDiffer(this, diffCall)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = ItemSettingsBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val view = ItemSettingsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(view)
     }
 
@@ -35,19 +36,29 @@ class SettingsAdapter(private val nav:(Int)->Unit):RecyclerView.Adapter<Settings
         return holder.bind(diffUtil.currentList[position])
     }
 
-    inner class ViewHolder(private val binding:ItemSettingsBinding):RecyclerView.ViewHolder(binding.root){
-           fun bind(current:SettingItem){
-               binding.txtSectionName.text = current.name
-               if(current.canNavigate){
-                   binding.cardView.setOnClickListener{
-                       nav(current.navTo!!)
-                   }
+    inner class ViewHolder(private val binding: ItemSettingsBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(current: SettingItem) {
+            binding.txtSectionName.text = current.name
+            if (current.canNavigate) {
+                binding.cardView.setOnClickListener {
+                    current.navTo?.let {
+                        nav(it)
+                    }
 
-               }
-           }
+                }
+
+            }
+
+            if (current.isLogout) {
+                binding.cardView.setOnClickListener {
+                    logout()
+                }
+            }
+        }
     }
 
-    fun submitList(items:List<SettingItem>){
+    fun submitList(items: List<SettingItem>) {
         diffUtil.submitList(items)
     }
 }

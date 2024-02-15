@@ -13,7 +13,7 @@ import com.example.spotifyclone.databinding.FragmentSignUp3Binding
 
 class SignUp3 : Fragment() {
     private lateinit var binding: FragmentSignUp3Binding
-    private lateinit var btnList: MutableList<Button>
+    private lateinit var btnList: MutableMap<String, Button>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -26,14 +26,18 @@ class SignUp3 : Fragment() {
     }
 
     private fun setNavigation() {
-        btnList = mutableListOf()
-        btnList.add(binding.btnMen)
-        btnList.add(binding.btnWomen)
-        btnList.add(binding.btnOther)
+        btnList = mutableMapOf(
+            "Men" to binding.btnMen,
+            "Women" to binding.btnWomen,
+            "Other" to binding.btnOther
+        )
 
-        for (btn in btnList) {
+
+        for ((gender, btn) in btnList.entries) {
             btn.setOnClickListener {
-                Navigation.findNavController(requireView()).navigate(R.id.toSignUp4)
+                val bundle = Bundle()
+                bundle.putString("gender", gender)
+                Navigation.findNavController(requireView()).navigate(R.id.toSignUp4, bundle)
             }
         }
 
