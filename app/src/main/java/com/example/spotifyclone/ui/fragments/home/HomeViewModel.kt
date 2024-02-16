@@ -12,11 +12,15 @@ import com.example.spotifyclone.model.firebase.Tracks
 import com.example.spotifyclone.resource.Resource
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
 import com.example.spotifyclone.network.retrofit.api.ArtistsApi
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -24,7 +28,9 @@ import java.util.Locale
 class HomeViewModel(
     private val roomDB: RoomDB,
     private val albumApi: AlbumApi,
-    private val artistApi: ArtistsApi
+    private val artistApi: ArtistsApi,
+    private val firestore: FirebaseFirestore,
+    private val firebaseAuth: FirebaseAuth
 ) : ViewModel() {
 
     private val _date = MutableLiveData<String>()
@@ -109,32 +115,46 @@ class HomeViewModel(
     }
 
 
-    fun getRoomArtistAlbum() {
-        val artistDao = roomDB.artistDao()
-        viewModelScope.launch {
-            try {
-                val allArtistId = artistDao?.getArtistId()
-                val artistIDs = allArtistId?.toSet()
-                val artists = mutableListOf<Artist>()
-                artistIDs?.forEach {
-                    val response = artistApi.getArtists(it)
-                    if (response.isSuccessful) {
-                        val artist = response.body()?.artists?.get(0)
-                        artist?.let { artist ->
-                            artists.add(artist)
+    fun getArtist() {
+        val artistRef = firestore.collection("favArtist")
+        val userId = firebaseAuth.currentUser?.uid
+        val query = artistRef.whereEqualTo("userId", userId)
+        try {
+            val artistIDs = hashSetOf<String>()
+            val artists = mutableListOf<Artist>()
+            query.get()
+                .addOnSuccessListener { querySnapshot ->
+                    if (!querySnapshot.isEmpty) {
+                        val documents = querySnapshot.documents
+                        for (document in documents) {
+                            artistIDs.add(document["artistId"] as String)
                         }
+                        viewModelScope.launch(Dispatchers.IO) {
+                            artistIDs.forEach {
+                                val response = artistApi.getArtists(it)
+                                if (response.isSuccessful) {
+                                    val artist = response.body()?.artists?.get(0)
+                                    artist?.let { artist ->
+                                        artists.add(artist)
+                                    }
+                                }
+                            }
+                            if (artists.size > 0) {
+                                _artists.postValue(Resource.Success(artists))
+                            } else {
+                                _artists.postValue(Resource.Error(Exception("There was an error ")))
+                            }
+                        }
+
                     }
                 }
-                if (artists.size > 0) {
-                    _artists.postValue(Resource.Success(artists))
-                } else {
-                    _artists.postValue(Resource.Error(Exception("There was an error ")))
-                }
-            } catch (e: Exception) {
-                _artists.postValue(Resource.Error(e))
-            }
+
+
+        } catch (e: Exception) {
+            _artists.postValue(Resource.Error(e))
         }
     }
+
 
     //Firebase
     fun setRecommended() {

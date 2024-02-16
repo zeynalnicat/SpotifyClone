@@ -227,7 +227,6 @@ class AlbumViewFragment : Fragment() {
         }
     }
 
-
     private fun playAll() {
         this.tracks = MusicPlayer.getListOfTracks() ?: emptyList()
 
@@ -241,7 +240,6 @@ class AlbumViewFragment : Fragment() {
 
     private fun playNextTrack() {
         if (currentTrackIndex < tracks.size) {
-
             adapter.notifyDataSetChanged()
             mediaPlayer?.stop()
             saveSharedPreference("PlayingMusic", tracks[currentTrackIndex].name)

@@ -21,6 +21,8 @@ import com.example.spotifyclone.network.retrofit.api.AlbumApi
 import com.example.spotifyclone.network.retrofit.api.ArtistsApi
 import com.example.spotifyclone.resource.Resource
 import com.example.spotifyclone.ui.activity.MainActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -35,12 +37,21 @@ class HomeFragment : Fragment() {
 
     @Inject
     lateinit var albumApi: AlbumApi
+
+    @Inject
+    lateinit var firestore: FirebaseFirestore
+
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
+
     private lateinit var roomDB: RoomDB
     private val homeViewModel: HomeViewModel by viewModels {
         HomeFactory(
             roomDB,
             albumApi,
-            artistsApi
+            artistsApi,
+            firestore,
+            firebaseAuth
         )
     }
 
@@ -145,7 +156,7 @@ class HomeFragment : Fragment() {
             }
         }
         homeViewModel.getNewRelease()
-        homeViewModel.getRoomArtistAlbum()
+        homeViewModel.getArtist()
         homeViewModel.getPopularAlbums()
         homeViewModel.setRecommended()
 

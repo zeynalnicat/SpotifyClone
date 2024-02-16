@@ -5,5 +5,5 @@ object ConstValues {
     const val url = "https://api.spotify.com/v1/"
 
     const val token =
-        "BQC-Hi7Ib14oVUSPBUaeb5yYQYG1MERka1tLtSM4xF6OkXyULoyqiamzzgIv5if-w04UZyBpuGuC4-BUyN1wGOO04bf-sniCBb1RZQYk-uzuoL-h7FJa_S1jTiCzOyvoUN33WA0hPbE4QoRMmeO2VX8wRXL_QtYqEV_TERCBr1MDgxko28OwsfP5QlQBhvEyWRMIhIT5tEPAo2qsnj1R67jUvRcXtgvJppxYcqOlDyekb0CBATK_sYsiSmpHY8v7Xl6mGxzDryz7aQ"
+        "BQCI3SeHyr-zDHcy5DLROmyZS2mfhTHXBBwpS2y1oyoSURF8j047ljFys-OVLe8RxfVkb0SS9LqQ26qEU8hGafRplko-QvqkWe3YOUxrZhaIHl1xak9hv1-2ysjwKG7Ano4Mg3Io-VTmCERxKZFPeu9_knBtM2HIQNbRuX6-qr9Iy946j8PYbnLrjWVOJ0_QPMqc4ncor2r-chIeIk0sdI__A3jp655fuSLSOluSGcH1MhjD7bHU_rTmcul-nzWdHwHbu0ssXcPPrg"
 }
