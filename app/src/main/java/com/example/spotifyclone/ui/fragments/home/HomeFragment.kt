@@ -194,7 +194,6 @@ class HomeFragment : Fragment() {
 
     private fun setTrySomethingElse(list: List<Artist>) {
 
-
         val adapter =
             ArtistAdapter {
                 findNavController().navigate(

@@ -119,6 +119,7 @@ class HomeViewModel(
         val artistRef = firestore.collection("favArtist")
         val userId = firebaseAuth.currentUser?.uid
         val query = artistRef.whereEqualTo("userId", userId)
+
         try {
             val artistIDs = hashSetOf<String>()
             val artists = mutableListOf<Artist>()
@@ -129,6 +130,7 @@ class HomeViewModel(
                         for (document in documents) {
                             artistIDs.add(document["artistId"] as String)
                         }
+
                         viewModelScope.launch(Dispatchers.IO) {
                             artistIDs.forEach {
                                 val response = artistApi.getArtists(it)
@@ -139,16 +141,17 @@ class HomeViewModel(
                                     }
                                 }
                             }
-                            if (artists.size > 0) {
-                                _artists.postValue(Resource.Success(artists))
-                            } else {
-                                _artists.postValue(Resource.Error(Exception("There was an error ")))
+
+                            withContext(Dispatchers.Main) {
+                                if (artists.size > 0) {
+                                    _artists.postValue(Resource.Success(artists))
+                                } else {
+                                    _artists.postValue(Resource.Error(Exception("There was an error ")))
+                                }
                             }
                         }
-
                     }
                 }
-
 
         } catch (e: Exception) {
             _artists.postValue(Resource.Error(e))
@@ -204,6 +207,7 @@ class HomeViewModel(
                 }
 
                 override fun onCancelled(error: DatabaseError) {
+                    _recommended.postValue(Resource.Error(Exception(error.message)))
                 }
             })
         } catch (e: Exception) {

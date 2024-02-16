@@ -6,8 +6,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.spotifyclone.network.db.RoomDB
 import com.example.spotifyclone.model.album.popularalbums.Album
+import com.example.spotifyclone.model.firebase.Albums
+import com.example.spotifyclone.model.firebase.Tracks
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
+import com.example.spotifyclone.resource.Resource
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,6 +30,8 @@ class LibraryViewModel(
     private val _albumIds = MutableLiveData<List<String>>()
     private val _count = MutableLiveData<Int>(0)
     private val likedSongsDao = roomDB.likedSongsDao()
+    private val _likedAlbumsFirestore =
+        MutableLiveData<Resource<List<com.example.spotifyclone.model.dto.Album>>>()
 
 
     val count: LiveData<Int> get() = _count
@@ -32,6 +41,8 @@ class LibraryViewModel(
 
     val albumIds: LiveData<List<String>>
         get() = _albumIds
+
+    val likedAlbumsFirestore: LiveData<Resource<List<com.example.spotifyclone.model.dto.Album>>> get() = _likedAlbumsFirestore
 
     fun getFromDB() {
         val albumRef = firestore.collection("retrofitAlbum")
@@ -53,6 +64,73 @@ class LibraryViewModel(
                 }
             }
 
+    }
+
+    fun getAlbumFirestore() {
+        try {
+            val userId = firebaseAuth.currentUser?.uid
+            val database = FirebaseDatabase.getInstance()
+            val albumRef = firestore.collection("firebaseAlbum")
+            val query = albumRef.whereEqualTo("userId", userId)
+            val refAlbums = database.getReference("albums")
+
+            val listAlbums = mutableListOf<Albums>()
+            val listAlbumIds = mutableListOf<String>()
+
+            query.get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val documents = task.result
+                    if (!documents.isEmpty && documents != null) {
+                        for (document in documents) {
+                            listAlbumIds.add(document["albumId"] as String)
+                        }
+                        listAlbumIds.forEach {
+                            refAlbums.orderByChild("id").equalTo(it).get()
+                                .addOnSuccessListener { snapshot->
+                                    for(ds in snapshot.children){
+                                        val albumMap = ds.value as HashMap<*, *>
+                                        val tracksMap = albumMap["tracks"] as List<Map<*, *>>
+                                        val trackList = tracksMap.map { track ->
+                                            val trackMap = track
+                                            Tracks(
+                                                artist = trackMap["artist"] as String?,
+                                                id = trackMap["id"] as String?,
+                                                name = trackMap["name"] as String?,
+                                                trackUri = trackMap["trackUri"] as String?
+                                            )
+                                        }
+
+                                        val album = Albums(
+                                            albumMap["coverImg"] as String?,
+                                            albumMap["id"] as String?,
+                                            albumMap["name"] as String?,
+                                            trackList
+                                        )
+
+                                        listAlbums.add(album)
+                                    }
+                                    val albumModel = listAlbums.map {
+                                        com.example.spotifyclone.model.dto.Album(
+                                            it.coverImg ?: "",
+                                            it.id ?: "",
+                                            it.name ?: "",
+                                            it.tracks ?: emptyList(),
+                                            true
+                                        )
+                                    }
+                                    _likedAlbumsFirestore.postValue(Resource.Success(albumModel))
+
+                                }
+
+
+                        }
+                    }
+                }
+            }
+
+        } catch (e: Exception) {
+            _likedAlbumsFirestore.postValue(Resource.Error(e))
+        }
     }
 
     fun getAlbumsFromApi(albumIDs: List<String>) {

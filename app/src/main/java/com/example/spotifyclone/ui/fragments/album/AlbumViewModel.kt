@@ -11,7 +11,9 @@ import com.example.spotifyclone.model.album.singlealbum.Album
 import com.example.spotifyclone.resource.Resource
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.Exception
@@ -31,8 +33,6 @@ class AlbumViewModel(
     val album: LiveData<Album>
         get() = _album
 
-    val insertion: LiveData<Resource<Long>>
-        get() = _insertion
 
     val isInDB: LiveData<Boolean>
         get() = _isInDB
@@ -50,10 +50,26 @@ class AlbumViewModel(
         }
     }
 
-    fun saveDB(albumId: String) {
+    fun saveDB(albumId: String, isFirebase: Boolean) {
         val userId = firebaseAuth.currentUser?.uid
-        val albumRef = firestore.collection("retrofitAlbum")
-        val query = albumRef.whereEqualTo("userId", userId).whereEqualTo("albumId", albumId)
+        if (isFirebase) {
+            val albumRef = firestore.collection("firebaseAlbum")
+            val query = albumRef.whereEqualTo("userId", userId).whereEqualTo("albumId", albumId)
+            addFirebaseAlbum(query, albumRef, albumId, userId.toString())
+        } else {
+            val albumRef = firestore.collection("retrofitAlbum")
+            val query = albumRef.whereEqualTo("userId", userId).whereEqualTo("albumId", albumId)
+            addFirebaseAlbum(query, albumRef, albumId, userId.toString())
+
+        }
+    }
+
+    fun addFirebaseAlbum(
+        query: Query,
+        albumRef: CollectionReference,
+        albumId: String,
+        userId: String
+    ) {
 
         try {
             query.get()
@@ -77,31 +93,40 @@ class AlbumViewModel(
                     }
 
                 }
-        }catch (e:Exception){
+        } catch (e: Exception) {
             _insertion.postValue(Resource.Error(e))
         }
-
     }
 
 
-    fun checkInDB(albumId: String) {
+    fun checkInDB(albumId: String, isFirebase: Boolean) {
         val userId = firebaseAuth.currentUser?.uid
-        val albumRef = firestore.collection("retrofitAlbum")
-        val query = albumRef.whereEqualTo("userId", userId).whereEqualTo("albumId", albumId)
+        if (isFirebase) {
+            val albumRef = firestore.collection("firebaseAlbum")
+            val query = albumRef.whereEqualTo("userId", userId).whereEqualTo("albumId", albumId)
+            checkFirestore(query)
+        } else {
+            val albumRef = firestore.collection("retrofitAlbum")
+            val query = albumRef.whereEqualTo("userId", userId).whereEqualTo("albumId", albumId)
+            checkFirestore(query)
 
+        }
+    }
+
+    fun checkFirestore(query: Query) {
         try {
             query.get()
-                .addOnCompleteListener { task->
-                    if(task.isSuccessful){
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
                         val document = task.result
-                        if(document!=null && !document.isEmpty){
+                        if (document != null && !document.isEmpty) {
                             _isInDB.postValue(true)
-                        }else{
+                        } else {
                             _isInDB.postValue(false)
                         }
                     }
                 }
-        }catch (e:Exception){
+        } catch (e: Exception) {
 
         }
     }

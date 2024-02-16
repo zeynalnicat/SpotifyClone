@@ -20,6 +20,7 @@ import com.example.spotifyclone.network.db.RoomDB
 import com.example.spotifyclone.model.dto.LibraryAlbum
 import com.example.spotifyclone.model.firebase.Tracks
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
+import com.example.spotifyclone.resource.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
@@ -71,6 +72,25 @@ class LibraryFragment : Fragment() {
         libraryViewModel.count.observe(viewLifecycleOwner) {
             binding.txtNumberSongs.text = it.toString()
         }
+
+        libraryViewModel.likedAlbumsFirestore.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Success -> {
+                    binding.recyclerFirebase.visibility = View.VISIBLE
+                    setAdapterFirebase(it.data)
+                }
+
+                is Resource.Error -> {
+                    binding.recyclerFirebase.visibility = View.GONE
+                }
+
+                is Resource.Loading -> {
+
+                }
+            }
+        }
+
+        libraryViewModel.getAlbumFirestore()
 
         libraryViewModel.setSize()
         setAdapter()
@@ -151,10 +171,24 @@ class LibraryFragment : Fragment() {
                     it
                 )
             }
-            val albums = it.map { Album(it.images[0].url,it.id,it.name, emptyList()) }
+            val albums = it.map { Album(it.images[0].url, it.id, it.name, emptyList()) }
             adapter.submitList(albums)
             binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
             binding.recyclerView.adapter = adapter
         }
+    }
+
+
+    private fun setAdapterFirebase(albums: List<Album>) {
+        val adapter = LibraryAlbumAdapter {
+            findNavController().navigate(
+                R.id.action_libraryFragment_to_albumViewFragment,
+                it
+            )
+        }
+        val albumsModel = albums.map { Album(it.coverImg, it.id, it.name, it.tracks, true) }
+        adapter.submitList(albumsModel)
+        binding.recyclerFirebase.layoutManager = GridLayoutManager(requireContext(), 1)
+        binding.recyclerFirebase.adapter = adapter
     }
 }

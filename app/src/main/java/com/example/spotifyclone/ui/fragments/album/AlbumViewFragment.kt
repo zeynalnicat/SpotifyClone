@@ -83,9 +83,9 @@ class AlbumViewFragment : Fragment() {
         }
 
 
-        albumViewModel.checkInDB(album.id)
+
         setLayoutButton()
-        saveAlbumDb()
+
         getAlbum()
 
 
@@ -105,9 +105,11 @@ class AlbumViewFragment : Fragment() {
 
     private fun getAlbum() {
         if (album.isFirebase) {
+            saveAlbumDb(true)
             binding.txtAlbumName.text = album.name
             binding.txtArtistName.text = album.tracks[0].artist
             imgAlbum = album.coverImg
+            albumViewModel.checkInDB(album.id, true)
             Glide.with(binding.root)
                 .load(album.coverImg)
                 .into(binding.imgAlbum)
@@ -120,7 +122,9 @@ class AlbumViewFragment : Fragment() {
 
             setAdapter(album.coverImg, music)
         } else {
+            saveAlbumDb(false)
             albumViewModel.getAlbum(album.id)
+            albumViewModel.checkInDB(album.id, false)
             albumViewModel.album.observe(viewLifecycleOwner) {
                 val artistNames = it.artists.joinToString { artist: Artist -> artist.name + " " }
                 binding.txtArtistName.text = artistNames
@@ -224,9 +228,9 @@ class AlbumViewFragment : Fragment() {
         return sharedPreference.containsValue(value)
     }
 
-    private fun saveAlbumDb() {
+    private fun saveAlbumDb(isFirebase: Boolean) {
         binding.imgLike.setOnClickListener {
-            albumViewModel.saveDB(album.id)
+            albumViewModel.saveDB(album.id, isFirebase)
         }
 
     }

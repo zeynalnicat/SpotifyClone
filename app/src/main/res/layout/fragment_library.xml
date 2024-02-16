@@ -150,9 +150,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
             app:layout_constraintStart_toStartOf="@+id/leftGuideline"
             app:layout_constraintTop_toBottomOf="@+id/imgPlaylistLiked" />
@@ -165,6 +164,16 @@
             app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
             app:layout_constraintStart_toStartOf="@+id/leftGuideline"
             app:layout_constraintTop_toTopOf="@+id/imgPlaylistLiked" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerFirebase"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+            app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -198,13 +207,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                tools:text="TextView"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imgProfileDrawer"
-                app:layout_constraintTop_toTopOf="@+id/imgProfileDrawer" />
+                app:layout_constraintTop_toTopOf="@+id/imgProfileDrawer"
+                tools:text="TextView" />
 
             <TextView
                 android:id="@+id/textView5"
@@ -213,8 +222,8 @@
                 android:layout_marginTop="4dp"
                 android:text="@string/settings_txt_view_profile"
                 android:textColor="@color/gray"
-                android:textStyle="bold"
                 android:textSize="12sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/txtNameDrawer"
                 app:layout_constraintTop_toBottomOf="@+id/txtNameDrawer" />
 
@@ -222,9 +231,9 @@
                 android:id="@+id/divider3"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:backgroundTint="@color/white"
                 android:layout_marginTop="16dp"
                 android:background="?android:attr/listDivider"
+                android:backgroundTint="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView5" />
@@ -255,9 +264,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:text="@string/settings_txt_header"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:text="@string/settings_txt_header"
                 app:layout_constraintBottom_toBottomOf="@+id/iconSetting"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/iconSetting"
