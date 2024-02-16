@@ -10,11 +10,18 @@ import com.example.spotifyclone.network.db.likedsongs.LikedSongsEntity
 import com.example.spotifyclone.model.album.singlealbum.Album
 import com.example.spotifyclone.resource.Resource
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.Exception
 
-class AlbumViewModel(private val roomDB: RoomDB,private val albumApi:AlbumApi) : ViewModel() {
+class AlbumViewModel(
+    private val roomDB: RoomDB,
+    private val albumApi: AlbumApi,
+    private val firebaseAuth: FirebaseAuth,
+    private val firestore: FirebaseFirestore
+) : ViewModel() {
     private val _album = MutableLiveData<Album>()
     private val _insertion = MutableLiveData<Resource<Long>>()
     private val _isInDB = MutableLiveData<Boolean>(false)
@@ -44,42 +51,57 @@ class AlbumViewModel(private val roomDB: RoomDB,private val albumApi:AlbumApi) :
     }
 
     fun saveDB(albumId: String) {
-        val albumDao = roomDB.albumDao()
-        checkInDB(albumId)
-        if (_isInDB.value == true) {
-            _insertion.postValue(Resource.Loading)
-            viewModelScope.launch(Dispatchers.IO) {
-                try {
-                    albumDao.delete(albumId)
-                    _insertion.postValue(Resource.Success(0L))
-                    _isInDB.postValue(false)
-                } catch (e: Exception) {
-                    _insertion.postValue(Resource.Error(e))
-                }
-            }
-        } else {
-            viewModelScope.launch(Dispatchers.IO) {
-                try {
-                    val insert = albumDao.insert(AlbumEntity(albumId = albumId))
-                    if (insert != -1L) {
-                        _insertion.postValue(Resource.Success(insert))
-                        _isInDB.postValue(true)
-                    } else {
-                        _insertion.postValue(Resource.Error(Exception("There was an error while handling the request")))
+        val userId = firebaseAuth.currentUser?.uid
+        val albumRef = firestore.collection("retrofitAlbum")
+        val query = albumRef.whereEqualTo("userId", userId).whereEqualTo("albumId", albumId)
+
+        try {
+            query.get()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val existingDocument = task.result
+                        if (existingDocument != null && !existingDocument.isEmpty) {
+                            val document = existingDocument.documents[0].id
+                            albumRef.document(document).delete()
+                            _isInDB.postValue(false)
+                            _insertion.postValue(Resource.Success(0L))
+                        } else {
+                            val album = hashMapOf(
+                                "albumId" to albumId,
+                                "userId" to userId
+                            )
+                            albumRef.add(album)
+                            _insertion.postValue(Resource.Success(3))
+                            _isInDB.postValue(true)
+                        }
                     }
-                } catch (e: Exception) {
-                    _insertion.postValue(Resource.Error(e))
+
                 }
-            }
+        }catch (e:Exception){
+            _insertion.postValue(Resource.Error(e))
         }
+
     }
 
 
     fun checkInDB(albumId: String) {
-        val albumDao = roomDB.albumDao()
-        viewModelScope.launch(Dispatchers.IO) {
-            val count = albumDao.checkInDB(albumId)
-            _isInDB.postValue(count > 0)
+        val userId = firebaseAuth.currentUser?.uid
+        val albumRef = firestore.collection("retrofitAlbum")
+        val query = albumRef.whereEqualTo("userId", userId).whereEqualTo("albumId", albumId)
+
+        try {
+            query.get()
+                .addOnCompleteListener { task->
+                    if(task.isSuccessful){
+                        val document = task.result
+                        if(document!=null && !document.isEmpty){
+                            _isInDB.postValue(true)
+                        }else{
+                            _isInDB.postValue(false)
+                        }
+                    }
+                }
+        }catch (e:Exception){
 
         }
     }

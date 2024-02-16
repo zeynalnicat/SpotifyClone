@@ -15,8 +15,10 @@ import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.ui.adapters.LibraryAlbumAdapter
 import com.example.spotifyclone.databinding.FragmentLibraryBinding
+import com.example.spotifyclone.model.dto.Album
 import com.example.spotifyclone.network.db.RoomDB
 import com.example.spotifyclone.model.dto.LibraryAlbum
+import com.example.spotifyclone.model.firebase.Tracks
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -39,7 +41,15 @@ class LibraryFragment : Fragment() {
     @Inject
     lateinit var firestore: FirebaseFirestore
 
-    private val libraryViewModel: LibraryViewModel by viewModels { LibraryFactor(roomDB, albumApi) }
+    private val libraryViewModel: LibraryViewModel by viewModels {
+        LibraryFactor(
+            roomDB,
+            albumApi,
+            firebaseAuth,
+            firestore
+        )
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -54,7 +64,7 @@ class LibraryFragment : Fragment() {
         roomDB = RoomDB.accessDb(requireContext())!!
 
         libraryViewModel.getFromDB()
-        libraryViewModel.roomAlbums.observe(viewLifecycleOwner) {
+        libraryViewModel.albumIds.observe(viewLifecycleOwner) {
             libraryViewModel.getAlbumsFromApi(it)
         }
 
@@ -141,7 +151,7 @@ class LibraryFragment : Fragment() {
                     it
                 )
             }
-            val albums = it.map { LibraryAlbum(it.id, it.name, it.images[0].url) }
+            val albums = it.map { Album(it.images[0].url,it.id,it.name, emptyList()) }
             adapter.submitList(albums)
             binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
             binding.recyclerView.adapter = adapter

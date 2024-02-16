@@ -25,6 +25,8 @@ import com.example.spotifyclone.network.retrofit.api.AlbumApi
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -37,7 +39,20 @@ class AlbumViewFragment : Fragment() {
 
     @Inject
     lateinit var albumApi: AlbumApi
-    private val albumViewModel: AlbumViewModel by viewModels { AlbumFactory(roomDB,albumApi) }
+
+    @Inject
+    lateinit var firestore: FirebaseFirestore
+
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
+    private val albumViewModel: AlbumViewModel by viewModels {
+        AlbumFactory(
+            roomDB,
+            albumApi,
+            firebaseAuth,
+            firestore
+        )
+    }
     private lateinit var tracks: List<MusicItem>
     private var currentTrackIndex: Int = 0
     private var imgAlbum = ""
