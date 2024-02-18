@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.ui.adapters.PlaylistAdapter
 import com.example.spotifyclone.databinding.FragmentUserLibraryBinding
-import com.example.spotifyclone.network.db.RoomDB
+
 import com.example.spotifyclone.model.dto.PlaylistModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -32,8 +32,7 @@ class UserLibraryFragment : Fragment() {
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
 
-    private lateinit var roomDB: RoomDB
-    private val userLibraryViewModel: UserLibraryViewModel by viewModels { UserLibraryFactory(roomDB) }
+    private val userLibraryViewModel: UserLibraryViewModel by viewModels { UserLibraryFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,8 +46,8 @@ class UserLibraryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        roomDB = RoomDB.accessDb(requireContext())!!
-        userLibraryViewModel.getPlaylists()
+
+//        userLibraryViewModel.getPlaylists()
         userLibraryViewModel.playlists.observe(viewLifecycleOwner) {
             setAdapter(it)
         }

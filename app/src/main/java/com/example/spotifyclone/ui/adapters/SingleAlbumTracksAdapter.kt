@@ -15,7 +15,7 @@ import com.example.spotifyclone.musicplayer.MusicPlayer
 
 class SingleAlbumTracksAdapter(
     private val img: String,
-    private val setMusicLayout: () -> Unit,
+    private val setMusicLayout: (Int) -> Unit,
     private val saveSharedPreference: (key: String, value: String) -> Unit,
     private val saveSharedPreferenceBool: (value: Boolean) -> Unit,
     private val isInSP: (value: String) -> Boolean,
@@ -49,6 +49,9 @@ class SingleAlbumTracksAdapter(
         return holder.bind(diffUtil.currentList[position])
     }
 
+
+
+
     inner class ViewHolder(private val binding: ItemAlbumTracksBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -76,7 +79,7 @@ class SingleAlbumTracksAdapter(
                 saveSharedPreferenceBool(true)
                 track.isPlayed = true
                 notifyDataSetChanged()
-                setMusicLayout()
+                setMusicLayout(layoutPosition)
                 MusicPlayer.playNext(binding.root.context, track.trackUri)
             }
             binding.imgMore.setOnClickListener {
@@ -87,5 +90,9 @@ class SingleAlbumTracksAdapter(
 
     fun submitList(tracks: List<MusicItem>) {
         diffUtil.submitList(tracks)
+    }
+
+    fun getTracks(): List<MusicItem> {
+        return diffUtil.currentList
     }
 }

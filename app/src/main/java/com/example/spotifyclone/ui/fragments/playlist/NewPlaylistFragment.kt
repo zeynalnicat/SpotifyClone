@@ -12,7 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.FragmentNewPlaylistBinding
-import com.example.spotifyclone.network.db.RoomDB
+
 import com.example.spotifyclone.resource.Resource
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
@@ -21,8 +21,7 @@ import com.example.spotifyclone.ui.fragments.playlist.NewPlaylistFactory
 
 class NewPlaylistFragment : Fragment() {
     private lateinit var binding: FragmentNewPlaylistBinding
-    private lateinit var roomDB: RoomDB
-    private val newPlaylistViewModel: NewPlaylistViewModel by viewModels { NewPlaylistFactory(roomDB) }
+    private val newPlaylistViewModel: NewPlaylistViewModel by viewModels { NewPlaylistFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,10 +37,10 @@ class NewPlaylistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        roomDB = RoomDB.accessDb(requireContext())!!
+
         binding.btnCreate.setOnClickListener {
             val name = binding.edtPlaylistName.text.toString()
-            newPlaylistViewModel.insert(name)
+//            newPlaylistViewModel.insert(name)
         }
         newPlaylistViewModel.isSuccessful.observe(viewLifecycleOwner) {
             if (it is Resource.Success) {

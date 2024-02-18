@@ -11,14 +11,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.spotifyclone.ui.adapters.PlaylistAdapter
 import com.example.spotifyclone.databinding.FragmentAddPlaylistBinding
-import com.example.spotifyclone.network.db.RoomDB
+
 import com.example.spotifyclone.model.dto.PlaylistModel
 import com.example.spotifyclone.resource.Resource
 
 class AddPlaylistFragment : Fragment() {
     private lateinit var binding:FragmentAddPlaylistBinding
-    private lateinit var roomDB: RoomDB
-    private val addPlaylistViewModel : AddPlaylistViewModel by viewModels { AddPlaylistFactory(roomDB) }
+    private val addPlaylistViewModel : AddPlaylistViewModel by viewModels { AddPlaylistFactory() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +31,7 @@ class AddPlaylistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        roomDB = RoomDB.accessDb(requireContext())!!
+
         addPlaylistViewModel.playlists.observe(viewLifecycleOwner){
             when(it){
                 is Resource.Success -> {
@@ -46,7 +45,7 @@ class AddPlaylistFragment : Fragment() {
                 }
             }
         }
-        addPlaylistViewModel.getPlaylists()
+//        addPlaylistViewModel.getPlaylists()
     }
 
     private fun setAdapter(playlists:List<PlaylistModel>){

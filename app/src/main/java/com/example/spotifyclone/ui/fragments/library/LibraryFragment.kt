@@ -16,9 +16,7 @@ import com.example.spotifyclone.R
 import com.example.spotifyclone.ui.adapters.LibraryAlbumAdapter
 import com.example.spotifyclone.databinding.FragmentLibraryBinding
 import com.example.spotifyclone.model.dto.Album
-import com.example.spotifyclone.network.db.RoomDB
-import com.example.spotifyclone.model.dto.LibraryAlbum
-import com.example.spotifyclone.model.firebase.Tracks
+
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
 import com.example.spotifyclone.resource.Resource
 import com.google.firebase.auth.FirebaseAuth
@@ -30,7 +28,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class LibraryFragment : Fragment() {
     private lateinit var binding: FragmentLibraryBinding
-    private lateinit var roomDB: RoomDB
 
 
     @Inject
@@ -44,7 +41,6 @@ class LibraryFragment : Fragment() {
 
     private val libraryViewModel: LibraryViewModel by viewModels {
         LibraryFactor(
-            roomDB,
             albumApi,
             firebaseAuth,
             firestore
@@ -62,7 +58,6 @@ class LibraryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        roomDB = RoomDB.accessDb(requireContext())!!
 
         libraryViewModel.getFromDB()
         libraryViewModel.albumIds.observe(viewLifecycleOwner) {

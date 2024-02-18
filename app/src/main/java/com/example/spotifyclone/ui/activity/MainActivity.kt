@@ -1,11 +1,14 @@
 package com.example.spotifyclone.ui.activity
 
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Bundle
+import android.os.IBinder
 import android.os.Looper
 import android.view.View
-
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
@@ -13,8 +16,7 @@ import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ActivityMainBinding
 import com.example.spotifyclone.model.dto.MusicItem
-import com.example.spotifyclone.model.firebase.Tracks
-import com.example.spotifyclone.musicplayer.MusicPlayer
+import com.example.spotifyclone.service.MusicPlayerService
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.fragments.track.TrackViewFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,13 +25,25 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var handler: android.os.Handler
+    private var musicPlayerService: MusicPlayerService? = null
     private var totalTime: Int = 0
+    private var position = 0
+    private var tracks: List<MusicItem> = emptyList()
+    private lateinit var sharedPreference: SharedPreference
+
+    override fun onStart() {
+        super.onStart()
+        val intent = Intent(this, MusicPlayerService::class.java)
+        tracks = sharedPreference.getSongsList()
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        sharedPreference = SharedPreference(this)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
@@ -38,6 +52,40 @@ class MainActivity : AppCompatActivity() {
         setNavigation()
 
 
+    }
+
+    fun getMediaPlayer(): MediaPlayer? {
+        return musicPlayerService?.mediaPlayer
+    }
+
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as MusicPlayerService.MusicPlayerBinder
+            musicPlayerService = binder.getService()
+            checkVisibility()
+            musicPlayerService?.let {
+                it.mediaPlayer.let { mediaPlayer ->
+                    totalTime = mediaPlayer.duration
+                    handler = android.os.Handler(Looper.getMainLooper())
+                    updateProgress(mediaPlayer)
+
+                    binding.imgPause.setOnClickListener { view ->
+                        if (mediaPlayer.isPlaying) {
+                            mediaPlayer.pause()
+                            binding.imgPause.setImageResource(R.drawable.icon_music_play)
+                        } else {
+                            mediaPlayer.start()
+                            binding.imgPause.setImageResource(R.drawable.icon_music_pause)
+                        }
+                    }
+                }
+
+            }
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+
+        }
     }
 
     fun checkVisibility() {
@@ -66,6 +114,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun setTracksAndPosition(tracks: List<MusicItem>, position: Int) {
+        this.position = position
+        this.tracks = tracks
+        musicPlayerService?.tracks = tracks
+        musicPlayerService?.songIndex = position
+    }
+
     fun setMusicAttrs() {
         val sharedPreference = SharedPreference(this)
         val musicName = sharedPreference.getValue("PlayingMusic", "")
@@ -77,28 +132,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setMusicLayout(name: String, img: String, uri: String) {
-
-        MusicPlayer.initialize(this, uri)
-        val music = MusicPlayer.getMediaPlayer()
-
-        music?.let {
-            it.start()
-            totalTime = it.duration
-            handler = android.os.Handler(Looper.getMainLooper())
-            updateProgress(it)
-
-
-            binding.imgPause.setOnClickListener { view ->
-                if (it.isPlaying) {
-                    it.pause()
-                    binding.imgPause.setImageResource(R.drawable.icon_music_play)
-                } else {
-                    it.start()
-                    binding.imgPause.setImageResource(R.drawable.icon_music_pause)
-                }
-            }
-
-        }
+        musicPlayerService?.playMusic(uri)
 
         Glide.with(binding.root)
             .load(img)
@@ -108,22 +142,18 @@ class MainActivity : AppCompatActivity() {
         binding.txtMusicName.text = name
     }
 
-    fun initializeMusic(musicUri: String) {
-        MusicPlayer.getMediaPlayer()?.setDataSource(this, Uri.parse(musicUri))
-    }
 
     private fun updateProgress(music: MediaPlayer?) {
         music?.let {
-            handler.postDelayed({
-
-                val currentDuration = it.currentPosition
-                val progress = (currentDuration.toFloat() / totalTime * 100).toInt()
-                binding.progressBar.progress = progress
-
-                updateProgress(it)
-            }, 100)
+            if (it.isPlaying) {
+                handler.postDelayed({
+                    val currentDuration = it.currentPosition
+                    val progress = (currentDuration.toFloat() / totalTime * 100).toInt()
+                    binding.progressBar.progress = progress
+                    updateProgress(it)
+                }, 100)
+            }
         }
-
     }
 
     private fun setNavigation() {
@@ -139,10 +169,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun getCurrentTrack(): MusicItem {
 
-    fun playTracks(list: List<MusicItem>) {
-
+        return musicPlayerService?.currentTrack()!!
     }
 
+
+    fun pauseMusic() {
+        musicPlayerService?.mediaPlayer?.pause()
+    }
+
+    fun nextSong() {
+        musicPlayerService?.nextSong()
+    }
+
+    fun prevSong() {
+        musicPlayerService?.prevSong()
+    }
 
 }

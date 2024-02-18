@@ -13,7 +13,7 @@ import com.example.spotifyclone.R
 import com.example.spotifyclone.ui.adapters.ArtistAdapter
 import com.example.spotifyclone.ui.adapters.AlbumAdapter
 import com.example.spotifyclone.databinding.FragmentHomeBinding
-import com.example.spotifyclone.network.db.RoomDB
+
 import com.example.spotifyclone.model.album.newrelease.Item
 import com.example.spotifyclone.model.artist.Artist
 import com.example.spotifyclone.model.dto.Album
@@ -44,10 +44,9 @@ class HomeFragment : Fragment() {
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
 
-    private lateinit var roomDB: RoomDB
+
     private val homeViewModel: HomeViewModel by viewModels {
         HomeFactory(
-            roomDB,
             albumApi,
             artistsApi,
             firestore,
@@ -68,7 +67,6 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        roomDB = RoomDB.accessDb(requireContext())!!
         setTextHeader()
         setNavigation()
 

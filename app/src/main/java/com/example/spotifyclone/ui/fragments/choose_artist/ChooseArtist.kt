@@ -18,8 +18,7 @@ import com.example.spotifyclone.ui.adapters.ChooseArtistAdapter
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.example.spotifyclone.databinding.FragmentChooseArtistBinding
-import com.example.spotifyclone.network.db.artist.ArtistsEntity
-import com.example.spotifyclone.network.db.RoomDB
+
 import com.example.spotifyclone.model.artist.Artist
 import com.example.spotifyclone.network.retrofit.api.ArtistsApi
 import com.google.android.flexbox.AlignItems

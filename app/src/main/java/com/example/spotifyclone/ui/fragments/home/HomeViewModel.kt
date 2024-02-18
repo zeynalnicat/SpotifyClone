@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.spotifyclone.network.db.RoomDB
 import com.example.spotifyclone.model.album.newrelease.Item
 import com.example.spotifyclone.model.artist.Artist
 import com.example.spotifyclone.model.firebase.Albums
@@ -26,7 +25,6 @@ import java.util.Date
 import java.util.Locale
 
 class HomeViewModel(
-    private val roomDB: RoomDB,
     private val albumApi: AlbumApi,
     private val artistApi: ArtistsApi,
     private val firestore: FirebaseFirestore,

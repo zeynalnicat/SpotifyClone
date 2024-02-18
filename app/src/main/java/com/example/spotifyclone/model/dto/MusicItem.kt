@@ -1,5 +1,6 @@
 package com.example.spotifyclone.model.dto
 
+import java.io.Serializable
 
 
 data class MusicItem(
@@ -8,4 +9,4 @@ data class MusicItem(
     val name: String,
     val trackUri: String,
     var isPlayed: Boolean = false
-)
+) : Serializable

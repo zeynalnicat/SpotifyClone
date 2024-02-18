@@ -4,58 +4,106 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.spotifyclone.network.db.RoomDB
-import com.example.spotifyclone.network.db.likedsongs.LikedSongsEntity
-import com.example.spotifyclone.resource.Resource
+import com.example.spotifyclone.model.dto.MusicItem
+import com.example.spotifyclone.network.retrofit.api.AlbumApi
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class TrackViewModel(private val roomDB: RoomDB) : ViewModel() {
-
-    private val _insertion = MutableLiveData<Long>()
-
-    private val _isInDb = MutableLiveData<Boolean>(false)
-
-    private val likedSongsDao = roomDB.likedSongsDao()
-    val insertion: LiveData<Long> get() = _insertion
-    val isInDb: LiveData<Boolean> get() = _isInDb
-
-    fun insertLikedSongs(name: String, artist: String, img: String, uri: String) {
-        check(name)
-        if(_isInDb.value==false){
-            viewModelScope.launch(Dispatchers.IO) {
-                try {
-                    val likedSongsDao = roomDB.likedSongsDao()
-                    val check = likedSongsDao.insert(LikedSongsEntity(0, name, artist, img, uri))
-                    _insertion.postValue(check)
-                    _isInDb.postValue(true)
-
-                } catch (e: Exception) {
-                    _insertion.postValue(-1L)
-                }
-
-            }
-        }else{
-            viewModelScope.launch(Dispatchers.IO) {
-                try {
-                    likedSongsDao.delete(name)
-                    _insertion.postValue(0)
-                    _isInDb.postValue(false)
-                } catch (e: Exception) {
-                    _insertion.postValue(-1L)
-                }
-            }
-        }
+class TrackViewModel(
+    private val firebaseAuth: FirebaseAuth,
+    private val firestore: FirebaseFirestore
+) : ViewModel() {
 
 
+
+
+    private val _insertionLiked = MutableLiveData<Long>()
+
+    private val _isInLiked = MutableLiveData<Boolean>(false)
+
+    val insertionLiked: LiveData<Long> get() = _insertionLiked
+
+    val isInLiked: LiveData<Boolean> get() = _isInLiked
+
+
+    private val _currentTrack = MutableLiveData<MusicItem>()
+
+    val currentTrack: LiveData<MusicItem> get() = _currentTrack
+
+    fun getCurrentTrack(current: () -> MusicItem) {
+        val musicItem = current()
+        _currentTrack.postValue(musicItem)
+    }
+
+    fun setCurrentTrack(musicItem: MusicItem) {
+        _currentTrack.value = musicItem
     }
 
 
-    fun check(name: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val count = likedSongsDao.check(name)
-            _isInDb.postValue(count > 0)
+    fun insertLikedSongs(name: String, artist: String, img: String, uri: String) {
+        val likedSongRef = firestore.collection("likedSongs")
+        val userId = firebaseAuth.currentUser?.uid
+        val query = likedSongRef.whereEqualTo("userId", userId).whereEqualTo("musicUri", uri)
+
+        try {
+            query.get()
+                .addOnCompleteListener { task ->
+                    val result = task.result
+                    if (result != null && !result.isEmpty) {
+                        val document = result.documents[0]
+                        document.reference.delete()
+                        _insertionLiked.postValue(0)
+                        _isInLiked.postValue(false)
+                    } else {
+                        val music = hashMapOf(
+                            "artist" to artist,
+                            "imgUri" to img,
+                            "musicUri" to uri,
+                            "name" to name,
+                            "userId" to userId
+                        )
+                        likedSongRef.add(music)
+                            .addOnSuccessListener {
+                                _insertionLiked.postValue(2)
+                                _isInLiked.postValue(true)
+                            }
+                            .addOnFailureListener {
+                                _insertionLiked.postValue(-1L)
+                            }
+
+                    }
+                }
+
+        } catch (e: Exception) {
+            _insertionLiked.postValue(-1L)
+
         }
+    }
+
+    fun checkLikedSongs(musicName: String) {
+        val likedSongRef = firestore.collection("likedSongs")
+        val userId = firebaseAuth.currentUser?.uid
+        val query = likedSongRef.whereEqualTo("userId", userId).whereEqualTo("name", musicName)
+
+        query.get()
+            .addOnCompleteListener { task ->
+
+                if (task.isSuccessful) {
+                    val result = task.result
+                    if (result != null && !result.isEmpty) {
+                        _isInLiked.postValue(true)
+                    } else {
+                        _isInLiked.postValue(false)
+                    }
+                } else {
+                    _isInLiked.postValue(false)
+                }
+
+            }
+
     }
 
 }

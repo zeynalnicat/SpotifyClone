@@ -1,8 +1,11 @@
 package com.example.spotifyclone.ui.fragments.album
 
+import android.content.ComponentName
+import android.content.ServiceConnection
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
+import android.os.IBinder
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,14 +19,16 @@ import com.example.spotifyclone.R
 import com.example.spotifyclone.ui.adapters.SingleAlbumTracksAdapter
 import com.example.spotifyclone.databinding.BottomSheetTrackBinding
 import com.example.spotifyclone.databinding.FragmentAlbumViewBinding
-import com.example.spotifyclone.network.db.RoomDB
+
 import com.example.spotifyclone.model.album.singlealbum.Artist
 import com.example.spotifyclone.model.dto.Album
 import com.example.spotifyclone.model.dto.MusicItem
 import com.example.spotifyclone.musicplayer.MusicPlayer
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
+import com.example.spotifyclone.service.MusicPlayerService
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
+import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -35,7 +40,8 @@ class AlbumViewFragment : Fragment() {
     private lateinit var binding: FragmentAlbumViewBinding
     private lateinit var album: Album
     private var mediaPlayer: MediaPlayer? = null
-    private lateinit var roomDB: RoomDB
+
+    private val musicPlayerViewModel: MusicPlayerViewModel by viewModels()
 
     @Inject
     lateinit var albumApi: AlbumApi
@@ -47,7 +53,6 @@ class AlbumViewFragment : Fragment() {
     lateinit var firebaseAuth: FirebaseAuth
     private val albumViewModel: AlbumViewModel by viewModels {
         AlbumFactory(
-            roomDB,
             albumApi,
             firebaseAuth,
             firestore
@@ -69,16 +74,18 @@ class AlbumViewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        roomDB = RoomDB.accessDb(requireContext())!!
         sharedPreference = SharedPreference(requireContext())
         setNavigation()
         getAlbumId()
 
         albumViewModel.insertionLiked.observe(viewLifecycleOwner) {
-            if (it != -1L) {
-                Toast.makeText(requireContext(), "Added", Toast.LENGTH_SHORT).show()
-            } else {
+            if (it == -1L) {
                 Toast.makeText(requireContext(), "Something wrong!", Toast.LENGTH_SHORT).show()
+
+            } else if (it == 0L) {
+                Toast.makeText(requireContext(), "Removed", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Added", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -90,6 +97,7 @@ class AlbumViewFragment : Fragment() {
 
 
     }
+
 
     private fun setNavigation() {
         binding.imgBack.setOnClickListener {
@@ -161,7 +169,7 @@ class AlbumViewFragment : Fragment() {
 
 
         adapter = SingleAlbumTracksAdapter(img,
-            { setMusicTrack() },
+            { position -> setMusicTrack(position) },
             { key, value -> saveSharedPreference(key, value) },
             { value -> saveSharedPreference(value) },
             { value -> isInSP(value) },
@@ -173,9 +181,14 @@ class AlbumViewFragment : Fragment() {
 
     }
 
-    private fun setMusicTrack() {
+    private fun setMusicTrack(position: Int) {
         val activity = requireActivity() as MainActivity
+        activity.setTracksAndPosition(tracks, position)
         activity.setMusicPlayer(true)
+
+        val tracks = adapter.getTracks()
+        sharedPreference.saveSongsList(tracks)
+
     }
 
     private fun setBottomSheet(img: String, track: String, artist: String, trackUri: String) {
@@ -196,6 +209,16 @@ class AlbumViewFragment : Fragment() {
             albumViewModel.insertLikedSongs(track, artist, img, trackUri)
 
         }
+
+        albumViewModel.isInLiked.observe(viewLifecycleOwner) {
+            if (it) {
+                view.txtLiked.setText(R.string.bottom_sheet_txt_remove)
+            } else {
+                view.txtLiked.setText(R.string.bottom_sheet_txt_liked)
+            }
+        }
+
+        albumViewModel.checkLikedSongs(track)
 
         view.viewAddPlaylist.setOnClickListener {
             findNavController().navigate(R.id.action_albumViewFragment_to_addPlaylistFragment)
