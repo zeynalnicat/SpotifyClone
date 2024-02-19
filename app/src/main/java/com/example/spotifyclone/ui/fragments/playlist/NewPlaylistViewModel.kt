@@ -10,6 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import java.util.UUID
 
 class NewPlaylistViewModel(private val firebaseAuth: FirebaseAuth, private val firebaseFirestore: FirebaseFirestore) : ViewModel() {
 
@@ -18,8 +19,10 @@ class NewPlaylistViewModel(private val firebaseAuth: FirebaseAuth, private val f
     fun insert(name: String) {
         isSuccessful.postValue(Resource.Loading)
         val playlistRef = firebaseFirestore.collection("playlists")
+        val uuid = UUID.randomUUID().toString()
         val userId = firebaseAuth.currentUser?.uid
         val playlist = hashMapOf(
+            "id" to uuid,
             "name" to name,
             "userId" to userId
         )

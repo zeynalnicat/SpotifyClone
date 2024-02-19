@@ -32,8 +32,8 @@
 
     <ImageView
         android:id="@+id/imgBack"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:src="@drawable/icon_arrow_back"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toTopOf="@+id/guideline" />

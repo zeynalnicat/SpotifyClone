@@ -44,8 +44,6 @@ class LikedSongsViewModel(
                             listLikedSongs.add(song)
                         }
                         _songs.postValue(Resource.Success(listLikedSongs))
-                    } else {
-                        _songs.postValue(Resource.Error(Exception("There was an error")))
                     }
 
                 }

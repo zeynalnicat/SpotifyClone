@@ -120,7 +120,13 @@ class UserLibraryFragment : Fragment() {
     }
 
     private fun setAdapter(list: List<PlaylistModel>) {
-        val adapter = PlaylistAdapter()
+        val adapter =
+            PlaylistAdapter { bundle ->
+                findNavController().navigate(
+                    R.id.action_userLibraryFragment_to_singlePlaylistFragment,
+                    bundle
+                )
+            }
         adapter.submitList(list)
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerView.adapter = adapter

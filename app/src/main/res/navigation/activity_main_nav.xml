@@ -176,6 +176,9 @@
         <action
             android:id="@+id/action_userLibraryFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_userLibraryFragment_to_singlePlaylistFragment"
+            app:destination="@id/singlePlaylistFragment" />
     </fragment>
     <fragment
         android:id="@+id/artistViewFragment"
@@ -212,6 +215,11 @@
         android:name="com.example.spotifyclone.ui.fragments.library.EditProfileFragment"
         android:label="fragment_edit_profile"
         tools:layout="@layout/fragment_edit_profile" />
+    <fragment
+        android:id="@+id/singlePlaylistFragment"
+        android:name="com.example.spotifyclone.ui.single_playlist.SinglePlaylistFragment"
+        android:label="fragment_single_playlist"
+        tools:layout="@layout/fragment_single_playlist" />
 
 
 </navigation>

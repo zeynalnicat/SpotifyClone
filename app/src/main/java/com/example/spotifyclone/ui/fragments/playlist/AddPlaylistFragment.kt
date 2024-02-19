@@ -75,14 +75,14 @@ class AddPlaylistFragment : Fragment() {
     }
 
     private fun setAdapter(playlists: List<PlaylistModel>) {
-        adapter = PlaylistAdapter()
+        adapter = PlaylistAdapter{}
         adapter.submitList(playlists)
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerView.adapter = adapter
 
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onChanged() {
-                if (::adapter.isInitialized) {
+
                     val selectedPlaylists = adapter.getSelectedPlaylists()
                     Log.e("list", selectedPlaylists.toString())
                     if (selectedPlaylists.isNotEmpty()) {
@@ -91,7 +91,7 @@ class AddPlaylistFragment : Fragment() {
                         binding.btnAdd.visibility = View.GONE
                     }
                 }
-            }
+
         })
     }
 

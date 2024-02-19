@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary"
-    tools:context=".ui.fragments.album.AlbumViewFragment">
-
+    tools:context=".ui.single_playlist.SinglePlaylistFragment">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/leftGuideline"
@@ -40,26 +39,26 @@
 
     <ImageView
         android:id="@+id/imgAlbum"
-        android:layout_width="300dp"
-        android:layout_height="250dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_marginTop="24dp"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toBottomOf="@+id/imgBack"
-        tools:src="@tools:sample/avatars" />
+        android:src="@drawable/playlist_image" />
 
     <TextView
         android:id="@+id/txtAlbumName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        tools:text="TextView"
         android:textColor="@color/white"
         android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/imgAlbum" />
+        app:layout_constraintTop_toBottomOf="@+id/imgAlbum"
+        tools:text="TextView" />
 
     <ImageView
         android:id="@+id/imgArtist"
@@ -77,46 +76,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        tools:text="TextView"
         android:textColor="@color/white"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/imgArtist"
         app:layout_constraintStart_toEndOf="@+id/imgArtist"
-        app:layout_constraintTop_toTopOf="@+id/imgArtist" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Album"
-        android:textColor="@color/txt_gray"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/imgArtist" />
-
-    <TextView
-        android:id="@+id/txtAlbumYear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        tools:text="TextView"
-        android:textColor="@color/txt_gray"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/textView4"
-        app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toTopOf="@+id/textView4" />
-
-    <ImageView
-        android:id="@+id/imgLike"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="16dp"
-        android:src="@drawable/icon_like"
-        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toTopOf="@+id/imgArtist"
+        tools:text="TextView" />
 
     <ImageView
         android:id="@+id/imgPlay"
@@ -124,30 +89,18 @@
         android:layout_height="64dp"
         android:scaleType="fitXY"
         android:src="@drawable/icon_play"
-        app:layout_constraintBottom_toBottomOf="@+id/imgLike"
-        app:layout_constraintEnd_toStartOf="@+id/rightGuideline" />
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/txtArtistName"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
-        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/imgLike" />
+        app:layout_constraintTop_toTopOf="@+id/imgArtist" />
 
     <View
-        android:id="@+id/view4"
+        android:id="@+id/view5"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/view_album"
+        android:background="@drawable/playlist_layout_view"
         android:translationZ="-10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imgLike"
+        app:layout_constraintBottom_toBottomOf="@+id/imgPlay"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

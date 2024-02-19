@@ -1,5 +1,7 @@
 package com.example.spotifyclone.ui.adapters
 
+import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +13,8 @@ import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ItemPlaylistViewBinding
 import com.example.spotifyclone.model.dto.PlaylistModel
 
-class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
+class PlaylistAdapter(private val nav: (Bundle) -> Unit?) :
+    RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
     private val diffCall = object : DiffUtil.ItemCallback<PlaylistModel>() {
         override fun areItemsTheSame(oldItem: PlaylistModel, newItem: PlaylistModel): Boolean {
             return oldItem === newItem
@@ -42,21 +45,25 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
     inner class ViewHolder(private val binding: ItemPlaylistViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        init {
-            binding.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
-                val playlist = diffUtil.currentList[layoutPosition]
-                playlist.isSelected = isChecked
-
-                selectedPlaylists.add(playlist)
-            }
-        }
 
         fun bind(playlist: PlaylistModel) {
             if (playlist.isLibrary) {
                 binding.checkBox.visibility = View.GONE
+                itemView.setOnClickListener {
+                    val bundle = Bundle()
+                    bundle.putString("id", playlist.id)
+                    nav(bundle)
+                }
             } else {
                 binding.checkBox.visibility = View.VISIBLE
-                binding.checkBox.isChecked = playlist.isSelected
+
+            }
+
+            binding.checkBox.isChecked = playlist.isSelected
+            binding.checkBox.setOnCheckedChangeListener{ buttonView, isChecked ->
+                val playlist = diffUtil.currentList[layoutPosition]
+                playlist.isSelected = isChecked
+                selectedPlaylists.add(playlist)
             }
 
             binding.txtPlaylistName.text = playlist.name
@@ -79,5 +86,6 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
 
     fun getSelectedPlaylists(): List<PlaylistModel> {
         return selectedPlaylists.filter { it.isSelected }
+
     }
 }

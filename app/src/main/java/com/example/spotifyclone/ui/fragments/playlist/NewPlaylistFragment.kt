@@ -31,6 +31,7 @@ class NewPlaylistFragment : Fragment() {
     @Inject
     lateinit var firestore: FirebaseFirestore
 
+    private lateinit var activity:MainActivity
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
     private val newPlaylistViewModel: NewPlaylistViewModel by viewModels {
@@ -45,7 +46,7 @@ class NewPlaylistFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentNewPlaylistBinding.inflate(inflater)
-        val activity = requireActivity() as MainActivity
+        activity = requireActivity() as MainActivity
         activity.setMusicPlayer(false)
         activity.setBottomNavigation(false)
         setNavigation()
@@ -61,6 +62,8 @@ class NewPlaylistFragment : Fragment() {
         }
         newPlaylistViewModel.isSuccessful.observe(viewLifecycleOwner) {
             if (it is Resource.Success) {
+                activity.setMusicPlayer(true)
+                activity.setBottomNavigation(true)
                 findNavController().navigate(R.id.action_newPlaylistFragment_to_userLibraryFragment)
             } else if (it is Resource.Error) {
                 Toast.makeText(requireContext(), it.exception.message, Toast.LENGTH_SHORT).show()
@@ -70,7 +73,6 @@ class NewPlaylistFragment : Fragment() {
         val callBack = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val sharedPreference = SharedPreference(requireContext())
-                val activity = requireActivity() as MainActivity
                 activity.setBottomNavigation(true)
                 if (sharedPreference.getValue("isPlaying", false)) {
                     activity.setMusicPlayer(true)
@@ -86,7 +88,6 @@ class NewPlaylistFragment : Fragment() {
     }
 
     private fun setNavigation() {
-        val activity = requireActivity() as MainActivity
 
         binding.btnCancel.setOnClickListener {
             findNavController().popBackStack()

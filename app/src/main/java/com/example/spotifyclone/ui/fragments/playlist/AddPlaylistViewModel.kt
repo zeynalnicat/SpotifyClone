@@ -35,7 +35,7 @@ class AddPlaylistViewModel(
             if (result != null && !result.isEmpty) {
                 val documents = result.documents
                 for (document in documents) {
-                    playlistList.add(PlaylistModel(0, document["name"].toString()))
+                    playlistList.add(PlaylistModel("", document["name"].toString()))
                 }
                 _playlists.postValue(Resource.Success(playlistList))
             } else {
