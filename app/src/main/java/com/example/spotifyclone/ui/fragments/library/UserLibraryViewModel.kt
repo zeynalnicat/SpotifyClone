@@ -34,7 +34,7 @@ class UserLibraryViewModel(
                 for (document in documents) {
                     playlistList.add(
                         PlaylistModel(
-                            "",
+                            document["id"].toString(),
                             document["name"].toString(),
                             isLibrary = true
                         )

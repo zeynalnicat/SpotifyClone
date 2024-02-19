@@ -30,7 +30,7 @@ class SinglePlaylistFragment : Fragment() {
     @Inject
     lateinit var firestore: FirebaseFirestore
 
-    private var id = ""
+    private lateinit var id:String
 
     private val singleViewModel: SinglePlaylistViewModel by viewModels {
         SinglePlaylistFactory(
