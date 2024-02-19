@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background= "@color/primary"
+    android:background="@color/primary"
     tools:context=".ui.fragments.playlist.AddPlaylistFragment">
 
 
@@ -63,17 +63,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:ems="10"
-        android:inputType="text"
-        android:textColor="@color/white"
-        android:padding="8dp"
         android:background="@drawable/edit_text_search_playlist"
+        android:drawableStart="@drawable/icon_menu_search"
+        android:drawablePadding="10dp"
+        android:ems="10"
         android:hint="@string/add_playlist_txt_find"
+        android:inputType="text"
+        android:padding="8dp"
+        android:textColor="@color/white"
         android:textColorHint="@color/white"
         android:textSize="14sp"
         android:textStyle="bold"
-        android:drawableStart="@drawable/icon_menu_search"
-        android:drawablePadding="10dp"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
@@ -93,14 +93,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
+        android:background="@drawable/btn_signup"
         android:text="@string/add_playlist_btn_done"
+        android:textAllCaps="false"
         android:textColor="@color/black"
         android:textStyle="bold"
-        android:textAllCaps="false"
         android:visibility="gone"
-        android:background="@drawable/btn_signup"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/btn_signup"
+        android:text="@string/add_playlist_btn_done"
+        android:textAllCaps="false"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/recyclerView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

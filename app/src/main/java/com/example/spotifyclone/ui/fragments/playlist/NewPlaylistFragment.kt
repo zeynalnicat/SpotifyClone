@@ -18,10 +18,27 @@ import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.ui.fragments.playlist.NewPlaylistViewModel
 import com.example.spotifyclone.ui.fragments.playlist.NewPlaylistFactory
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class NewPlaylistFragment : Fragment() {
     private lateinit var binding: FragmentNewPlaylistBinding
-    private val newPlaylistViewModel: NewPlaylistViewModel by viewModels { NewPlaylistFactory() }
+
+    @Inject
+    lateinit var firestore: FirebaseFirestore
+
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
+    private val newPlaylistViewModel: NewPlaylistViewModel by viewModels {
+        NewPlaylistFactory(
+            firebaseAuth,
+            firestore
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +57,7 @@ class NewPlaylistFragment : Fragment() {
 
         binding.btnCreate.setOnClickListener {
             val name = binding.edtPlaylistName.text.toString()
-//            newPlaylistViewModel.insert(name)
+            newPlaylistViewModel.insert(name)
         }
         newPlaylistViewModel.isSuccessful.observe(viewLifecycleOwner) {
             if (it is Resource.Success) {
@@ -50,12 +67,12 @@ class NewPlaylistFragment : Fragment() {
             }
         }
 
-        val callBack = object : OnBackPressedCallback(true){
+        val callBack = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val sharedPreference = SharedPreference(requireContext())
                 val activity = requireActivity() as MainActivity
                 activity.setBottomNavigation(true)
-                if(sharedPreference.getValue("isPlaying",false)){
+                if (sharedPreference.getValue("isPlaying", false)) {
                     activity.setMusicPlayer(true)
                 }
                 findNavController().popBackStack()

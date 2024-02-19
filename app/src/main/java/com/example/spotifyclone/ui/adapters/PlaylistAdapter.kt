@@ -1,6 +1,7 @@
 package com.example.spotifyclone.ui.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -23,7 +24,7 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
     }
 
     private val diffUtil = AsyncListDiffer(this, diffCall)
-
+    private val selectedPlaylists = mutableListOf<PlaylistModel>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             ItemPlaylistViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -40,7 +41,26 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemPlaylistViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.radioBtnSelect.setOnClickListener {
+                val playlist = diffUtil.currentList[layoutPosition]
+
+                if (binding.radioBtnSelect.isChecked) {
+                    selectedPlaylists.remove(playlist)
+                    binding.radioBtnSelect.isChecked = false
+                } else {
+                    selectedPlaylists.add(playlist)
+                    binding.radioBtnSelect.isChecked = true
+                }
+            }
+        }
         fun bind(playlist: PlaylistModel) {
+            if (playlist.isLibrary) {
+                binding.radioBtnSelect.visibility = View.GONE
+            } else {
+                binding.radioBtnSelect.isChecked = selectedPlaylists.contains(playlist)
+            }
             binding.txtPlaylistName.text = playlist.name
             binding.txtCountMusic.text = playlist.countTrack.toString()
 
@@ -56,5 +76,9 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
 
     fun submitList(list: List<PlaylistModel>) {
         diffUtil.submitList(list)
+    }
+
+    fun getSelectedPlaylists(): List<PlaylistModel> {
+         return selectedPlaylists
     }
 }

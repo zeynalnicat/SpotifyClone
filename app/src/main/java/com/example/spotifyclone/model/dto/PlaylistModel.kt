@@ -5,5 +5,6 @@ data class PlaylistModel(
     val name:String ,
     val img : String = "",
     var countTrack :Int = 0,
-    var isSelected: Boolean = false
+    var isSelected: Boolean = false,
+    var isLibrary :Boolean = false
 )
