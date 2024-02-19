@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.spotifyclone.model.dto.MusicItem
 
 import com.example.spotifyclone.model.dto.PlaylistModel
 import com.example.spotifyclone.resource.Resource
@@ -41,6 +42,14 @@ class AddPlaylistViewModel(
                 _playlists.postValue(Resource.Error(Exception("There is no data from playlist")))
             }
         }
+
+    }
+
+
+    fun addFirebase(tracks:List<MusicItem>){
+        val playlistsRef = firestore.collection("playlistTracks")
+        val userId = firebaseAuth.currentUser?.uid
+
 
     }
 }

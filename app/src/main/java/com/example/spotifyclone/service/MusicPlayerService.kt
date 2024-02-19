@@ -26,14 +26,24 @@ class MusicPlayerService : Service() {
         super.onCreate()
         mediaPlayer = MediaPlayer()
         sharedPreference = SharedPreference(applicationContext)
-        mediaPlayer.setOnCompletionListener {
-            nextSong()
-        }
+//        mediaPlayer.setOnCompletionListener {
+//
+//            mediaPlayer.stop()
+//            songIndex = if (songIndex >= tracks.size - 1) 0 else songIndex + 1
+//            playMusic(tracks[songIndex].trackUri)
+//        }
+
     }
 
 
     inner class MusicPlayerBinder : Binder() {
         fun getService(): MusicPlayerService = this@MusicPlayerService
+    }
+
+
+    fun playAll() {
+        songIndex = 0
+        playMusic(tracks[songIndex].trackUri)
     }
 
     fun playMusic(songUri: String) {
@@ -53,6 +63,7 @@ class MusicPlayerService : Service() {
                 musicIsplaying.postValue(true)
             }
             mediaPlayer.prepareAsync()
+
             if (!sharedPreference.containsValue(track.name)) {
                 sharedPreference.saveValue("PlayingMusic", track.name)
                 sharedPreference.saveValue("PlayingMusicArtist", track.artist)
@@ -106,7 +117,8 @@ class MusicPlayerService : Service() {
     }
 
     override fun onDestroy() {
-        mediaPlayer.release()
+
+        super.onDestroy()
     }
 
     override fun onTaskRemoved(rootIntent: Intent) {

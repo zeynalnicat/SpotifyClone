@@ -20,11 +20,11 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
         override fun areContentsTheSame(oldItem: PlaylistModel, newItem: PlaylistModel): Boolean {
             return oldItem == newItem
         }
-
     }
 
     private val diffUtil = AsyncListDiffer(this, diffCall)
     private val selectedPlaylists = mutableListOf<PlaylistModel>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             ItemPlaylistViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -43,24 +43,22 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
         RecyclerView.ViewHolder(binding.root) {
 
         init {
-            binding.radioBtnSelect.setOnClickListener {
+            binding.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
                 val playlist = diffUtil.currentList[layoutPosition]
+                playlist.isSelected = isChecked
 
-                if (binding.radioBtnSelect.isChecked) {
-                    selectedPlaylists.remove(playlist)
-                    binding.radioBtnSelect.isChecked = false
-                } else {
-                    selectedPlaylists.add(playlist)
-                    binding.radioBtnSelect.isChecked = true
-                }
+                selectedPlaylists.add(playlist)
             }
         }
+
         fun bind(playlist: PlaylistModel) {
             if (playlist.isLibrary) {
-                binding.radioBtnSelect.visibility = View.GONE
+                binding.checkBox.visibility = View.GONE
             } else {
-                binding.radioBtnSelect.isChecked = selectedPlaylists.contains(playlist)
+                binding.checkBox.visibility = View.VISIBLE
+                binding.checkBox.isChecked = playlist.isSelected
             }
+
             binding.txtPlaylistName.text = playlist.name
             binding.txtCountMusic.text = playlist.countTrack.toString()
 
@@ -74,11 +72,12 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
         }
     }
 
+
     fun submitList(list: List<PlaylistModel>) {
         diffUtil.submitList(list)
     }
 
     fun getSelectedPlaylists(): List<PlaylistModel> {
-         return selectedPlaylists
+        return selectedPlaylists.filter { it.isSelected }
     }
 }

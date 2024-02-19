@@ -41,7 +41,6 @@ class AlbumViewFragment : Fragment() {
     private lateinit var album: Album
     private var mediaPlayer: MediaPlayer? = null
 
-    private val musicPlayerViewModel: MusicPlayerViewModel by viewModels()
 
     @Inject
     lateinit var albumApi: AlbumApi
@@ -51,6 +50,8 @@ class AlbumViewFragment : Fragment() {
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
+
+    private lateinit var acitivity: MainActivity
     private val albumViewModel: AlbumViewModel by viewModels {
         AlbumFactory(
             albumApi,
@@ -69,6 +70,8 @@ class AlbumViewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAlbumViewBinding.inflate(inflater)
+        acitivity = requireActivity() as MainActivity
+        mediaPlayer = acitivity.getMediaPlayer()
         return binding.root
     }
 
@@ -165,7 +168,8 @@ class AlbumViewFragment : Fragment() {
     ) {
         MusicPlayer.setListOfTracks(tracks)
         playAll()
-        checkSp()
+
+
 
 
         adapter = SingleAlbumTracksAdapter(img,
@@ -173,9 +177,11 @@ class AlbumViewFragment : Fragment() {
             { key, value -> saveSharedPreference(key, value) },
             { value -> saveSharedPreference(value) },
             { value -> isInSP(value) },
-            { img, track, artist, trackUri -> setBottomSheet(img, track, artist, trackUri) })
+            { musicItem -> setBottomSheet(musicItem) })
 
         adapter.submitList(tracks)
+        this.tracks = adapter.getTracks()
+        checkSp()
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerView.adapter = adapter
 
@@ -186,12 +192,12 @@ class AlbumViewFragment : Fragment() {
         activity.setTracksAndPosition(tracks, position)
         activity.setMusicPlayer(true)
 
-        val tracks = adapter.getTracks()
+
         sharedPreference.saveSongsList(tracks)
 
     }
 
-    private fun setBottomSheet(img: String, track: String, artist: String, trackUri: String) {
+    private fun setBottomSheet(musicItem: MusicItem) {
         val dialog = BottomSheetDialog(requireContext())
         val view = BottomSheetTrackBinding.inflate(layoutInflater)
 
@@ -199,14 +205,14 @@ class AlbumViewFragment : Fragment() {
         dialog.setContentView(view.root)
 
         Glide.with(binding.root)
-            .load(img)
+            .load(musicItem.img)
             .into(view.imgAlbum)
 
-        view.txtArtistName.text = artist
-        view.txtTrackName.text = track
+        view.txtArtistName.text = musicItem.artist
+        view.txtTrackName.text = musicItem.name
 
         view.viewAddLiked.setOnClickListener {
-            albumViewModel.insertLikedSongs(track, artist, img, trackUri)
+            albumViewModel.insertLikedSongs(musicItem.name,musicItem.artist, musicItem.img, musicItem.trackUri)
 
         }
 
@@ -218,7 +224,7 @@ class AlbumViewFragment : Fragment() {
             }
         }
 
-        albumViewModel.checkLikedSongs(track)
+        albumViewModel.checkLikedSongs(musicItem.name)
 
         view.viewAddPlaylist.setOnClickListener {
             findNavController().navigate(R.id.action_albumViewFragment_to_addPlaylistFragment)
@@ -230,10 +236,12 @@ class AlbumViewFragment : Fragment() {
 
 
     private fun checkSp() {
-        val isSP = tracks.any { sharedPreference.containsValue(it.name) }
-        if (mediaPlayer?.isPlaying == true && isSP) {
+
+        val isThis = tracks.any { it.trackUri == acitivity.getCurrentTrack().trackUri }
+
+        if (isThis && mediaPlayer?.isPlaying == true) {
             binding.imgPlay.setImageResource(R.drawable.icon_album_pause)
-        } else if (mediaPlayer?.isPlaying == false && isSP) {
+        } else {
             binding.imgPlay.setImageResource(R.drawable.icon_play)
         }
     }
@@ -270,45 +278,13 @@ class AlbumViewFragment : Fragment() {
     }
 
     private fun playAll() {
-        this.tracks = MusicPlayer.getListOfTracks() ?: emptyList()
 
         mediaPlayer = MusicPlayer.getMediaPlayer()
 
         binding.imgPlay.setOnClickListener {
-
-            playNextTrack()
+            acitivity.setTracksAndPosition(tracks,0)
+            acitivity.playAll()
         }
     }
 
-    private fun playNextTrack() {
-        if (currentTrackIndex < tracks.size) {
-            adapter.notifyDataSetChanged()
-            mediaPlayer?.stop()
-            saveSharedPreference("PlayingMusic", tracks[currentTrackIndex].name)
-            saveSharedPreference("PlayingMusicArtist", tracks[currentTrackIndex].artist)
-            saveSharedPreference("PlayingMusicImg", imgAlbum)
-            saveSharedPreference("PlayingMusicUri", tracks[currentTrackIndex].trackUri)
-            checkSp()
-            val activity = activity as MainActivity
-            activity.setMusicAttrs()
-            MusicPlayer.playNext(requireContext(), tracks[currentTrackIndex].trackUri)
-            binding.imgPlay.setOnClickListener {
-                if (mediaPlayer?.isPlaying == true) {
-                    mediaPlayer?.pause()
-                    checkSp()
-                } else if (mediaPlayer?.isPlaying == false) {
-                    mediaPlayer?.start()
-                    checkSp()
-                }
-            }
-            mediaPlayer?.setOnCompletionListener {
-                currentTrackIndex++
-                playNextTrack()
-            }
-
-
-        } else {
-            currentTrackIndex = 0
-        }
-    }
 }

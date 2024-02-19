@@ -1,6 +1,7 @@
 package com.example.spotifyclone.ui.fragments.playlist
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -30,6 +31,8 @@ class AddPlaylistFragment : Fragment() {
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
+
+    private lateinit var adapter: PlaylistAdapter
     private val addPlaylistViewModel: AddPlaylistViewModel by viewModels {
         AddPlaylistFactory(
             firebaseAuth,
@@ -67,22 +70,26 @@ class AddPlaylistFragment : Fragment() {
                 }
             }
         }
+
         addPlaylistViewModel.getPlaylists()
     }
 
     private fun setAdapter(playlists: List<PlaylistModel>) {
-        val adapter = PlaylistAdapter()
+        adapter = PlaylistAdapter()
         adapter.submitList(playlists)
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerView.adapter = adapter
 
-        adapter.registerAdapterDataObserver(object :RecyclerView.AdapterDataObserver(){
+        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onChanged() {
-                val selectedPlaylists = adapter.getSelectedPlaylists()
-                if(selectedPlaylists.isNotEmpty()){
-                    binding.btnAdd.visibility = View.VISIBLE
-                }else{
-                    binding.btnAdd.visibility = View.GONE
+                if (::adapter.isInitialized) {
+                    val selectedPlaylists = adapter.getSelectedPlaylists()
+                    Log.e("list", selectedPlaylists.toString())
+                    if (selectedPlaylists.isNotEmpty()) {
+                        binding.btnAdd.visibility = View.VISIBLE
+                    } else {
+                        binding.btnAdd.visibility = View.GONE
+                    }
                 }
             }
         })

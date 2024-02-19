@@ -8,5 +8,7 @@ data class MusicItem(
     val id: String,
     val name: String,
     val trackUri: String,
+    var img: String = "",
     var isPlayed: Boolean = false
+
 ) : Serializable

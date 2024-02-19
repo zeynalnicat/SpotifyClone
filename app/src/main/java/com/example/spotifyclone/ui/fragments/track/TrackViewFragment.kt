@@ -93,17 +93,23 @@ class TrackViewFragment : Fragment() {
 
             setMusic()
 
+            binding.imgNext.setOnClickListener {
+                activity.nextSong()
+                trackViewModel.setCurrentTrack(activity.getCurrentTrack())
+                binding.seekBar.progress = 0
+
+            }
+
+            binding.imgPrevious.setOnClickListener {
+                activity.prevSong()
+                trackViewModel.setCurrentTrack(activity.getCurrentTrack())
+                binding.seekBar.progress = 0
+
+            }
+
+
         }
 
-        binding.imgNext.setOnClickListener {
-            activity.nextSong()
-            trackViewModel.setCurrentTrack(activity.getCurrentTrack())
-        }
-
-        binding.imgPrevious.setOnClickListener {
-            activity.prevSong()
-            trackViewModel.setCurrentTrack(activity.getCurrentTrack())
-        }
 
         trackViewModel.getCurrentTrack { activity.getCurrentTrack() }
 
@@ -125,17 +131,8 @@ class TrackViewFragment : Fragment() {
 
         val music = activity.getMediaPlayer()
 
-
         music?.let { media ->
-            var totalTime = media.duration
-            binding.txtTimeEnd.text = formatDuration(totalTime)
-
-            if (media.isPlaying) {
-                binding.imgPause.setImageResource(R.drawable.icon_music_view_pause)
-
-            } else if (!media.isPlaying) {
-                binding.imgPause.setImageResource(R.drawable.icon_music_view_resume)
-            }
+             var totalTime =0
 
             binding.imgPause.setOnClickListener { view ->
                 if (media.isPlaying) {
@@ -150,7 +147,15 @@ class TrackViewFragment : Fragment() {
 
             binding.seekBar.postDelayed(object : Runnable {
                 override fun run() {
+                    totalTime = media.duration
                     binding.txtTimeStart.text = formatDuration(media.currentPosition)
+                    if (media.isPlaying) {
+                        binding.imgPause.setImageResource(R.drawable.icon_music_view_pause)
+
+                    } else if (!media.isPlaying) {
+                        binding.imgPause.setImageResource(R.drawable.icon_music_view_resume)
+                    }
+
                     binding.txtTimeEnd.text = formatDuration(totalTime)
                     binding.seekBar.progress =
                         (media.currentPosition.toFloat() / totalTime * 100).toInt()
@@ -160,7 +165,6 @@ class TrackViewFragment : Fragment() {
             }, 0)
 
             binding.seekBar.setOnSeekBarChangeListener(
-
                 object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(
                         seekbar: SeekBar?,

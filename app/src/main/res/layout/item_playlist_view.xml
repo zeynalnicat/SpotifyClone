@@ -55,15 +55,15 @@
             app:layout_constraintStart_toEndOf="@+id/txtCountMusic"
             app:layout_constraintTop_toTopOf="@+id/txtCountMusic" />
 
-        <RadioButton
-            android:id="@+id/radioBtnSelect"
+        <CheckBox
+            android:id="@+id/checkBox"
             android:layout_width="wrap_content"
-            android:background="@drawable/radio_btn_playlist"
             android:layout_height="wrap_content"
-            android:textIsSelectable="true"
 
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/radio_btn_playlist"
+            app:layout_constraintBottom_toBottomOf="@+id/txtSaves"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/txtPlaylistName" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
                 it.mediaPlayer.let { mediaPlayer ->
                     totalTime = mediaPlayer.duration
                     handler = android.os.Handler(Looper.getMainLooper())
-                    updateProgress(mediaPlayer)
+                    updateProgress()
 
                     binding.imgPause.setOnClickListener { view ->
                         if (mediaPlayer.isPlaying) {
@@ -143,18 +143,17 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun updateProgress(music: MediaPlayer?) {
-        music?.let {
-            if (it.isPlaying) {
-                handler.postDelayed({
-                    val currentDuration = it.currentPosition
-                    val progress = (currentDuration.toFloat() / totalTime * 100).toInt()
-                    binding.progressBar.progress = progress
-                    updateProgress(it)
-                }, 100)
+    private fun updateProgress() {
+        musicPlayerService?.mediaPlayer?.let { mediaPlayer ->
+            if (mediaPlayer.isPlaying) {
+                val currentDuration = mediaPlayer.currentPosition
+                val progress = (currentDuration.toFloat() / totalTime * 100).toInt()
+                binding.progressBar.progress = progress
+                handler.postDelayed({ updateProgress() }, 100)
             }
         }
     }
+
 
     private fun setNavigation() {
         binding.musicPlayer.setOnClickListener {
@@ -186,5 +185,10 @@ class MainActivity : AppCompatActivity() {
     fun prevSong() {
         musicPlayerService?.prevSong()
     }
+
+    fun playAll() {
+        musicPlayerService?.playAll()
+    }
+
 
 }
