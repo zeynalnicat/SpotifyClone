@@ -3,14 +3,12 @@ package com.example.spotifyclone.ui.fragments.library
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+
 
 import com.example.spotifyclone.model.dto.PlaylistModel
 import com.example.spotifyclone.resource.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class UserLibraryViewModel(
     private val firebaseAuth: FirebaseAuth,

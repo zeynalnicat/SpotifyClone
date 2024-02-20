@@ -31,6 +31,10 @@ class AddPlaylistFragment : Fragment() {
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
+    
+//    companion object{
+//        val selectedPlaylists = mutab
+//    }
 
     private lateinit var adapter: PlaylistAdapter
     private val addPlaylistViewModel: AddPlaylistViewModel by viewModels {
