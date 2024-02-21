@@ -26,13 +26,18 @@ import com.example.spotifyclone.model.dto.MusicItem
 import com.example.spotifyclone.musicplayer.MusicPlayer
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
 import com.example.spotifyclone.service.MusicPlayerService
+import com.example.spotifyclone.service.MusicRepository
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
+import com.example.spotifyclone.util.GsonHelper
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -177,11 +182,15 @@ class AlbumViewFragment : Fragment() {
             { key, value -> saveSharedPreference(key, value) },
             { value -> saveSharedPreference(value) },
             { value -> isInSP(value) },
-            { musicItem -> setBottomSheet(musicItem) })
+            { musicItem, trackId -> setBottomSheet(musicItem,trackId) })
 
         adapter.submitList(tracks)
         this.tracks = adapter.getTracks()
-        checkSp()
+        GsonHelper.serializeTracks(requireContext().applicationContext, this.tracks)
+        GlobalScope.launch(Dispatchers.Main) {
+            val updatedTracks = GsonHelper.deserializeTracks(requireContext())
+            MusicRepository(requireContext()).tracksLiveData.postValue(updatedTracks)
+        }
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerView.adapter = adapter
 
@@ -189,15 +198,13 @@ class AlbumViewFragment : Fragment() {
 
     private fun setMusicTrack(position: Int) {
         val activity = requireActivity() as MainActivity
-        activity.setTracksAndPosition(tracks, position)
+        sharedPreference.saveValue("Position", position)
         activity.setMusicPlayer(true)
 
 
-        sharedPreference.saveSongsList(tracks)
-
     }
 
-    private fun setBottomSheet(musicItem: MusicItem) {
+    private fun setBottomSheet(musicItem: MusicItem,trackId:String) {
         val dialog = BottomSheetDialog(requireContext())
         val view = BottomSheetTrackBinding.inflate(layoutInflater)
 
@@ -212,7 +219,12 @@ class AlbumViewFragment : Fragment() {
         view.txtTrackName.text = musicItem.name
 
         view.viewAddLiked.setOnClickListener {
-            albumViewModel.insertLikedSongs(musicItem.name,musicItem.artist, musicItem.img, musicItem.trackUri)
+            albumViewModel.insertLikedSongs(
+                musicItem.name,
+                musicItem.artist,
+                musicItem.img,
+                musicItem.trackUri
+            )
 
         }
 
@@ -227,23 +239,13 @@ class AlbumViewFragment : Fragment() {
         albumViewModel.checkLikedSongs(musicItem.name)
 
         view.viewAddPlaylist.setOnClickListener {
-            findNavController().navigate(R.id.action_albumViewFragment_to_addPlaylistFragment)
+            val bundle = Bundle()
+            bundle.putString("trackId",trackId)
+            findNavController().navigate(R.id.action_albumViewFragment_to_addPlaylistFragment,bundle)
             dialog.hide()
         }
         dialog.show()
 
-    }
-
-
-    private fun checkSp() {
-
-        val isThis = tracks.any { it.trackUri == acitivity.getCurrentTrack().trackUri }
-
-        if (isThis && mediaPlayer?.isPlaying == true) {
-            binding.imgPlay.setImageResource(R.drawable.icon_album_pause)
-        } else {
-            binding.imgPlay.setImageResource(R.drawable.icon_play)
-        }
     }
 
 
@@ -282,7 +284,7 @@ class AlbumViewFragment : Fragment() {
         mediaPlayer = MusicPlayer.getMediaPlayer()
 
         binding.imgPlay.setOnClickListener {
-            acitivity.setTracksAndPosition(tracks,0)
+            acitivity.setTracksAndPosition(tracks, 0)
             acitivity.playAll()
         }
     }

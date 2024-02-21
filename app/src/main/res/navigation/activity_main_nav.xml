@@ -204,7 +204,13 @@
         android:id="@+id/addPlaylistFragment"
         android:name="com.example.spotifyclone.ui.fragments.playlist.AddPlaylistFragment"
         android:label="fragment_add_playlist"
-        tools:layout="@layout/fragment_add_playlist" />
+        tools:layout="@layout/fragment_add_playlist" >
+        <action
+            android:id="@+id/action_addPlaylistFragment_to_userLibraryFragment"
+            app:destination="@id/userLibraryFragment"
+            app:popUpTo="@id/albumViewFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
         android:id="@+id/likedSongsFragment"
         android:name="com.example.spotifyclone.ui.fragments.others.LikedSongsFragment"

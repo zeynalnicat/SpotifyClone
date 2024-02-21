@@ -23,8 +23,20 @@ class SharedPreference(context: Context) {
         }
     }
 
+    fun saveValue(key: String, value: Int) {
+        if (sharedPreferences.contains(key)) {
+            updateValue(key, value)
+        } else {
+            editor.putInt(key, value)
+            editor.apply()
+        }
+    }
     fun updateValue(key: String, newValue: String) {
         editor.putString(key, newValue)
+        editor.apply()
+    }
+    fun updateValue(key: String, newValue: Int) {
+        editor.putInt(key, newValue)
         editor.apply()
     }
 
@@ -48,9 +60,12 @@ class SharedPreference(context: Context) {
     }
 
     fun getValue(key: String, defaultValue: Boolean): Boolean {
-        return sharedPreferences.getBoolean(key, defaultValue) ?: defaultValue
+        return sharedPreferences.getBoolean(key, defaultValue)
     }
 
+    fun getValue(key: String, defaultValue: Int): Int {
+        return sharedPreferences.getInt(key, defaultValue)
+    }
     fun saveSongsList(songsList: List<MusicItem>) {
         val editor = sharedPreferences.edit()
         val gson = Gson()

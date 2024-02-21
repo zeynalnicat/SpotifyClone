@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ItemPlaylistViewBinding
 import com.example.spotifyclone.model.dto.PlaylistModel
+import com.example.spotifyclone.ui.fragments.playlist.AddPlaylistFragment
 
 class PlaylistAdapter(private val nav: (Bundle) -> Unit?) :
     RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
@@ -60,10 +61,16 @@ class PlaylistAdapter(private val nav: (Bundle) -> Unit?) :
             }
 
             binding.checkBox.isChecked = playlist.isSelected
-            binding.checkBox.setOnCheckedChangeListener{ buttonView, isChecked ->
+            binding.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
                 val playlist = diffUtil.currentList[layoutPosition]
                 playlist.isSelected = isChecked
-                selectedPlaylists.add(playlist)
+                if (playlist.isSelected) {
+                    selectedPlaylists.add(playlist)
+                    AddPlaylistFragment.selectedPlaylists.postValue(selectedPlaylists)
+                } else {
+                    selectedPlaylists.remove(playlist)
+                    AddPlaylistFragment.selectedPlaylists.postValue(selectedPlaylists)
+                }
             }
 
             binding.txtPlaylistName.text = playlist.name
@@ -84,8 +91,4 @@ class PlaylistAdapter(private val nav: (Bundle) -> Unit?) :
         diffUtil.submitList(list)
     }
 
-    fun getSelectedPlaylists(): List<PlaylistModel> {
-        return selectedPlaylists.filter { it.isSelected }
-
-    }
 }

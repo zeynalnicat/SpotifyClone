@@ -111,6 +111,7 @@
         android:background="@drawable/btn_signup"
         android:text="@string/add_playlist_btn_done"
         android:textAllCaps="false"
+        app:layout_constraintVertical_bias="0.8"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

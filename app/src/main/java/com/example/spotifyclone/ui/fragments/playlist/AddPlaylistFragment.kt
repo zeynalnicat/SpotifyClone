@@ -8,9 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.spotifyclone.R
 import com.example.spotifyclone.ui.adapters.PlaylistAdapter
 import com.example.spotifyclone.databinding.FragmentAddPlaylistBinding
 
@@ -31,10 +33,12 @@ class AddPlaylistFragment : Fragment() {
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
-    
-//    companion object{
-//        val selectedPlaylists = mutab
-//    }
+
+    private var trackId = ""
+
+    companion object {
+        val selectedPlaylists = MutableLiveData<List<PlaylistModel>>()
+    }
 
     private lateinit var adapter: PlaylistAdapter
     private val addPlaylistViewModel: AddPlaylistViewModel by viewModels {
@@ -58,6 +62,10 @@ class AddPlaylistFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        arguments?.let {
+            trackId = it.getString("trackId","")
+        }
+
         addPlaylistViewModel.playlists.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Success -> {
@@ -75,28 +83,54 @@ class AddPlaylistFragment : Fragment() {
             }
         }
 
+
+        selectedPlaylists.observe(viewLifecycleOwner) {
+            when {
+                it.isNotEmpty() ->
+                {
+                    binding.btnAdd.visibility = View.VISIBLE
+
+                    binding.btnAdd.setOnClickListener {view->
+                        addPlaylistViewModel.addFirebase(it,trackId)
+                    }
+
+                }
+                else -> {
+                    binding.btnAdd.visibility = View.GONE
+                }
+            }
+        }
+
+        addPlaylistViewModel.state.observe(viewLifecycleOwner){
+            when(it){
+                is Resource.Success ->{
+                    if(!it.data.contains(false)){
+                        findNavController().navigate(R.id.action_addPlaylistFragment_to_userLibraryFragment)
+                    }else{
+                        Toast.makeText(requireContext(),"Undefined Error",Toast.LENGTH_SHORT).show()
+                    }
+
+                }
+                is Resource.Error -> {
+                    Toast.makeText(requireContext(),it.exception.message,Toast.LENGTH_SHORT).show()
+                }
+
+                is Resource.Loading ->{
+
+                }
+
+            }
+        }
+
         addPlaylistViewModel.getPlaylists()
     }
 
     private fun setAdapter(playlists: List<PlaylistModel>) {
-        adapter = PlaylistAdapter{}
+        adapter = PlaylistAdapter {}
         adapter.submitList(playlists)
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerView.adapter = adapter
 
-        adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-            override fun onChanged() {
-
-                    val selectedPlaylists = adapter.getSelectedPlaylists()
-                    Log.e("list", selectedPlaylists.toString())
-                    if (selectedPlaylists.isNotEmpty()) {
-                        binding.btnAdd.visibility = View.VISIBLE
-                    } else {
-                        binding.btnAdd.visibility = View.GONE
-                    }
-                }
-
-        })
     }
 
 

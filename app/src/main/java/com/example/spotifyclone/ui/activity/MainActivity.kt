@@ -5,11 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.Glide
@@ -28,14 +31,14 @@ class MainActivity : AppCompatActivity() {
     private var musicPlayerService: MusicPlayerService? = null
     private var totalTime: Int = 0
     private var position = 0
-    private var tracks: List<MusicItem> = emptyList()
+    private var track = MutableLiveData<MusicItem>()
     private lateinit var sharedPreference: SharedPreference
 
     override fun onStart() {
         super.onStart()
-        val intent = Intent(this, MusicPlayerService::class.java)
-        tracks = sharedPreference.getSongsList()
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+
+        startService()
+
     }
 
 
@@ -51,11 +54,24 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(binding.bottomNav, navController)
         setNavigation()
 
+        track.observe(this) {
+            if (it.trackUri.isNotEmpty()) {
+                setMusicLayout(it.name, it.img, it.trackUri)
+            } else {
+                binding.musicPlayer.visibility = View.GONE
+            }
+        }
 
     }
 
     fun getMediaPlayer(): MediaPlayer? {
         return musicPlayerService?.mediaPlayer
+    }
+
+    private fun startService() {
+        val intent = Intent(this, MusicPlayerService::class.java)
+
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
     }
 
     private val serviceConnection = object : ServiceConnection {
@@ -116,8 +132,7 @@ class MainActivity : AppCompatActivity() {
 
     fun setTracksAndPosition(tracks: List<MusicItem>, position: Int) {
         this.position = position
-        this.tracks = tracks
-        musicPlayerService?.tracks = tracks
+        musicPlayerService?.tracks?.postValue(tracks)
         musicPlayerService?.songIndex = position
     }
 
@@ -169,8 +184,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun getCurrentTrack(): MusicItem {
+        var musicModel = MusicItem("", "", "", "")
+        musicPlayerService?.let {
+            musicModel = it.currentTrack()
+        }
+        track.postValue(musicModel)
+        return musicModel
 
-        return musicPlayerService?.currentTrack()!!
     }
 
 
