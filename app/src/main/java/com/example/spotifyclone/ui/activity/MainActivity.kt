@@ -10,9 +10,13 @@ import android.os.Bundle
 import android.os.IBinder
 import android.os.Looper
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.remember
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.Glide
@@ -20,6 +24,7 @@ import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ActivityMainBinding
 import com.example.spotifyclone.model.dto.MusicItem
 import com.example.spotifyclone.service.MusicPlayerService
+import com.example.spotifyclone.service.MusicRepository
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.fragments.track.TrackViewFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,10 +34,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var handler: android.os.Handler
     private var musicPlayerService: MusicPlayerService? = null
-    private var totalTime: Int = 0
-    private var position = 0
-    private var track = MutableLiveData<MusicItem>()
+    private lateinit var musicPlayerViewModel: MusicPlayerViewModel
+
+    private lateinit var repository: MusicRepository
+    private var tracks = MutableLiveData<List<MusicItem>>(emptyList())
     private lateinit var sharedPreference: SharedPreference
+    private var position = 0
 
     override fun onStart() {
         super.onStart()
@@ -46,22 +53,40 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        musicPlayerViewModel = ViewModelProvider(this)[MusicPlayerViewModel::class.java]
         sharedPreference = SharedPreference(this)
-
+        repository = MusicRepository(applicationContext)
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         val navController = navHostFragment.navController
         NavigationUI.setupWithNavController(binding.bottomNav, navController)
         setNavigation()
 
-        track.observe(this) {
-            if (it.trackUri.isNotEmpty()) {
-                setMusicLayout(it.name, it.img, it.trackUri)
-            } else {
-                binding.musicPlayer.visibility = View.GONE
+        musicPlayerViewModel.selectedTrackPosition.observe(this) { position ->
+            this.position = position
+            setMusicPlayer(true)
+        }
+        musicPlayerViewModel.tracks.observe(this) { tracks ->
+            setTracksAndPosition(tracks, position)
+        }
+
+
+        repository = MusicRepository(applicationContext)
+        repository.loadTracks()
+
+        repository.tracksLiveData.observeForever { newTracks ->
+            newTracks?.let {
+                handleTracksUpdate(it)
             }
         }
 
+    }
+
+    private fun handleTracksUpdate(newTracks: List<MusicItem>) {
+        if (newTracks.isNotEmpty()) {
+            tracks.postValue(newTracks)
+
+        }
     }
 
     fun getMediaPlayer(): MediaPlayer? {
@@ -81,9 +106,9 @@ class MainActivity : AppCompatActivity() {
             checkVisibility()
             musicPlayerService?.let {
                 it.mediaPlayer.let { mediaPlayer ->
-                    totalTime = mediaPlayer.duration
+                    val totalTime = mediaPlayer.duration
                     handler = android.os.Handler(Looper.getMainLooper())
-                    updateProgress()
+                    updateProgress(totalTime)
 
                     binding.imgPause.setOnClickListener { view ->
                         if (mediaPlayer.isPlaying) {
@@ -103,6 +128,7 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
+
 
     fun checkVisibility() {
         val sharedPreference = SharedPreference(this)
@@ -131,9 +157,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setTracksAndPosition(tracks: List<MusicItem>, position: Int) {
-        this.position = position
-        musicPlayerService?.tracks?.postValue(tracks)
-        musicPlayerService?.songIndex = position
+        musicPlayerService?.setTracks(tracks, position)
     }
 
     fun setMusicAttrs() {
@@ -158,13 +182,13 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun updateProgress() {
+    private fun updateProgress(totalTime: Int) {
         musicPlayerService?.mediaPlayer?.let { mediaPlayer ->
             if (mediaPlayer.isPlaying) {
                 val currentDuration = mediaPlayer.currentPosition
                 val progress = (currentDuration.toFloat() / totalTime * 100).toInt()
                 binding.progressBar.progress = progress
-                handler.postDelayed({ updateProgress() }, 100)
+                handler.postDelayed({ updateProgress(totalTime) }, 100)
             }
         }
     }
@@ -188,7 +212,6 @@ class MainActivity : AppCompatActivity() {
         musicPlayerService?.let {
             musicModel = it.currentTrack()
         }
-        track.postValue(musicModel)
         return musicModel
 
     }

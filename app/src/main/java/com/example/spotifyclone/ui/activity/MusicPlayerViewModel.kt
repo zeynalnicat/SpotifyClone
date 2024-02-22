@@ -1,12 +1,25 @@
 package com.example.spotifyclone.ui.activity
 
 import android.media.MediaPlayer
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.spotifyclone.model.dto.MusicItem
 
-class MusicPlayerViewModel:ViewModel() {
-    val mediaPlayer: MediaPlayer? = MediaPlayer()
-    val isPlaying = MutableLiveData<Boolean>()
-    val currentDuration = MutableLiveData<Int>()
-    val totalDuration = MutableLiveData<Int>()
+class MusicPlayerViewModel : ViewModel() {
+    private val _selectedTrackPosition = MutableLiveData<Int>()
+    val selectedTrackPosition: LiveData<Int>
+        get() = _selectedTrackPosition
+
+    private val _tracks = MutableLiveData<List<MusicItem>>()
+    val tracks: LiveData<List<MusicItem>>
+        get() = _tracks
+
+    fun setSelectedTrackPosition(position: Int) {
+        _selectedTrackPosition.value = position
+    }
+
+    fun setTracks(tracks: List<MusicItem>) {
+        _tracks.value = tracks
+    }
 }

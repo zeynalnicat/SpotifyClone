@@ -11,7 +11,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
@@ -38,6 +40,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -45,6 +48,8 @@ class AlbumViewFragment : Fragment() {
     private lateinit var binding: FragmentAlbumViewBinding
     private lateinit var album: Album
     private var mediaPlayer: MediaPlayer? = null
+
+    private val musicPlayerViewModel: MusicPlayerViewModel by activityViewModels()
 
 
     @Inject
@@ -182,29 +187,30 @@ class AlbumViewFragment : Fragment() {
             { key, value -> saveSharedPreference(key, value) },
             { value -> saveSharedPreference(value) },
             { value -> isInSP(value) },
-            { musicItem, trackId -> setBottomSheet(musicItem,trackId) })
+            { musicItem, trackId -> setBottomSheet(musicItem, trackId) })
 
         adapter.submitList(tracks)
         this.tracks = adapter.getTracks()
-        GsonHelper.serializeTracks(requireContext().applicationContext, this.tracks)
-        GlobalScope.launch(Dispatchers.Main) {
-            val updatedTracks = GsonHelper.deserializeTracks(requireContext())
-            MusicRepository(requireContext()).tracksLiveData.postValue(updatedTracks)
-        }
+
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerView.adapter = adapter
 
     }
 
     private fun setMusicTrack(position: Int) {
-        val activity = requireActivity() as MainActivity
         sharedPreference.saveValue("Position", position)
-        activity.setMusicPlayer(true)
 
+        lifecycleScope.launch {
+            GsonHelper.serializeTracks(requireContext().applicationContext, tracks)
 
+            withContext(Dispatchers.Main) {
+                musicPlayerViewModel.setSelectedTrackPosition(position)
+                musicPlayerViewModel.setTracks(tracks)
+            }
+        }
     }
 
-    private fun setBottomSheet(musicItem: MusicItem,trackId:String) {
+    private fun setBottomSheet(musicItem: MusicItem, trackId: String) {
         val dialog = BottomSheetDialog(requireContext())
         val view = BottomSheetTrackBinding.inflate(layoutInflater)
 
@@ -240,8 +246,11 @@ class AlbumViewFragment : Fragment() {
 
         view.viewAddPlaylist.setOnClickListener {
             val bundle = Bundle()
-            bundle.putString("trackId",trackId)
-            findNavController().navigate(R.id.action_albumViewFragment_to_addPlaylistFragment,bundle)
+            bundle.putString("trackId", trackId)
+            findNavController().navigate(
+                R.id.action_albumViewFragment_to_addPlaylistFragment,
+                bundle
+            )
             dialog.hide()
         }
         dialog.show()

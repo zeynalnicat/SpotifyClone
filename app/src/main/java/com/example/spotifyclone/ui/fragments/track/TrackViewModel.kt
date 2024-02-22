@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.spotifyclone.model.dto.MusicItem
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
+import com.example.spotifyclone.sp.SharedPreference
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -16,8 +17,6 @@ class TrackViewModel(
     private val firebaseAuth: FirebaseAuth,
     private val firestore: FirebaseFirestore
 ) : ViewModel() {
-
-
 
 
     private val _insertionLiked = MutableLiveData<Long>()
@@ -33,9 +32,13 @@ class TrackViewModel(
 
     val currentTrack: LiveData<MusicItem> get() = _currentTrack
 
-    fun getCurrentTrack(current: () -> MusicItem) {
-        val musicItem = current()
-        _currentTrack.postValue(musicItem)
+    fun getCurrentTrack(sp: SharedPreference) {
+        val name = sp.getValue("PlayingMusic", "")
+        val artist = sp.getValue("PlayingMusicArtist", "")
+        val uri = sp.getValue("PlayingMusicUri", "")
+
+        _currentTrack.postValue(MusicItem(artist, "", name, uri))
+
     }
 
     fun setCurrentTrack(musicItem: MusicItem) {

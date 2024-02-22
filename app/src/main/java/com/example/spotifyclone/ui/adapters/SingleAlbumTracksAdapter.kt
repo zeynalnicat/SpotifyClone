@@ -71,11 +71,14 @@ class SingleAlbumTracksAdapter(
 
             itemView.setOnClickListener {
                 saveSharedPreference("PlayingMusicImg", img)
+                saveSharedPreference("PlayingMusic",track.name)
+                saveSharedPreference("PlayingMusicArtist",track.artist)
+                saveSharedPreference("PlayingMusicUri",track.trackUri)
                 saveSharedPreferenceBool(true)
                 track.isPlayed = true
                 notifyDataSetChanged()
                 setMusicLayout(layoutPosition)
-                MusicPlayer.playNext(binding.root.context, track.trackUri)
+
             }
             binding.imgMore.setOnClickListener {
                 val musicItem =

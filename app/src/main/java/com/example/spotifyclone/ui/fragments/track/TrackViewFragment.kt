@@ -9,6 +9,7 @@ import android.widget.SeekBar
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
@@ -16,6 +17,7 @@ import com.example.spotifyclone.databinding.FragmentTrackViewBinding
 
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
+import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +34,8 @@ class TrackViewFragment : Fragment() {
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
+
+
 
     private lateinit var sharedPreference: SharedPreference
     private val trackViewModel: TrackViewModel by viewModels {
@@ -111,7 +115,7 @@ class TrackViewFragment : Fragment() {
         }
 
 
-        trackViewModel.getCurrentTrack { activity.getCurrentTrack() }
+        trackViewModel.getCurrentTrack(sharedPreference)
 
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callBack)
@@ -132,7 +136,7 @@ class TrackViewFragment : Fragment() {
         val music = activity.getMediaPlayer()
 
         music?.let { media ->
-             var totalTime =0
+            var totalTime = 0
 
             binding.imgPause.setOnClickListener { view ->
                 if (media.isPlaying) {
