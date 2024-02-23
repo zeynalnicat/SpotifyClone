@@ -11,6 +11,8 @@ class MusicRepository(private val applicationContext: Context) {
 
     fun loadTracks() {
         val newTracks = GsonHelper.deserializeTracks(applicationContext)
-        tracksLiveData.postValue(newTracks)
+        tracksLiveData.value = newTracks
     }
+
+
 }

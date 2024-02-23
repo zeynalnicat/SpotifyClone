@@ -97,15 +97,18 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/icon_music_pause" />
 
-            <ProgressBar
+            <SeekBar
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="0dp"
                 android:layout_height="10dp"
+                android:clickable="false"
+                android:focusable="false"
                 android:indeterminate="false"
-                android:progress="1"
-
+                android:max="100"
+                android:progress="0"
                 android:progressTint="@color/white"
+                android:thumb="@null"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />

@@ -1,7 +1,9 @@
 package com.example.spotifyclone.ui.fragments.track
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,9 +13,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.FragmentTrackViewBinding
+import com.example.spotifyclone.service.MusicPlayerService
 
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
@@ -35,6 +39,7 @@ class TrackViewFragment : Fragment() {
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
 
+    private val musicPlayerViewModel: MusicPlayerViewModel by activityViewModels()
 
 
     private lateinit var sharedPreference: SharedPreference
@@ -69,7 +74,10 @@ class TrackViewFragment : Fragment() {
                 activity.supportFragmentManager.popBackStack()
             }
 
+
         }
+
+
 
         trackViewModel.isInLiked.observe(viewLifecycleOwner) {
             if (it) {
@@ -79,9 +87,11 @@ class TrackViewFragment : Fragment() {
             }
         }
 
+        activity.getCurrentTrack()
 
-        trackViewModel.currentTrack.observe(viewLifecycleOwner) {
 
+        musicPlayerViewModel.currentTrack.observe(viewLifecycleOwner) {
+            Log.d("TrackViewFragment", "Current track changed: $it.name")
             musicImg = sharedPreference.getValue("PlayingMusicImg", "")
             binding.txtTrackName.text = it.name
             binding.txtTrackHeader.text = it.name
@@ -98,19 +108,31 @@ class TrackViewFragment : Fragment() {
             setMusic()
 
             binding.imgNext.setOnClickListener {
+//                val intent = Intent(MusicPlayerService.BROADCAST_ACTION)
+//                intent.putExtra(
+//                    MusicPlayerService.EXTRA_ACTION_TYPE,
+//                    MusicPlayerService.ACTION_NEXT
+//                )
+//                LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent)
                 activity.nextSong()
-                trackViewModel.setCurrentTrack(activity.getCurrentTrack())
+                activity.getCurrentTrack()
                 binding.seekBar.progress = 0
 
             }
 
             binding.imgPrevious.setOnClickListener {
-                activity.prevSong()
-                trackViewModel.setCurrentTrack(activity.getCurrentTrack())
+//                val intent = Intent(MusicPlayerService.BROADCAST_ACTION)
+//                intent.putExtra(
+//                    MusicPlayerService.EXTRA_ACTION_TYPE,
+//                    MusicPlayerService.ACTION_PREVIOUS
+//                )
+//                LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent)
+                activity.nextSong()
+                activity.getCurrentTrack()
+
                 binding.seekBar.progress = 0
 
             }
-
 
         }
 
