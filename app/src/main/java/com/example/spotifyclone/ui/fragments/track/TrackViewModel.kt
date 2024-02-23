@@ -37,7 +37,7 @@ class TrackViewModel(
         val artist = sp.getValue("PlayingMusicArtist", "")
         val uri = sp.getValue("PlayingMusicUri", "")
 
-        _currentTrack.postValue(MusicItem(artist, "", name, uri))
+        _currentTrack.value = MusicItem(artist, "", name, uri)
 
     }
 

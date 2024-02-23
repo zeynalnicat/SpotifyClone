@@ -11,9 +11,14 @@ class MusicPlayerViewModel : ViewModel() {
     val selectedTrackPosition: LiveData<Int>
         get() = _selectedTrackPosition
 
+
+    private val _currentTrack = MutableLiveData<MusicItem>()
+
     private val _tracks = MutableLiveData<List<MusicItem>>()
     val tracks: LiveData<List<MusicItem>>
         get() = _tracks
+
+    val currentTrack: LiveData<MusicItem> get() = _currentTrack
 
     fun setSelectedTrackPosition(position: Int) {
         _selectedTrackPosition.value = position
@@ -22,4 +27,9 @@ class MusicPlayerViewModel : ViewModel() {
     fun setTracks(tracks: List<MusicItem>) {
         _tracks.value = tracks
     }
+
+    fun setCurrentMusic(musicItem: MusicItem) {
+        _currentTrack.postValue(musicItem)
+    }
+
 }
