@@ -118,6 +118,13 @@ class MusicPlayerService : Service() {
         }
     }
 
+
+    fun stopMusic() {
+        mediaPlayer.stop()
+        mediaPlayer.release()
+        mediaPlayer = MediaPlayer()
+    }
+
     fun currentTrack(): MusicItem {
         return tracks.value?.get(songIndex) ?: MusicItem("", "", "", "")
     }

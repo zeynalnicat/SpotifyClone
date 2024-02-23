@@ -40,9 +40,9 @@
         android:id="@+id/musicPlayer"
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:visibility="gone"
         android:layout_marginBottom="2dp"
         android:backgroundTint="@color/music_blue"
+        android:visibility="gone"
         app:cardCornerRadius="12dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNav"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,6 +51,16 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/imgCancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/close" />
 
             <ImageView
                 android:id="@+id/imgTrack"
@@ -79,11 +89,11 @@
 
             <ImageView
                 android:id="@+id/imgPause"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginEnd="24dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imgCancel"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/icon_music_pause" />
 

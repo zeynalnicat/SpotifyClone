@@ -27,6 +27,7 @@ import com.example.spotifyclone.service.MusicPlayerService
 import com.example.spotifyclone.service.MusicRepository
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.fragments.track.TrackViewFragment
+import com.example.spotifyclone.util.GsonHelper
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -109,7 +110,7 @@ class MainActivity : AppCompatActivity() {
                     val totalTime = mediaPlayer.duration
                     handler = android.os.Handler(Looper.getMainLooper())
                     updateProgress(totalTime)
-
+                    cancelMusic()
                     binding.imgPause.setOnClickListener { view ->
                         if (mediaPlayer.isPlaying) {
                             mediaPlayer.pause()
@@ -126,6 +127,19 @@ class MainActivity : AppCompatActivity() {
 
         override fun onServiceDisconnected(name: ComponentName?) {
 
+        }
+    }
+
+    fun cancelMusic() {
+        binding.imgCancel.setOnClickListener {
+            sharedPreference.saveIsPlaying(false)
+            sharedPreference.updateValue("PlayingMusic","")
+            sharedPreference.updateValue("PlayingMusicUri","")
+            sharedPreference.updateValue("PlayingMusicArtist","")
+            setMusicPlayer(false)
+            GsonHelper.serializeTracks(this, emptyList())
+            musicPlayerService?.tracks?.postValue(emptyList())
+            musicPlayerService?.stopMusic()
         }
     }
 
