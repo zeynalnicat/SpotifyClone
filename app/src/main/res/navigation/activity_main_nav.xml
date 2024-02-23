@@ -223,7 +223,7 @@
         tools:layout="@layout/fragment_edit_profile" />
     <fragment
         android:id="@+id/singlePlaylistFragment"
-        android:name="com.example.spotifyclone.ui.single_playlist.SinglePlaylistFragment"
+        android:name="com.example.spotifyclone.ui.fragments.single_playlist.SinglePlaylistFragment"
         android:label="fragment_single_playlist"
         tools:layout="@layout/fragment_single_playlist" />
 

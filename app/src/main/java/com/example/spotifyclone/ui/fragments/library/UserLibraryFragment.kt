@@ -59,15 +59,17 @@ class UserLibraryFragment : Fragment() {
             when (it) {
                 is Resource.Success -> {
                     setAdapter(it.data)
+                    binding.progressBar.visibility=View.GONE
                 }
 
                 is Resource.Error -> {
+                    binding.progressBar.visibility=View.GONE
                     Toast.makeText(requireContext(), it.exception.message, Toast.LENGTH_SHORT)
                         .show()
                 }
 
                 else -> {
-
+                    binding.progressBar.visibility=View.VISIBLE
                 }
 
             }

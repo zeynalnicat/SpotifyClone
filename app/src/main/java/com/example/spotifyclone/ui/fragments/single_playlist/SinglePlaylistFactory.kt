@@ -1,4 +1,4 @@
-package com.example.spotifyclone.ui.single_playlist
+package com.example.spotifyclone.ui.fragments.single_playlist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
