@@ -66,20 +66,12 @@ class SharedPreference(context: Context) {
     fun getValue(key: String, defaultValue: Int): Int {
         return sharedPreferences.getInt(key, defaultValue)
     }
-    fun saveSongsList(songsList: List<MusicItem>) {
-        val editor = sharedPreferences.edit()
-        val gson = Gson()
-        val json = gson.toJson(songsList)
-        editor.putString(SONGS_KEY, json)
-        editor.apply()
-    }
 
-    fun getSongsList(): List<MusicItem> {
-        val gson = Gson()
-        val json = sharedPreferences.getString(SONGS_KEY, null)
-        val type = object : TypeToken<List<MusicItem>>() {}.type
+    fun removeCurrent(){
+        editor.remove("PlayingMusic")
+        editor.remove("PlayingMusicUri")
+        editor.remove("PlayingMusicArtist")
 
-        return gson.fromJson(json, type) ?: emptyList()
     }
 
 }

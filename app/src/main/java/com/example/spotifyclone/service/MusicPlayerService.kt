@@ -87,21 +87,16 @@ class MusicPlayerService : Service() {
             mediaPlayer.setOnPreparedListener {
                 mediaPlayer.start()
                 musicIsPlaying.postValue(true)
-                sharedPreference.saveValue("PlayingMusic", track?.name ?: "")
-                sharedPreference.saveValue("PlayingMusicArtist", track?.artist ?: "")
-                sharedPreference.saveValue("PlayingMusicUri", track?.trackUri ?: "")
-
+                if(!sharedPreference.containsValue(track?.name?:"")){
+                    sharedPreference.saveValue("PlayingMusic", track?.name ?: "")
+                    sharedPreference.saveValue("PlayingMusicArtist", track?.artist ?: "")
+                    sharedPreference.saveValue("PlayingMusicUri", track?.trackUri ?: "")
+                }
             }
-
-
             mediaPlayer.prepareAsync()
-
-
             if (!GsonHelper.hasTracks(applicationContext)) {
                 GsonHelper.serializeTracks(applicationContext, tracks.value ?: emptyList())
             }
-        } else {
-            tracks.value = sharedPreference.getSongsList()
         }
     }
 

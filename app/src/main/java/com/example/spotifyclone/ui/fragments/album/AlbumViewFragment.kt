@@ -187,7 +187,8 @@ class AlbumViewFragment : Fragment() {
             { key, value -> saveSharedPreference(key, value) },
             { value -> saveSharedPreference(value) },
             { value -> isInSP(value) },
-            { musicItem, trackId -> setBottomSheet(musicItem, trackId) })
+            { musicItem, trackId -> setBottomSheet(musicItem, trackId) },
+            { removeSp() })
 
         adapter.submitList(tracks)
         this.tracks = adapter.getTracks()
@@ -200,14 +201,16 @@ class AlbumViewFragment : Fragment() {
     private fun setMusicTrack(position: Int) {
         sharedPreference.saveValue("Position", position)
 
-        lifecycleScope.launch {
-            GsonHelper.serializeTracks(requireContext().applicationContext, tracks)
 
-            withContext(Dispatchers.Main) {
-                musicPlayerViewModel.setSelectedTrackPosition(position)
-                musicPlayerViewModel.setTracks(tracks)
-            }
-        }
+        GsonHelper.serializeTracks(requireContext().applicationContext, tracks)
+        musicPlayerViewModel.setSelectedTrackPosition(position)
+        musicPlayerViewModel.setTracks(tracks)
+
+
+    }
+
+    private fun removeSp() {
+        sharedPreference.removeCurrent()
     }
 
     private fun setBottomSheet(musicItem: MusicItem, trackId: String) {

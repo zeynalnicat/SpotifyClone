@@ -19,7 +19,8 @@ class SingleAlbumTracksAdapter(
     private val saveSharedPreference: (key: String, value: String) -> Unit,
     private val saveSharedPreferenceBool: (value: Boolean) -> Unit,
     private val isInSP: (value: String) -> Boolean,
-    private val setBottom: (MusicItem, String) -> Unit
+    private val setBottom: (MusicItem, String) -> Unit,
+    private val removeCurrent : ()->Unit,
 ) : RecyclerView.Adapter<SingleAlbumTracksAdapter.ViewHolder>() {
 
     private val diffCallBack = object : DiffUtil.ItemCallback<MusicItem>() {
@@ -70,6 +71,7 @@ class SingleAlbumTracksAdapter(
             binding.musicIcon.visibility = if (track.isPlayed) View.VISIBLE else View.GONE
 
             itemView.setOnClickListener {
+
                 saveSharedPreference("PlayingMusicImg", img)
                 saveSharedPreference("PlayingMusic",track.name)
                 saveSharedPreference("PlayingMusicArtist",track.artist)
