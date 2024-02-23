@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -71,6 +72,24 @@ class MainActivity : AppCompatActivity() {
             setTracksAndPosition(tracks, position)
         }
 
+        musicPlayerService?.let {
+            val mediaPlayer = it.mediaPlayer
+            val totalTime = mediaPlayer.duration
+            cancelMusic()
+            handler = android.os.Handler(Looper.getMainLooper())
+            updateProgress(totalTime)
+
+            binding.imgPause.setOnClickListener { view ->
+                if (mediaPlayer.isPlaying) {
+                    it.pauseMusic()
+                    binding.imgPause.setImageResource(R.drawable.icon_music_play)
+                } else {
+                    it.startMusic()
+                    binding.imgPause.setImageResource(R.drawable.icon_music_pause)
+                }
+            }
+        }
+
 
         repository = MusicRepository(applicationContext)
         repository.loadTracks()
@@ -105,24 +124,7 @@ class MainActivity : AppCompatActivity() {
             val binder = service as MusicPlayerService.MusicPlayerBinder
             musicPlayerService = binder.getService()
             checkVisibility()
-            musicPlayerService?.let {
-                it.mediaPlayer.let { mediaPlayer ->
-                    val totalTime = mediaPlayer.duration
-                    handler = android.os.Handler(Looper.getMainLooper())
-                    updateProgress(totalTime)
-                    cancelMusic()
-                    binding.imgPause.setOnClickListener { view ->
-                        if (mediaPlayer.isPlaying) {
-                            mediaPlayer.pause()
-                            binding.imgPause.setImageResource(R.drawable.icon_music_play)
-                        } else {
-                            mediaPlayer.start()
-                            binding.imgPause.setImageResource(R.drawable.icon_music_pause)
-                        }
-                    }
-                }
 
-            }
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -130,12 +132,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     fun cancelMusic() {
         binding.imgCancel.setOnClickListener {
             sharedPreference.saveIsPlaying(false)
-            sharedPreference.updateValue("PlayingMusic","")
-            sharedPreference.updateValue("PlayingMusicUri","")
-            sharedPreference.updateValue("PlayingMusicArtist","")
+            sharedPreference.updateValue("PlayingMusic", "")
+            sharedPreference.updateValue("PlayingMusicUri", "")
+            sharedPreference.updateValue("PlayingMusicArtist", "")
             setMusicPlayer(false)
             GsonHelper.serializeTracks(this, emptyList())
             musicPlayerService?.tracks?.postValue(emptyList())
@@ -197,13 +200,21 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun updateProgress(totalTime: Int) {
-        musicPlayerService?.mediaPlayer?.let { mediaPlayer ->
-            if (mediaPlayer.isPlaying) {
-                val currentDuration = mediaPlayer.currentPosition
-                val progress = (currentDuration.toFloat() / totalTime * 100).toInt()
-                binding.progressBar.progress = progress
-                handler.postDelayed({ updateProgress(totalTime) }, 100)
+        try {
+            musicPlayerService?.mediaPlayer?.let { mediaPlayer ->
+                if (mediaPlayer.isPlaying) {
+                    val currentDuration = mediaPlayer.currentPosition
+                    val progress = (currentDuration.toFloat() / totalTime * 100).toInt()
+                    binding.progressBar.progress = progress
+                    handler.postDelayed({ updateProgress(totalTime) }, 100)
+                    Log.d("ProgressBar", "Progress Updated: $progress")
+                } else {
+                    Log.d("ProgressBar", "Media Player not playing.")
+                }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Log.e("ProgressBar", "Error updating progress: ${e.message}")
         }
     }
 

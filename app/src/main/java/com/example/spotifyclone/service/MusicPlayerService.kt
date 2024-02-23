@@ -114,15 +114,20 @@ class MusicPlayerService : Service() {
     fun pauseMusic() {
         if (mediaPlayer.isPlaying) {
             mediaPlayer.pause()
-            musicIsPlaying.postValue(false)
+
+        }
+    }
+
+    fun startMusic() {
+        if (!mediaPlayer.isPlaying) {
+            mediaPlayer.start()
         }
     }
 
 
     fun stopMusic() {
         mediaPlayer.stop()
-        mediaPlayer.release()
-        mediaPlayer = MediaPlayer()
+
     }
 
     fun currentTrack(): MusicItem {
@@ -140,6 +145,9 @@ class MusicPlayerService : Service() {
     }
 
     override fun onBind(intent: Intent): IBinder {
+        mediaPlayer.setOnCompletionListener {
+            nextSong()
+        }
         return MusicPlayerBinder()
     }
 
