@@ -140,7 +140,7 @@
             android:layout_height="wrap_content"
             android:text="@string/home_txt_recommended"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/leftGuideline"
             app:layout_constraintTop_toBottomOf="@+id/recyclerRecentlyPlayed"

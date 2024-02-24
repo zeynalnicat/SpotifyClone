@@ -10,6 +10,8 @@
         android:id="@+id/imgArtist"
         android:layout_width="140dp"
         android:layout_height="140dp"
+        android:background="@drawable/image_album"
+        android:clipToOutline="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />

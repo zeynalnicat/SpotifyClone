@@ -78,9 +78,9 @@ class HomeViewModel(
 
         val greeting = when (hour) {
             in 6..11 -> "Good morning!"
-            in 12..15 -> "Good afternoon!"
-            in 16..20 -> "Good evening!"
-            else -> "Good night"
+            in 12..17 -> "Good afternoon!"
+            in 18..23 -> "Good evening!"
+            else -> "Good night!"
         }
         _date.postValue(greeting)
     }

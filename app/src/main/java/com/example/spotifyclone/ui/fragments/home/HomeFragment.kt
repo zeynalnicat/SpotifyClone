@@ -228,6 +228,7 @@ class HomeFragment : Fragment() {
     private fun setTextHeader() {
         homeViewModel.setDateText()
         homeViewModel.date.observe(viewLifecycleOwner) {
+            binding.txtGood.text = it
         }
     }
 
