@@ -1,14 +1,19 @@
 package com.example.spotifyclone.ui.fragments.home
 
 import android.os.Bundle
+import android.util.Log
 
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.ui.adapters.ArtistAdapter
 import com.example.spotifyclone.ui.adapters.AlbumAdapter
@@ -17,6 +22,7 @@ import com.example.spotifyclone.databinding.FragmentHomeBinding
 import com.example.spotifyclone.model.album.newrelease.Item
 import com.example.spotifyclone.model.artist.Artist
 import com.example.spotifyclone.model.dto.Album
+import com.example.spotifyclone.network.retrofit.TokenRefresher
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
 import com.example.spotifyclone.network.retrofit.api.ArtistsApi
 import com.example.spotifyclone.resource.Resource
@@ -44,13 +50,17 @@ class HomeFragment : Fragment() {
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
 
+    @Inject
+    lateinit var tokenRefresher: TokenRefresher
+
 
     private val homeViewModel: HomeViewModel by viewModels {
         HomeFactory(
             albumApi,
             artistsApi,
             firestore,
-            firebaseAuth
+            firebaseAuth,
+            tokenRefresher
         )
     }
 
@@ -59,6 +69,8 @@ class HomeFragment : Fragment() {
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater)
         setBottom()
+        setLayout()
+        setNavigation()
 
         val activity = requireActivity() as MainActivity
         activity.checkVisibility()
@@ -68,7 +80,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setTextHeader()
-        setNavigation()
+        setDrawer()
 
         homeViewModel.newReleases.observe(viewLifecycleOwner) {
             when (it) {
@@ -160,6 +172,54 @@ class HomeFragment : Fragment() {
 
     }
 
+    private fun setNavigation() {
+        binding.viewProfile.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_userLibraryFragment)
+        }
+
+        binding.viewSetting.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
+        }
+    }
+
+    private fun setLayout() {
+        val userRef = firestore.collection("users")
+        val query = userRef.whereEqualTo("userId", firebaseAuth.currentUser?.uid)
+        try {
+            query.get()
+                .addOnSuccessListener { querySnapshot ->
+                    if (!querySnapshot.isEmpty) {
+                        val gender = querySnapshot.documents[0].getString("gender")
+                        val name = querySnapshot.documents[0].getString("username")
+                        val image = querySnapshot.documents[0].getString("img")
+
+                        binding.txtNameDrawer.text = name ?: "N/A"
+                        if (image?.isEmpty() == true) {
+                            binding.imgProfileAccount.setImageResource(if (gender == "Men") R.drawable.man_icon else R.drawable.woman_icon)
+                            binding.imgProfileDrawer.setImageResource(if (gender == "Men") R.drawable.man_icon else R.drawable.woman_icon)
+                        } else {
+                            Glide.with(binding.root)
+                                .load(image.toString())
+                                .into(binding.imgProfileAccount)
+
+                            Glide.with(binding.root)
+                                .load(image.toString())
+                                .into(binding.imgProfileDrawer)
+                        }
+                    } else {
+                        binding.txtNameDrawer.text = "N/A"
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    binding.txtNameDrawer.text = "N/A"
+                    Log.e("Firestore", "Error retrieving user data: ${exception.message}")
+                }
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
     private fun setBottom() {
         val activity = requireActivity() as? MainActivity
         activity?.setBottomNavigation(true)
@@ -168,7 +228,6 @@ class HomeFragment : Fragment() {
     private fun setTextHeader() {
         homeViewModel.setDateText()
         homeViewModel.date.observe(viewLifecycleOwner) {
-            binding.txtGood.text = it
         }
     }
 
@@ -207,12 +266,6 @@ class HomeFragment : Fragment() {
     }
 
 
-    private fun setNavigation() {
-        binding.imgSettings.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
-        }
-    }
-
     private fun setPopularAlbums(list: List<com.example.spotifyclone.model.album.popularalbums.Album>) {
 
         val adapter =
@@ -243,5 +296,15 @@ class HomeFragment : Fragment() {
         binding.recyclerViewRecommended.adapter = adapter
 
 
+    }
+
+    private fun setDrawer() {
+        binding.imgProfileAccount.setOnClickListener {
+            if (binding.drawer2.isDrawerOpen(GravityCompat.START)) {
+                binding.drawer2.closeDrawer(GravityCompat.START)
+            } else {
+                binding.drawer2.openDrawer(GravityCompat.START)
+            }
+        }
     }
 }

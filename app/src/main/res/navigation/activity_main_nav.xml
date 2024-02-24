@@ -54,6 +54,9 @@
         <action
             android:id="@+id/action_homeFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_userLibraryFragment"
+            app:destination="@id/userLibraryFragment" />
     </fragment>
     <action
         android:id="@+id/toSearch"

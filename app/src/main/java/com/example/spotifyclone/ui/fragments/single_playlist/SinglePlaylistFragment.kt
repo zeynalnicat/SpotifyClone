@@ -11,10 +11,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
+import com.example.spotifyclone.databinding.BottomSheetTrackBinding
 import com.example.spotifyclone.databinding.FragmentSinglePlaylistBinding
 import com.example.spotifyclone.model.dto.LikedSongs
+import com.example.spotifyclone.model.dto.MusicItem
 import com.example.spotifyclone.resource.Resource
 import com.example.spotifyclone.ui.adapters.LikedSongsAdapter
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,14 +40,12 @@ class SinglePlaylistFragment : Fragment() {
 
     private val singleViewModel: SinglePlaylistViewModel by viewModels {
         SinglePlaylistFactory(
-            firestore,
-            firebaseAuth
+            firestore, firebaseAuth
         )
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSinglePlaylistBinding.inflate(inflater)
         setNavigation()
@@ -98,7 +99,7 @@ class SinglePlaylistFragment : Fragment() {
     }
 
     private fun setAdapter(data: List<LikedSongs>) {
-        val adapter = LikedSongsAdapter()
+        val adapter = LikedSongsAdapter { setBottomSheet(it) }
         adapter.submitList(data)
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerView.adapter = adapter
@@ -116,8 +117,7 @@ class SinglePlaylistFragment : Fragment() {
         val userRef = firestore.collection("users")
         val query = userRef.whereEqualTo("userId", userId)
 
-        query.get()
-            .addOnSuccessListener { querySnapshot ->
+        query.get().addOnSuccessListener { querySnapshot ->
 
                 if (querySnapshot != null && !querySnapshot.isEmpty) {
 
@@ -131,9 +131,7 @@ class SinglePlaylistFragment : Fragment() {
                     if (img?.isEmpty() == true) {
                         binding.imgArtist.setImageResource(if (gender == "Men") R.drawable.man_icon else R.drawable.woman_icon)
                     } else {
-                        Glide.with(binding.root)
-                            .load(img.toString())
-                            .into(binding.imgArtist)
+                        Glide.with(binding.root).load(img.toString()).into(binding.imgArtist)
                     }
                 } else {
                     binding.txtArtistName.text = "N/A"
@@ -142,4 +140,44 @@ class SinglePlaylistFragment : Fragment() {
             }
     }
 
+    private fun setBottomSheet(musicItem: LikedSongs) {
+        val dialog = BottomSheetDialog(requireContext())
+        val view = BottomSheetTrackBinding.inflate(layoutInflater)
+
+        dialog.setCancelable(true)
+        dialog.setContentView(view.root)
+
+        Glide.with(binding.root).load(musicItem.imgUri).into(view.imgAlbum)
+
+        view.txtArtistName.text = musicItem.artist
+        view.txtTrackName.text = musicItem.name
+        view.txtPlaylist.text = getText(R.string.playlist_txt_remove)
+
+        view.viewAddLiked.setOnClickListener {
+            singleViewModel.insertLikedSongs(
+                musicItem.name, musicItem.artist, musicItem.imgUri, musicItem.uri
+            )
+
+        }
+
+        singleViewModel.checkLikedSongs(musicItem.name)
+
+        singleViewModel.isInLiked.observe(viewLifecycleOwner) {
+            if (it) {
+                view.txtLiked.setText(R.string.bottom_sheet_txt_remove)
+            } else {
+                view.txtLiked.setText(R.string.bottom_sheet_txt_liked)
+            }
+
+
+            view.viewAddPlaylist.setOnClickListener {
+                singleViewModel.removeFromPlaylist(id, musicItem.name)
+                singleViewModel.getTracks(id)
+                dialog.hide()
+            }
+            dialog.show()
+
+        }
+
+    }
 }

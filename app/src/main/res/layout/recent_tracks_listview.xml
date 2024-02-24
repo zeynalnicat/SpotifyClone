@@ -10,8 +10,6 @@
 
     <ImageView
         android:id="@+id/imgArtist"
-
-
         android:layout_width="100dp"
         android:layout_height="100dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +24,7 @@
         android:textStyle="bold"
         android:textSize="12sp"
         android:layout_marginTop="5dp"
-        android:text="TextView"
+        tools:text="TextView"
         app:layout_constraintEnd_toEndOf="@+id/imgArtist"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imgArtist" />

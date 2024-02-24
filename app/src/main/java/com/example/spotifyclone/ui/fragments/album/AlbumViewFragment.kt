@@ -249,7 +249,7 @@ class AlbumViewFragment : Fragment() {
 
         view.viewAddPlaylist.setOnClickListener {
             val bundle = Bundle()
-            bundle.putString("trackId", trackId)
+            bundle.putSerializable("track", musicItem)
             findNavController().navigate(
                 R.id.action_albumViewFragment_to_addPlaylistFragment,
                 bundle

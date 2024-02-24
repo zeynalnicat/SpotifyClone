@@ -55,7 +55,7 @@ class AddPlaylistViewModel(
     }
 
 
-    fun addFirebase(playlist: List<PlaylistModel>, trackId: String) {
+    fun addFirebase(playlist: List<PlaylistModel>, track: MusicItem) {
         val playlistsRef = firestore.collection("playlistTracks")
         val userId = firebaseAuth.currentUser?.uid
         val listStates = mutableListOf<Boolean>()
@@ -63,8 +63,11 @@ class AddPlaylistViewModel(
             viewModelScope.launch(Dispatchers.IO) {
                 playlist.forEach {
                     val model = hashMapOf(
+                        "artist" to track.artist,
+                        "imgUri" to track.img,
                         "playlistId" to it.id,
-                        "trackId" to trackId,
+                        "trackName" to track.name,
+                        "trackUri" to track.trackUri,
                         "userId" to userId
                     )
                     playlistsRef.add(model)

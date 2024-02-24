@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.spotifyclone.R
 import com.example.spotifyclone.ui.adapters.PlaylistAdapter
 import com.example.spotifyclone.databinding.FragmentAddPlaylistBinding
+import com.example.spotifyclone.model.dto.MusicItem
 
 import com.example.spotifyclone.model.dto.PlaylistModel
 import com.example.spotifyclone.resource.Resource
@@ -34,7 +35,7 @@ class AddPlaylistFragment : Fragment() {
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
 
-    private var trackId = ""
+    private var track: MusicItem? = null
 
     companion object {
         val selectedPlaylists = MutableLiveData<List<PlaylistModel>>()
@@ -63,7 +64,7 @@ class AddPlaylistFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.let {
-            trackId = it.getString("trackId","")
+            track = it.getSerializable("track") as MusicItem
         }
 
         addPlaylistViewModel.playlists.observe(viewLifecycleOwner) {
@@ -86,36 +87,39 @@ class AddPlaylistFragment : Fragment() {
 
         selectedPlaylists.observe(viewLifecycleOwner) {
             when {
-                it.isNotEmpty() ->
-                {
+                it.isNotEmpty() -> {
                     binding.btnAdd.visibility = View.VISIBLE
 
-                    binding.btnAdd.setOnClickListener {view->
-                        addPlaylistViewModel.addFirebase(it,trackId)
+                    binding.btnAdd.setOnClickListener { view ->
+                        addPlaylistViewModel.addFirebase(it, track!!)
                     }
 
                 }
+
                 else -> {
                     binding.btnAdd.visibility = View.GONE
                 }
             }
         }
 
-        addPlaylistViewModel.state.observe(viewLifecycleOwner){
-            when(it){
-                is Resource.Success ->{
-                    if(!it.data.contains(false)){
+        addPlaylistViewModel.state.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Success -> {
+                    if (!it.data.contains(false)) {
                         findNavController().navigate(R.id.action_addPlaylistFragment_to_userLibraryFragment)
-                    }else{
-                        Toast.makeText(requireContext(),"Undefined Error",Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(requireContext(), "Undefined Error", Toast.LENGTH_SHORT)
+                            .show()
                     }
 
                 }
+
                 is Resource.Error -> {
-                    Toast.makeText(requireContext(),it.exception.message,Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), it.exception.message, Toast.LENGTH_SHORT)
+                        .show()
                 }
 
-                is Resource.Loading ->{
+                is Resource.Loading -> {
 
                 }
 

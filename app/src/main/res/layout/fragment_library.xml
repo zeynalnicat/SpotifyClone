@@ -5,7 +5,7 @@
     android:id="@+id/drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:openDrawer="start">
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -68,8 +68,8 @@
 
         <ImageView
             android:id="@+id/imgPlaylistLiked"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:layout_marginTop="24dp"
             android:src="@drawable/icon_library_liked"
             app:layout_constraintStart_toStartOf="@+id/leftGuideline"
@@ -81,9 +81,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:text="@string/library_txt_liked_songs"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/imgPlaylistLiked"
             app:layout_constraintTop_toTopOf="@+id/imgPlaylistLiked" />

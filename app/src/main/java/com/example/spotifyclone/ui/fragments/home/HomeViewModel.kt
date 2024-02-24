@@ -1,5 +1,6 @@
 package com.example.spotifyclone.ui.fragments.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,7 @@ import com.example.spotifyclone.model.album.newrelease.Item
 import com.example.spotifyclone.model.artist.Artist
 import com.example.spotifyclone.model.firebase.Albums
 import com.example.spotifyclone.model.firebase.Tracks
+import com.example.spotifyclone.network.retrofit.TokenRefresher
 import com.example.spotifyclone.resource.Resource
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
 import com.example.spotifyclone.network.retrofit.api.ArtistsApi
@@ -20,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -28,7 +31,8 @@ class HomeViewModel(
     private val albumApi: AlbumApi,
     private val artistApi: ArtistsApi,
     private val firestore: FirebaseFirestore,
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    private val tokenRefresher: TokenRefresher
 ) : ViewModel() {
 
     private val _date = MutableLiveData<String>()
@@ -55,6 +59,18 @@ class HomeViewModel(
         get() = _recommended
 
 
+
+    private suspend fun <T> refreshTokenAndExecute(apiCall: suspend () -> Response<T>): Response<T> {
+        if (tokenRefresher.isAccessTokenExpired()) {
+            Log.d("TokenRefresh", "Refreshing access token")
+            tokenRefresher.refreshAccessToken()
+        }
+        Log.d("TokenRefresh", "Executing API call")
+        val response = apiCall.invoke()
+        Log.d("TokenRefresh", "API call response: $response")
+        return response
+    }
+
     fun setDateText() {
         val currentDate = Date()
         val dateFormat = SimpleDateFormat("HH", Locale.getDefault())
@@ -72,7 +88,7 @@ class HomeViewModel(
     fun getNewRelease() {
         viewModelScope.launch {
             try {
-                val response = albumApi.getNewReleases()
+                val response =  albumApi.getNewReleases()
                 if (response.isSuccessful) {
                     val result = response.body()?.albums?.items
                     result?.let {
@@ -94,7 +110,7 @@ class HomeViewModel(
             try {
                 val query =
                     "7bPTIw59JU8w3NntSpmEzo,78bpIziExqiI9qztvNFlQu,5pSk3c3wVwnb2arb6ohCPU,5VoeRuTrGhTbKelUfwymwu,0ODLCdHBFVvKwJGeSfd1jy"
-                val response = albumApi.getSomeAlbums(query)
+                val response =  albumApi.getSomeAlbums(query)
                 if (response.isSuccessful) {
                     val result = response.body()?.albums
                     result?.let {
@@ -131,7 +147,7 @@ class HomeViewModel(
 
                         viewModelScope.launch(Dispatchers.IO) {
                             artistIDs.forEach {
-                                val response = artistApi.getArtists(it)
+                                val response = refreshTokenAndExecute { artistApi.getArtists(it) }
                                 if (response.isSuccessful) {
                                     val artist = response.body()?.artists?.get(0)
                                     artist?.let { artist ->

@@ -13,7 +13,8 @@ import com.example.spotifyclone.databinding.ItemLibraryAlbumBinding
 
 import com.example.spotifyclone.model.dto.LikedSongs
 
-class LikedSongsAdapter() : RecyclerView.Adapter<LikedSongsAdapter.ViewHolder>() {
+class LikedSongsAdapter(private val setBottom: (LikedSongs) -> Unit) :
+    RecyclerView.Adapter<LikedSongsAdapter.ViewHolder>() {
 
 
     private val diffCallBack = object : DiffUtil.ItemCallback<LikedSongs>() {
@@ -54,6 +55,7 @@ class LikedSongsAdapter() : RecyclerView.Adapter<LikedSongsAdapter.ViewHolder>()
     inner class ViewHolder(private val binding: ItemLibraryAlbumBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(track: LikedSongs) {
+            binding.imgMore.visibility = View.VISIBLE
             binding.cardView.setCardBackgroundColor(
                 ContextCompat.getColor(
                     itemView.context,
@@ -66,6 +68,10 @@ class LikedSongsAdapter() : RecyclerView.Adapter<LikedSongsAdapter.ViewHolder>()
                 .into(binding.imgAlbum)
 
             binding.album.text = track.artist
+
+            binding.imgMore.setOnClickListener {
+                setBottom(track)
+            }
         }
     }
 

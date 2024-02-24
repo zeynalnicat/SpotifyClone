@@ -10,11 +10,14 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
+import com.example.spotifyclone.databinding.BottomSheetTrackBinding
 import com.example.spotifyclone.ui.adapters.LikedSongsAdapter
 import com.example.spotifyclone.databinding.FragmentLikedSongsBinding
 
 import com.example.spotifyclone.model.dto.LikedSongs
 import com.example.spotifyclone.resource.Resource
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
@@ -80,11 +83,36 @@ class LikedSongsFragment : Fragment() {
     }
 
     private fun setAdapter(songs: List<LikedSongs>) {
-        val adapter = LikedSongsAdapter()
+        val adapter = LikedSongsAdapter{setBottomSheet(it)}
         adapter.submitList(songs)
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerView.adapter = adapter
     }
 
+    private fun setBottomSheet(musicItem: LikedSongs) {
+        val dialog = BottomSheetDialog(requireContext())
+        val view = BottomSheetTrackBinding.inflate(layoutInflater)
+
+        dialog.setCancelable(true)
+        dialog.setContentView(view.root)
+
+        Glide.with(binding.root)
+            .load(musicItem.imgUri)
+            .into(view.imgAlbum)
+
+        view.txtArtistName.text = musicItem.artist
+        view.txtTrackName.text = musicItem.name
+
+        view.viewAddLiked.setOnClickListener {
+
+        }
+
+        view.viewAddPlaylist.setOnClickListener {
+
+            dialog.hide()
+        }
+        dialog.show()
+
+    }
 
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
         <item name="android:fontFamily">@font/avenir_next_regular</item>
@@ -20,5 +20,12 @@
         <item name="android:progressBackgroundTint">@color/white</item>
         <item name="android:progressTint">@color/txt_gray</item>
         <item name="android:thumbTint">@color/white</item>
+    </style>
+
+    <style name="Colors_Widget.MaterialComponents.Chip.Choice" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/filled_gray</item>
+        <item name="chipStrokeColor">@color/primary</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="android:textColor">@color/green</item>
     </style>
 </resources>
