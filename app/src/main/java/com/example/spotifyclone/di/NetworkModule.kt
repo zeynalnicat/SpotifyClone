@@ -8,6 +8,7 @@ import com.example.spotifyclone.network.retrofit.consts.ConstValues
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.internal.managers.ApplicationComponentManager
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -68,7 +69,7 @@ class NetworkModule {
             clientId = "3927891f65e6435586508e1bc22ce82a",
             clientSecret = "8aac71670abc416e99adf6012dd96ad8",
             redirectUri = "https://oauth.pstmn.io/v1/browser-callback",
-            accessToken = "BQDp_GAi63RRa7w2Um28634fSu5_px_WxgC3ye3zhTApTeAVVC1a_mHPwxPXmkEmAQ8R36YoIQpy7n1Rk3dzdtkMbF0v8vi6FpRJ4D41WycO9m_Vvs1MFKT2Tpax2vZVgzvqMIrIHd6gaOF0yC4HQIvd-DBwcRQ1YzH3Z0SwIuX0IJo_1eL4wkQJHZlRmvJqcJLCPfuA9Dfhy8B2aRgnE4jo5_Wvv1G5iz6LQWy-ZYmTHFiA1hbYbvF-K1EeeG9xHR0sAOgEN8Kocg",
+            accessToken = "BQCq0BEYxk3FKUH1ABxKgCOgtw1OenQa7-PKiAXKTHBU8SuTERVZ6pIp5r7GXO2WDzhUnQeTlSkTjpOhvhWQRF1gmg0Fg1VpVv5_q7dss_QhhIyp2-b5pmc-z8xju7jFfVs3FbbjFUATeUI_6T88vtmDHXl9eMijheWUrbkHMAZp1NGeG1RZTm7leVLfRyV2ZU9sZ0_TxMgT5ilrCVGwEdF6FFbLb_9vXUABPydU7D6vOI3aG20PVP2SC2s2vEB3VIDL_NHmAGNY2A",
             tokenType = "Bearer",
             accessTokenUrl = "https://accounts.spotify.com/api/token",
             expiresIn = 3600,

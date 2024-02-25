@@ -42,6 +42,7 @@
     <string name="home_txt_popular">Popular Albums</string>
     <string name="home_txt_recommended">Recommended Albums</string>
     <string name="home_txt_new">New Release</string>
+    <string name="home_txt_all">All</string>
 
 
     <string name="search_txt_search">WHAT DO YOU WANT TO LISTEN TO?</string>
@@ -49,6 +50,7 @@
     <string name="search_txt_popular_genre">Popular podcast categories</string>
     <string name="search_txt_browse_all">Browse All</string>
     <string name="search_txt_cancel">Cancel</string>
+
 
 
     <string name="library_txt_header">Your Library</string>

@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/primary"
-        tools:context=".ui.fragments.home.HomeFragment">
+        tools:context=".ui.fragments.home.general.HomeFragment">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/leftGuideline"
