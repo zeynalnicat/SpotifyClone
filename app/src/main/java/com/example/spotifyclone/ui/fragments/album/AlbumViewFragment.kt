@@ -70,7 +70,6 @@ class AlbumViewFragment : Fragment() {
         )
     }
     private lateinit var tracks: List<MusicItem>
-    private var currentTrackIndex: Int = 0
     private var imgAlbum = ""
     private lateinit var adapter: SingleAlbumTracksAdapter
     private lateinit var sharedPreference: SharedPreference
@@ -200,7 +199,6 @@ class AlbumViewFragment : Fragment() {
 
     private fun setMusicTrack(position: Int) {
         sharedPreference.saveValue("Position", position)
-
 
         GsonHelper.serializeTracks(requireContext().applicationContext, tracks)
         musicPlayerViewModel.setSelectedTrackPosition(position)

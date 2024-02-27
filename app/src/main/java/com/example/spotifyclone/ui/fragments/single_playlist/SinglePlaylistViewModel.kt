@@ -41,6 +41,8 @@ class SinglePlaylistViewModel(
 
     val isInLiked: LiveData<Boolean> get() = _isInLiked
 
+    private var trackModels: List<LikedSongs> = emptyList()
+
     val insertionLiked: LiveData<Long> get() = _insertionLiked
 
     fun getPlaylistName(id: String) {
@@ -82,6 +84,7 @@ class SinglePlaylistViewModel(
                         trackList.add(musicModel)
                     }
                     _tracks.postValue(Resource.Success(trackList))
+                    trackModels = trackList
                 } else {
                     _tracks.postValue(Resource.Error(Exception("No tracks")))
                 }
@@ -168,6 +171,14 @@ class SinglePlaylistViewModel(
                 val document = querySnapshot.documents[0]
                 playlistRef.document(document.id).delete()
             }
+
+    }
+
+
+    fun search(text: String) {
+        val searched = trackModels.filter { it.name == text }
+
+        _tracks.postValue(Resource.Success(searched))
 
     }
 

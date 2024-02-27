@@ -12,8 +12,15 @@ import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ItemLibraryAlbumBinding
 
 import com.example.spotifyclone.model.dto.LikedSongs
+import com.example.spotifyclone.model.dto.MusicItem
 
-class LikedSongsAdapter(private val setBottom: (LikedSongs) -> Unit) :
+class LikedSongsAdapter(
+    private val setBottom: (LikedSongs) -> Unit,
+    private val setMusicLayout: (Int) -> Unit,
+    private val saveSharedPreference: (key: String, value: String) -> Unit,
+    private val saveSharedPreferenceBool: (value: Boolean) -> Unit,
+    private val isInSP: (value: String) -> Boolean,
+) :
     RecyclerView.Adapter<LikedSongsAdapter.ViewHolder>() {
 
 
@@ -62,6 +69,8 @@ class LikedSongsAdapter(private val setBottom: (LikedSongs) -> Unit) :
                     R.color.txt_gray
                 )
             )
+
+            track.isPlayed = isInSP(track.name)
             binding.txtAlbumName.text = track.name
             Glide.with(binding.root)
                 .load(track.imgUri)
@@ -69,9 +78,28 @@ class LikedSongsAdapter(private val setBottom: (LikedSongs) -> Unit) :
 
             binding.album.text = track.artist
 
+            binding.txtAlbumName.setTextColor(
+                if (track.isPlayed) ContextCompat.getColor(
+                    itemView.context,
+                    R.color.green
+                ) else ContextCompat.getColor(itemView.context, R.color.white)
+            )
+
+            itemView.setOnClickListener {
+                saveSharedPreference("PlayingMusicImg", track.imgUri)
+                saveSharedPreference("PlayingMusic", track.name)
+                saveSharedPreference("PlayingMusicArtist", track.artist)
+                saveSharedPreference("PlayingMusicUri", track.uri)
+                saveSharedPreferenceBool(true)
+                track.isPlayed = true
+                notifyDataSetChanged()
+                setMusicLayout(layoutPosition)
+
+            }
             binding.imgMore.setOnClickListener {
                 setBottom(track)
             }
+
         }
     }
 

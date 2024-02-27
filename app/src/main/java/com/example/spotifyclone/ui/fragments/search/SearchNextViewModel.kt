@@ -18,6 +18,7 @@ class SearchNextViewModel(private val searchApi: SearchApi) : ViewModel() {
 
 
     fun search(query: String) {
+        _searchResults.postValue(Resource.Loading)
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = searchApi.search(query)
@@ -28,7 +29,7 @@ class SearchNextViewModel(private val searchApi: SearchApi) : ViewModel() {
                             SearchModel(
                                 it.title,
                                 it.artist.name,
-                                it.album.cover,
+                                it.album.cover_medium,
                                 it.preview
                             )
                         }

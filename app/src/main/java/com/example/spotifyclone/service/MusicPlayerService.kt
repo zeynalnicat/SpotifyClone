@@ -49,6 +49,10 @@ class MusicPlayerService : Service() {
         tracks.observeForever {
             if (!it.isEmpty() && it != null) {
                 songIndex = sharedPreference.getValue("Position", 0)
+                sharedPreference.saveValue("PlayingMusicImg", it[songIndex].img)
+                sharedPreference.saveValue("PlayingMusic", it[songIndex].name)
+                sharedPreference.saveValue("PlayingMusicArtist", it[songIndex].artist)
+                sharedPreference.saveValue("PlayingMusicUri", it[songIndex].trackUri)
                 playMusic(it[songIndex].trackUri)
             }
 
@@ -87,7 +91,7 @@ class MusicPlayerService : Service() {
             mediaPlayer.setOnPreparedListener {
                 mediaPlayer.start()
                 musicIsPlaying.postValue(true)
-                if(!sharedPreference.containsValue(track?.name?:"")){
+                if (!sharedPreference.containsValue(track?.name ?: "")) {
                     sharedPreference.saveValue("PlayingMusic", track?.name ?: "")
                     sharedPreference.saveValue("PlayingMusicArtist", track?.artist ?: "")
                     sharedPreference.saveValue("PlayingMusicUri", track?.trackUri ?: "")
@@ -129,6 +133,7 @@ class MusicPlayerService : Service() {
         Log.e("Tracks", tracks.value.toString())
         songIndex = newIndex
         sharedPreference.saveValue("Position", songIndex)
+        sharedPreference.saveValue("PlayingMusicImg", tracks.value?.get(songIndex)?.img ?: "")
         val songUri: String = tracks.value?.get(songIndex)?.trackUri ?: ""
         playMusic(songUri)
     }
@@ -140,6 +145,7 @@ class MusicPlayerService : Service() {
         val newIndex = (index - 1) % (tracks.value?.size ?: 0)
         songIndex = newIndex
         sharedPreference.saveValue("Position", songIndex)
+        sharedPreference.saveValue("PlayingMusicImg", tracks.value?.get(songIndex)?.img ?: "")
         val songUri = tracks.value?.get(songIndex)?.trackUri ?: ""
         playMusic(songUri)
     }

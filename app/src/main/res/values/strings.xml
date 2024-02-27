@@ -85,5 +85,8 @@
     <string name="edit_text_save">Save</string>
     <string name="edit_txt_name">Name</string>
 
+    <string name="search_txt_play_love">Play what you love</string>
+    <string name="search_txt_search_for">Search for songs</string>
+
 
 </resources>
