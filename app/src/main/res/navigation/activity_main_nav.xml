@@ -147,7 +147,11 @@
         android:id="@+id/searchNextFragment"
         android:name="com.example.spotifyclone.ui.fragments.search.SearchNextFragment"
         android:label="fragment_search_next"
-        tools:layout="@layout/fragment_search_next" />
+        tools:layout="@layout/fragment_search_next" >
+        <action
+            android:id="@+id/action_searchNextFragment_to_addPlaylistFragment"
+            app:destination="@id/addPlaylistFragment" />
+    </fragment>
     <fragment
         android:id="@+id/albumViewFragment"
         android:name="com.example.spotifyclone.ui.fragments.album.AlbumViewFragment"
@@ -218,7 +222,11 @@
         android:id="@+id/likedSongsFragment"
         android:name="com.example.spotifyclone.ui.fragments.others.LikedSongsFragment"
         android:label="fragment_liked_songs"
-        tools:layout="@layout/fragment_liked_songs" />
+        tools:layout="@layout/fragment_liked_songs" >
+        <action
+            android:id="@+id/action_likedSongsFragment_to_addPlaylistFragment"
+            app:destination="@id/addPlaylistFragment" />
+    </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.example.spotifyclone.ui.fragments.library.EditProfileFragment"

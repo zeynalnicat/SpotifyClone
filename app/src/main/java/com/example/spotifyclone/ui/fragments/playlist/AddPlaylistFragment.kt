@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
@@ -56,6 +57,7 @@ class AddPlaylistFragment : Fragment() {
     ): View? {
         binding = FragmentAddPlaylistBinding.inflate(inflater)
         setNavigation()
+        search()
         return binding.root
     }
 
@@ -71,15 +73,17 @@ class AddPlaylistFragment : Fragment() {
             when (it) {
                 is Resource.Success -> {
                     setAdapter(it.data)
+                    binding.progressBar.visibility = View.GONE
                 }
 
                 is Resource.Error -> {
+                    binding.progressBar.visibility = View.GONE
                     Toast.makeText(requireContext(), it.exception.message, Toast.LENGTH_SHORT)
                         .show()
                 }
 
                 is Resource.Loading -> {
-
+                    binding.progressBar.visibility = View.VISIBLE
                 }
             }
         }
@@ -141,6 +145,12 @@ class AddPlaylistFragment : Fragment() {
     private fun setNavigation() {
         binding.navBack.setOnClickListener {
             findNavController().popBackStack()
+        }
+    }
+
+    private fun search() {
+        binding.edtSearch.doAfterTextChanged {
+            addPlaylistViewModel.search(it.toString())
         }
     }
 }

@@ -177,14 +177,17 @@ class SinglePlaylistViewModel(
 
 
     fun search(text: String) {
-        val lowercaseText = text.toLowerCase(Locale.ROOT)
-        val searched = trackModels.filter { it.name.toLowerCase(Locale.ROOT) == lowercaseText }
-
-        if (searched.isNotEmpty()) {
-            _tracks.postValue(Resource.Success(searched))
+        val model = _tracks.value
+        if (model is Resource.Success) {
+            if (text.isEmpty()) {
+                _tracks.postValue(Resource.Success(trackModels))
+            } else {
+                val searched = trackModels.filter { it.name.contains(text, ignoreCase = true) }
+                _tracks.postValue(Resource.Success(searched))
+            }
         }
-    }
 
+    }
 
 
 }

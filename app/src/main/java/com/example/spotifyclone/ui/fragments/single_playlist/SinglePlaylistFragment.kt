@@ -93,6 +93,7 @@ class SinglePlaylistFragment : Fragment() {
             when (it) {
                 is Resource.Success -> {
                     setAdapter(it.data)
+                    binding.txtSongNumber.text = it.data.size.toString()
                 }
 
                 is Resource.Error -> {

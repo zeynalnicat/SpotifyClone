@@ -55,47 +55,33 @@ class LikedSongsViewModel(
     }
 
     fun search(query: String) {
-        val userId = firebaseAuth.currentUser?.uid
-        if (userId == null) {
-            _songs.postValue(Resource.Error(Exception("User not authenticated")))
-            return
-        }
-
-        val likedSongsRef = firestore.collection("likedSongs")
-        val lowercaseQuery = query.toLowerCase()
-        val query = likedSongsRef
-            .whereEqualTo("userId", userId)
-            .whereGreaterThanOrEqualTo("name", lowercaseQuery)
-            .whereLessThanOrEqualTo("name", lowercaseQuery + "\uf8ff")
-            .orderBy("name", Query.Direction.ASCENDING)
-            .orderBy("artist", Query.Direction.ASCENDING)
-
-
-        query.get().addOnCompleteListener { task ->
-            _songs.postValue(Resource.Loading)
-            if (task.isSuccessful) {
-                val result = task.result
-                val listLikedSongs = mutableListOf<LikedSongs>()
-
-                if (result != null && !result.isEmpty) {
-                    val documents = result.documents
-                    for (document in documents) {
-                        val song = LikedSongs(
-                            document["name"].toString(),
-                            document["artist"].toString(),
-                            document["imgUri"].toString(),
-                            document["musicUri"].toString()
-                        )
-                        listLikedSongs.add(song)
-                    }
-                    _songs.postValue(Resource.Success(listLikedSongs))
-                } else {
-                    _songs.postValue(Resource.Error(Exception("No matching songs found")))
-                }
+        val model = _songs.value
+        if (model is Resource.Success) {
+            if (query.isEmpty()) {
+                getSongs()
             } else {
-                _songs.postValue(Resource.Error(task.exception ?: Exception("Unknown error")))
+                val searched = model.data.filter { it.name.contains(query, ignoreCase = true) }
+                _songs.postValue(Resource.Success(searched))
             }
         }
+    }
+
+
+    fun removeLikedSongs(musicName: String) {
+        val likedSongsRef = firestore.collection("likedSongs")
+        val userId = firebaseAuth.currentUser?.uid
+        val query = likedSongsRef.whereEqualTo("userId", userId).whereEqualTo("name", musicName)
+
+        query.get()
+            .addOnSuccessListener { querySnapshot ->
+                if (querySnapshot != null && !querySnapshot.isEmpty) {
+                    val document = querySnapshot.documents[0]
+                    likedSongsRef.document(document.id).delete()
+                    getSongs()
+                }
+
+            }
+
     }
 
 }

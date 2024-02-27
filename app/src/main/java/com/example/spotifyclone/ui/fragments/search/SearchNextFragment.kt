@@ -26,18 +26,36 @@ import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
 import com.example.spotifyclone.ui.adapters.LikedSongsAdapter
 import com.example.spotifyclone.util.GsonHelper
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class SearchNextFragment : Fragment() {
     private lateinit var binding: FragmentSearchNextBinding
 
     private lateinit var searchApi: SearchApi
 
-    private val searchNextViewModel: SearchNextViewModel by viewModels { SearchNextFactory(searchApi) }
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
+
+    @Inject
+    lateinit var firestore: FirebaseFirestore
+
+    private val searchNextViewModel: SearchNextViewModel by viewModels {
+        SearchNextFactory(
+            searchApi,
+            firestore,
+            firebaseAuth
+        )
+    }
 
     private lateinit var sharedPreference: SharedPreference
+
 
     private val musicPlayerViewModel: MusicPlayerViewModel by activityViewModels()
 
@@ -142,32 +160,39 @@ class SearchNextFragment : Fragment() {
 
         view.txtArtistName.text = musicItem.artist
         view.txtTrackName.text = musicItem.name
-        view.txtPlaylist.text = getText(R.string.playlist_txt_remove)
 
         view.viewAddLiked.setOnClickListener {
-//            singleViewModel.insertLikedSongs(
-//                musicItem.name, musicItem.artist, musicItem.imgUri, musicItem.uri
-//            )
+            searchNextViewModel.insertLikedSongs(
+                musicItem.name, musicItem.artist, musicItem.imgUri, musicItem.uri
+            )
 
         }
-//
-//        singleViewModel.checkLikedSongs(musicItem.name)
-//
-//        singleViewModel.isInLiked.observe(viewLifecycleOwner) {
-//            if (it) {
-//                view.txtLiked.setText(R.string.bottom_sheet_txt_remove)
-//            } else {
-//                view.txtLiked.setText(R.string.bottom_sheet_txt_liked)
-//            }
+
+        searchNextViewModel.checkLikedSongs(musicItem.name)
+
+        searchNextViewModel.isInLiked.observe(viewLifecycleOwner) {
+            if (it) {
+                view.txtLiked.setText(R.string.bottom_sheet_txt_remove)
+            } else {
+                view.txtLiked.setText(R.string.bottom_sheet_txt_liked)
+            }
 
 
-//            view.viewAddPlaylist.setOnClickListener {
-//                singleViewModel.removeFromPlaylist(id, musicItem.name)
-//                singleViewModel.getTracks(id)
-//                dialog.hide()
-//            }
-        dialog.show()
+            view.viewAddPlaylist.setOnClickListener {
+                val bundle = Bundle()
+                val musicModel =
+                    MusicItem(musicItem.artist, "", musicItem.name, musicItem.uri, musicItem.imgUri)
+                bundle.putSerializable("track", musicModel)
+                findNavController().navigate(
+                    R.id.action_searchNextFragment_to_addPlaylistFragment,
+                    bundle
+                )
+                dialog.hide()
 
+            }
+            dialog.show()
+
+        }
     }
 
     private fun saveSharedPreference(key: String, value: String) {

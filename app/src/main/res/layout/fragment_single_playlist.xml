@@ -41,8 +41,8 @@
         android:id="@+id/imgAlbum"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/playlist_image"
         android:layout_marginTop="32dp"
+        android:src="@drawable/playlist_image"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toBottomOf="@+id/edtSearch" />
@@ -135,4 +135,25 @@
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toBottomOf="@+id/imgPlay" />
+
+    <TextView
+        android:id="@+id/txtSong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:text="@string/library_txt_songs"
+        android:textColor="@color/txt_gray"
+        app:layout_constraintBottom_toBottomOf="@+id/imgPlay"
+        app:layout_constraintEnd_toStartOf="@+id/imgPlay" />
+
+    <TextView
+        android:id="@+id/txtSongNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:textColor="@color/txt_gray"
+        app:layout_constraintBottom_toBottomOf="@+id/txtSong"
+        app:layout_constraintEnd_toStartOf="@+id/txtSong"
+        app:layout_constraintTop_toTopOf="@+id/txtSong"
+        android:text="0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

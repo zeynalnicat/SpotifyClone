@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
+import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.BottomSheetTrackBinding
 import com.example.spotifyclone.ui.adapters.LikedSongsAdapter
 import com.example.spotifyclone.databinding.FragmentLikedSongsBinding
@@ -134,13 +135,22 @@ class LikedSongsFragment : Fragment() {
 
         view.txtArtistName.text = musicItem.artist
         view.txtTrackName.text = musicItem.name
+        view.txtLiked.setText(getText(R.string.bottom_sheet_txt_remove))
+
 
         view.viewAddLiked.setOnClickListener {
-
+            likedSongsViewModel.removeLikedSongs(musicItem.name)
+            dialog.hide()
         }
 
         view.viewAddPlaylist.setOnClickListener {
-
+            val bundle = Bundle()
+            val model = MusicItem(musicItem.artist, musicItem.name, musicItem.imgUri, musicItem.uri)
+            bundle.putSerializable("track", model)
+            findNavController().navigate(
+                R.id.action_likedSongsFragment_to_addPlaylistFragment,
+                bundle
+            )
             dialog.hide()
         }
         dialog.show()
