@@ -19,6 +19,7 @@ import com.google.firebase.firestore.Query
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.util.Locale
 
 class SinglePlaylistViewModel(
     private val firestore: FirebaseFirestore,
@@ -176,11 +177,14 @@ class SinglePlaylistViewModel(
 
 
     fun search(text: String) {
-        val searched = trackModels.filter { it.name == text }
+        val lowercaseText = text.toLowerCase(Locale.ROOT)
+        val searched = trackModels.filter { it.name.toLowerCase(Locale.ROOT) == lowercaseText }
 
-        _tracks.postValue(Resource.Success(searched))
-
+        if (searched.isNotEmpty()) {
+            _tracks.postValue(Resource.Success(searched))
+        }
     }
+
 
 
 }
