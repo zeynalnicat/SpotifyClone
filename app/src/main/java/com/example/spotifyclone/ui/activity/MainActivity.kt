@@ -125,6 +125,9 @@ class MainActivity : AppCompatActivity() {
         musicPlayerService?.let {
             val mediaPlayer = it.mediaPlayer
             cancelMusic()
+
+
+
             binding.imgPause.setOnClickListener { view ->
                 if (mediaPlayer.isPlaying) {
                     it.pauseMusic()
