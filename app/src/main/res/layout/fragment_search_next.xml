@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.06" />
+        app:layout_constraintGuide_percent="0.08" />
 
     <EditText
         android:id="@+id/edtSearch"
@@ -59,4 +59,15 @@
         app:layout_constraintBottom_toBottomOf="@+id/edtSearch"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintTop_toTopOf="@+id/topGuideline" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/edtSearch" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
