@@ -2,6 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:vumeter="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:backgroundTint="@color/primary"
@@ -13,9 +14,20 @@
         android:layout_height="match_parent">
 
         <ImageView
+            android:id="@+id/imgMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/album"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/txtAlbumName"
+            app:srcCompat="@drawable/icon_more" />
+
+        <ImageView
             android:id="@+id/imgAlbum"
-            android:layout_width="67dp"
-            android:layout_height="67dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
@@ -26,11 +38,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:textColor="@color/white"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imgMore"
             app:layout_constraintStart_toEndOf="@+id/imgAlbum"
             app:layout_constraintTop_toTopOf="@+id/imgAlbum"
             tools:text="TextView" />
@@ -39,11 +51,14 @@
             android:id="@+id/album"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:text="Album"
             android:textColor="@color/txt_gray"
             app:layout_constraintStart_toStartOf="@+id/txtAlbumName"
             app:layout_constraintTop_toBottomOf="@+id/txtAlbumName" />
+
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

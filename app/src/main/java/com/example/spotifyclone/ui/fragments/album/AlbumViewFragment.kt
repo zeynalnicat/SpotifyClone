@@ -1,14 +1,19 @@
 package com.example.spotifyclone.ui.fragments.album
 
+import android.content.ComponentName
+import android.content.ServiceConnection
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
+import android.os.IBinder
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
@@ -16,16 +21,26 @@ import com.example.spotifyclone.R
 import com.example.spotifyclone.ui.adapters.SingleAlbumTracksAdapter
 import com.example.spotifyclone.databinding.BottomSheetTrackBinding
 import com.example.spotifyclone.databinding.FragmentAlbumViewBinding
-import com.example.spotifyclone.network.db.RoomDB
+
 import com.example.spotifyclone.model.album.singlealbum.Artist
 import com.example.spotifyclone.model.dto.Album
 import com.example.spotifyclone.model.dto.MusicItem
 import com.example.spotifyclone.musicplayer.MusicPlayer
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
+import com.example.spotifyclone.service.MusicPlayerService
+import com.example.spotifyclone.service.MusicRepository
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
+import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
+import com.example.spotifyclone.util.GsonHelper
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -33,13 +48,28 @@ class AlbumViewFragment : Fragment() {
     private lateinit var binding: FragmentAlbumViewBinding
     private lateinit var album: Album
     private var mediaPlayer: MediaPlayer? = null
-    private lateinit var roomDB: RoomDB
+
+    private val musicPlayerViewModel: MusicPlayerViewModel by activityViewModels()
+
 
     @Inject
     lateinit var albumApi: AlbumApi
-    private val albumViewModel: AlbumViewModel by viewModels { AlbumFactory(roomDB,albumApi) }
+
+    @Inject
+    lateinit var firestore: FirebaseFirestore
+
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
+
+    private lateinit var acitivity: MainActivity
+    private val albumViewModel: AlbumViewModel by viewModels {
+        AlbumFactory(
+            albumApi,
+            firebaseAuth,
+            firestore
+        )
+    }
     private lateinit var tracks: List<MusicItem>
-    private var currentTrackIndex: Int = 0
     private var imgAlbum = ""
     private lateinit var adapter: SingleAlbumTracksAdapter
     private lateinit var sharedPreference: SharedPreference
@@ -49,32 +79,37 @@ class AlbumViewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentAlbumViewBinding.inflate(inflater)
+        acitivity = requireActivity() as MainActivity
+        mediaPlayer = acitivity.getMediaPlayer()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        roomDB = RoomDB.accessDb(requireContext())!!
         sharedPreference = SharedPreference(requireContext())
         setNavigation()
         getAlbumId()
 
         albumViewModel.insertionLiked.observe(viewLifecycleOwner) {
-            if (it != -1L) {
-                Toast.makeText(requireContext(), "Added", Toast.LENGTH_SHORT).show()
-            } else {
+            if (it == -1L) {
                 Toast.makeText(requireContext(), "Something wrong!", Toast.LENGTH_SHORT).show()
+
+            } else if (it == 0L) {
+                Toast.makeText(requireContext(), "Removed", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Added", Toast.LENGTH_SHORT).show()
             }
         }
 
 
-        albumViewModel.checkInDB(album.id)
+
         setLayoutButton()
-        saveAlbumDb()
+
         getAlbum()
 
 
     }
+
 
     private fun setNavigation() {
         binding.imgBack.setOnClickListener {
@@ -90,9 +125,11 @@ class AlbumViewFragment : Fragment() {
 
     private fun getAlbum() {
         if (album.isFirebase) {
+            saveAlbumDb(true)
             binding.txtAlbumName.text = album.name
             binding.txtArtistName.text = album.tracks[0].artist
             imgAlbum = album.coverImg
+            albumViewModel.checkInDB(album.id, true)
             Glide.with(binding.root)
                 .load(album.coverImg)
                 .into(binding.imgAlbum)
@@ -105,7 +142,9 @@ class AlbumViewFragment : Fragment() {
 
             setAdapter(album.coverImg, music)
         } else {
+            saveAlbumDb(false)
             albumViewModel.getAlbum(album.id)
+            albumViewModel.checkInDB(album.id, false)
             albumViewModel.album.observe(viewLifecycleOwner) {
                 val artistNames = it.artists.joinToString { artist: Artist -> artist.name + " " }
                 binding.txtArtistName.text = artistNames
@@ -138,28 +177,41 @@ class AlbumViewFragment : Fragment() {
     ) {
         MusicPlayer.setListOfTracks(tracks)
         playAll()
-        checkSp()
+
+
 
 
         adapter = SingleAlbumTracksAdapter(img,
-            { setMusicTrack() },
+            { position -> setMusicTrack(position) },
             { key, value -> saveSharedPreference(key, value) },
             { value -> saveSharedPreference(value) },
             { value -> isInSP(value) },
-            { img, track, artist, trackUri -> setBottomSheet(img, track, artist, trackUri) })
+            { musicItem, trackId -> setBottomSheet(musicItem, trackId) },
+            { removeSp() })
 
         adapter.submitList(tracks)
+        this.tracks = adapter.getTracks()
+
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerView.adapter = adapter
 
     }
 
-    private fun setMusicTrack() {
-        val activity = requireActivity() as MainActivity
-        activity.setMusicPlayer(true)
+    private fun setMusicTrack(position: Int) {
+        sharedPreference.saveValue("Position", position)
+
+        GsonHelper.serializeTracks(requireContext().applicationContext, tracks)
+        musicPlayerViewModel.setSelectedTrackPosition(position)
+        musicPlayerViewModel.setTracks(tracks)
+
+
     }
 
-    private fun setBottomSheet(img: String, track: String, artist: String, trackUri: String) {
+    private fun removeSp() {
+        sharedPreference.removeCurrent()
+    }
+
+    private fun setBottomSheet(musicItem: MusicItem, trackId: String) {
         val dialog = BottomSheetDialog(requireContext())
         val view = BottomSheetTrackBinding.inflate(layoutInflater)
 
@@ -167,33 +219,43 @@ class AlbumViewFragment : Fragment() {
         dialog.setContentView(view.root)
 
         Glide.with(binding.root)
-            .load(img)
+            .load(musicItem.img)
             .into(view.imgAlbum)
 
-        view.txtArtistName.text = artist
-        view.txtTrackName.text = track
+        view.txtArtistName.text = musicItem.artist
+        view.txtTrackName.text = musicItem.name
 
         view.viewAddLiked.setOnClickListener {
-            albumViewModel.insertLikedSongs(track, artist, img, trackUri)
+            albumViewModel.insertLikedSongs(
+                musicItem.name,
+                musicItem.artist,
+                musicItem.img,
+                musicItem.trackUri
+            )
 
         }
 
+        albumViewModel.isInLiked.observe(viewLifecycleOwner) {
+            if (it) {
+                view.txtLiked.setText(R.string.bottom_sheet_txt_remove)
+            } else {
+                view.txtLiked.setText(R.string.bottom_sheet_txt_liked)
+            }
+        }
+
+        albumViewModel.checkLikedSongs(musicItem.name)
+
         view.viewAddPlaylist.setOnClickListener {
-            findNavController().navigate(R.id.action_albumViewFragment_to_addPlaylistFragment)
+            val bundle = Bundle()
+            bundle.putSerializable("track", musicItem)
+            findNavController().navigate(
+                R.id.action_albumViewFragment_to_addPlaylistFragment,
+                bundle
+            )
             dialog.hide()
         }
         dialog.show()
 
-    }
-
-
-    private fun checkSp() {
-        val isSP = tracks.any { sharedPreference.containsValue(it.name) }
-        if (mediaPlayer?.isPlaying == true && isSP) {
-            binding.imgPlay.setImageResource(R.drawable.icon_album_pause)
-        } else if (mediaPlayer?.isPlaying == false && isSP) {
-            binding.imgPlay.setImageResource(R.drawable.icon_play)
-        }
     }
 
 
@@ -209,9 +271,9 @@ class AlbumViewFragment : Fragment() {
         return sharedPreference.containsValue(value)
     }
 
-    private fun saveAlbumDb() {
+    private fun saveAlbumDb(isFirebase: Boolean) {
         binding.imgLike.setOnClickListener {
-            albumViewModel.saveDB(album.id)
+            albumViewModel.saveDB(album.id, isFirebase)
         }
 
     }
@@ -227,48 +289,14 @@ class AlbumViewFragment : Fragment() {
         }
     }
 
-
     private fun playAll() {
-        this.tracks = MusicPlayer.getListOfTracks() ?: emptyList()
 
         mediaPlayer = MusicPlayer.getMediaPlayer()
 
         binding.imgPlay.setOnClickListener {
-
-            playNextTrack()
+            acitivity.setTracksAndPosition(tracks, 0)
+            acitivity.playAll()
         }
     }
 
-    private fun playNextTrack() {
-        if (currentTrackIndex < tracks.size) {
-
-            adapter.notifyDataSetChanged()
-            mediaPlayer?.stop()
-            saveSharedPreference("PlayingMusic", tracks[currentTrackIndex].name)
-            saveSharedPreference("PlayingMusicArtist", tracks[currentTrackIndex].artist)
-            saveSharedPreference("PlayingMusicImg", imgAlbum)
-            saveSharedPreference("PlayingMusicUri", tracks[currentTrackIndex].trackUri)
-            checkSp()
-            val activity = activity as MainActivity
-            activity.setMusicAttrs()
-            MusicPlayer.playNext(requireContext(), tracks[currentTrackIndex].trackUri)
-            binding.imgPlay.setOnClickListener {
-                if (mediaPlayer?.isPlaying == true) {
-                    mediaPlayer?.pause()
-                    checkSp()
-                } else if (mediaPlayer?.isPlaying == false) {
-                    mediaPlayer?.start()
-                    checkSp()
-                }
-            }
-            mediaPlayer?.setOnCompletionListener {
-                currentTrackIndex++
-                playNextTrack()
-            }
-
-
-        } else {
-            currentTrackIndex = 0
-        }
-    }
 }

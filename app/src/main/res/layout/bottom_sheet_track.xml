@@ -89,7 +89,7 @@
             app:srcCompat="@drawable/icon_add_track" />
 
         <TextView
-            android:id="@+id/textView11"
+            android:id="@+id/txtPlaylist"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/bottom_sheet_txt_playlist"
@@ -113,7 +113,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="@+id/imageView3"
-            app:layout_constraintEnd_toEndOf="@+id/textView11"
+            app:layout_constraintEnd_toEndOf="@+id/txtPlaylist"
             app:layout_constraintStart_toStartOf="@+id/imageView3"
             app:layout_constraintTop_toTopOf="@+id/imageView3" />
     </androidx.constraintlayout.widget.ConstraintLayout>

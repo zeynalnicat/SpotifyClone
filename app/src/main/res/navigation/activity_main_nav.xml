@@ -54,6 +54,9 @@
         <action
             android:id="@+id/action_homeFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_userLibraryFragment"
+            app:destination="@id/userLibraryFragment" />
     </fragment>
     <action
         android:id="@+id/toSearch"
@@ -62,7 +65,7 @@
         android:id="@+id/startFragment"
         android:name="com.example.spotifyclone.ui.fragments.pre_information.StartFragment"
         android:label="fragment_start"
-        tools:layout="@layout/fragment_start" >
+        tools:layout="@layout/fragment_start">
         <action
             android:id="@+id/toSignUp1"
             app:destination="@id/signUp1"
@@ -81,7 +84,7 @@
         android:id="@+id/signUp1"
         android:name="com.example.spotifyclone.ui.fragments.sign_up.SignUp1"
         android:label="fragment_sign_up1"
-        tools:layout="@layout/fragment_sign_up1" >
+        tools:layout="@layout/fragment_sign_up1">
         <action
             android:id="@+id/toSignUp2"
             app:destination="@id/signUp2"
@@ -92,7 +95,7 @@
         android:id="@+id/signUp2"
         android:name="com.example.spotifyclone.ui.fragments.sign_up.SignUp2"
         android:label="fragment_sign_up2"
-        tools:layout="@layout/fragment_sign_up1" >
+        tools:layout="@layout/fragment_sign_up1">
         <action
             android:id="@+id/toSignUp3"
             app:destination="@id/signUp3"
@@ -104,7 +107,7 @@
         android:id="@+id/signUp3"
         android:name="com.example.spotifyclone.ui.fragments.sign_up.SignUp3"
         android:label="fragment_sign_up3"
-        tools:layout="@layout/fragment_sign_up3" >
+        tools:layout="@layout/fragment_sign_up3">
         <action
             android:id="@+id/toSignUp4"
             app:destination="@id/signUp43" />
@@ -144,12 +147,16 @@
         android:id="@+id/searchNextFragment"
         android:name="com.example.spotifyclone.ui.fragments.search.SearchNextFragment"
         android:label="fragment_search_next"
-        tools:layout="@layout/fragment_search_next" />
+        tools:layout="@layout/fragment_search_next" >
+        <action
+            android:id="@+id/action_searchNextFragment_to_addPlaylistFragment"
+            app:destination="@id/addPlaylistFragment" />
+    </fragment>
     <fragment
         android:id="@+id/albumViewFragment"
         android:name="com.example.spotifyclone.ui.fragments.album.AlbumViewFragment"
         android:label="fragment_album_view"
-        tools:layout="@layout/fragment_album_view" >
+        tools:layout="@layout/fragment_album_view">
         <action
             android:id="@+id/action_albumViewFragment_to_addPlaylistFragment"
             app:destination="@id/addPlaylistFragment" />
@@ -158,7 +165,7 @@
         android:id="@+id/settingsFragment"
         android:name="com.example.spotifyclone.ui.fragments.settings.SettingsFragment"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" >
+        tools:layout="@layout/fragment_settings">
         <action
             android:id="@+id/action_settingsFragment_to_userLibraryFragment"
             app:destination="@id/userLibraryFragment" />
@@ -172,16 +179,19 @@
         android:id="@+id/userLibraryFragment"
         android:name="com.example.spotifyclone.ui.fragments.library.UserLibraryFragment"
         android:label="fragment_user_library"
-        tools:layout="@layout/fragment_user_library" >
+        tools:layout="@layout/fragment_user_library">
         <action
             android:id="@+id/action_userLibraryFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_userLibraryFragment_to_singlePlaylistFragment"
+            app:destination="@id/singlePlaylistFragment" />
     </fragment>
     <fragment
         android:id="@+id/artistViewFragment"
-        tools:layout="@layout/fragment_artist_view"
         android:name="com.example.spotifyclone.ui.fragments.artist.ArtistViewFragment"
-        android:label="ArtistViewFragment" >
+        android:label="ArtistViewFragment"
+        tools:layout="@layout/fragment_artist_view">
         <action
             android:id="@+id/action_artistViewFragment_to_albumViewFragment"
             app:destination="@id/albumViewFragment" />
@@ -190,7 +200,7 @@
         android:id="@+id/newPlaylistFragment"
         android:name="com.example.spotifyclone.ui.fragments.playlist.NewPlaylistFragment"
         android:label="fragment_new_playlist"
-        tools:layout="@layout/fragment_new_playlist" >
+        tools:layout="@layout/fragment_new_playlist">
         <action
             android:id="@+id/action_newPlaylistFragment_to_userLibraryFragment"
             app:destination="@id/userLibraryFragment"
@@ -201,17 +211,32 @@
         android:id="@+id/addPlaylistFragment"
         android:name="com.example.spotifyclone.ui.fragments.playlist.AddPlaylistFragment"
         android:label="fragment_add_playlist"
-        tools:layout="@layout/fragment_add_playlist" />
+        tools:layout="@layout/fragment_add_playlist">
+        <action
+            android:id="@+id/action_addPlaylistFragment_to_userLibraryFragment"
+            app:destination="@id/userLibraryFragment"
+            app:popUpTo="@id/albumViewFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
         android:id="@+id/likedSongsFragment"
         android:name="com.example.spotifyclone.ui.fragments.others.LikedSongsFragment"
         android:label="fragment_liked_songs"
-        tools:layout="@layout/fragment_liked_songs" />
+        tools:layout="@layout/fragment_liked_songs" >
+        <action
+            android:id="@+id/action_likedSongsFragment_to_addPlaylistFragment"
+            app:destination="@id/addPlaylistFragment" />
+    </fragment>
     <fragment
         android:id="@+id/editProfileFragment"
         android:name="com.example.spotifyclone.ui.fragments.library.EditProfileFragment"
         android:label="fragment_edit_profile"
         tools:layout="@layout/fragment_edit_profile" />
+    <fragment
+        android:id="@+id/singlePlaylistFragment"
+        android:name="com.example.spotifyclone.ui.fragments.single_playlist.SinglePlaylistFragment"
+        android:label="fragment_single_playlist"
+        tools:layout="@layout/fragment_single_playlist" />
 
 
 </navigation>

@@ -11,11 +11,13 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
+
 import com.example.spotifyclone.R
 import com.example.spotifyclone.ui.adapters.PlaylistAdapter
 import com.example.spotifyclone.databinding.FragmentUserLibraryBinding
-import com.example.spotifyclone.network.db.RoomDB
+
 import com.example.spotifyclone.model.dto.PlaylistModel
+import com.example.spotifyclone.resource.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,8 +34,12 @@ class UserLibraryFragment : Fragment() {
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
 
-    private lateinit var roomDB: RoomDB
-    private val userLibraryViewModel: UserLibraryViewModel by viewModels { UserLibraryFactory(roomDB) }
+    private val userLibraryViewModel: UserLibraryViewModel by viewModels {
+        UserLibraryFactory(
+            firebaseAuth,
+            firestore
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,10 +53,27 @@ class UserLibraryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        roomDB = RoomDB.accessDb(requireContext())!!
+
         userLibraryViewModel.getPlaylists()
         userLibraryViewModel.playlists.observe(viewLifecycleOwner) {
-            setAdapter(it)
+            when (it) {
+                is Resource.Success -> {
+                    setAdapter(it.data)
+                    binding.progressBar.visibility=View.GONE
+                }
+
+                is Resource.Error -> {
+                    binding.progressBar.visibility=View.GONE
+                    Toast.makeText(requireContext(), it.exception.message, Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+                else -> {
+                    binding.progressBar.visibility=View.VISIBLE
+                }
+
+            }
+
         }
 
     }
@@ -99,7 +122,13 @@ class UserLibraryFragment : Fragment() {
     }
 
     private fun setAdapter(list: List<PlaylistModel>) {
-        val adapter = PlaylistAdapter()
+        val adapter =
+            PlaylistAdapter { bundle ->
+                findNavController().navigate(
+                    R.id.action_userLibraryFragment_to_singlePlaylistFragment,
+                    bundle
+                )
+            }
         adapter.submitList(list)
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerView.adapter = adapter

@@ -42,13 +42,15 @@
     <string name="home_txt_popular">Popular Albums</string>
     <string name="home_txt_recommended">Recommended Albums</string>
     <string name="home_txt_new">New Release</string>
+    <string name="home_txt_all">All</string>
 
 
-    <string name="search_txt_search">Artists,songs, or podcasts</string>
+    <string name="search_txt_search">WHAT DO YOU WANT TO LISTEN TO?</string>
     <string name="search_txt_top_genre">Your top genres</string>
     <string name="search_txt_popular_genre">Popular podcast categories</string>
     <string name="search_txt_browse_all">Browse All</string>
     <string name="search_txt_cancel">Cancel</string>
+
 
 
     <string name="library_txt_header">Your Library</string>
@@ -64,9 +66,12 @@
     <string name="playlist_txt_header">Give your playlist a name</string>
     <string name="playlist_txt_create">Create</string>
     <string name="playlist_txt_saves">saves</string>
+    <string name="playlist_txt_find">Find in playlist</string>
+    <string name="playlist_txt_remove">Remove from playlist</string>
 
     <string name="bottom_sheet_txt_liked">Add to Liked Songs</string>
     <string name="bottom_sheet_txt_playlist">Add to playlist</string>
+    <string name="bottom_sheet_txt_remove">Remove from Liked Songs</string>
 
     <string name="add_playlist_txt">Add to playlist</string>
     <string name="add_playlist_txt_find">Find playlist</string>
@@ -79,4 +84,9 @@
     <string name="edit_txt_edit">Edit profile</string>
     <string name="edit_text_save">Save</string>
     <string name="edit_txt_name">Name</string>
+
+    <string name="search_txt_play_love">Play what you love</string>
+    <string name="search_txt_search_for">Search for songs</string>
+
+
 </resources>

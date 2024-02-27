@@ -1,159 +1,151 @@
 package com.example.spotifyclone.ui.fragments.home
 
 import android.os.Bundle
-
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
-import com.example.spotifyclone.ui.adapters.ArtistAdapter
-import com.example.spotifyclone.ui.adapters.AlbumAdapter
 import com.example.spotifyclone.databinding.FragmentHomeBinding
-import com.example.spotifyclone.network.db.RoomDB
-import com.example.spotifyclone.model.album.newrelease.Item
-import com.example.spotifyclone.model.artist.Artist
-import com.example.spotifyclone.model.dto.Album
+import com.example.spotifyclone.network.retrofit.TokenRefresher
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
 import com.example.spotifyclone.network.retrofit.api.ArtistsApi
-import com.example.spotifyclone.resource.Resource
-import com.example.spotifyclone.ui.activity.MainActivity
+import com.example.spotifyclone.ui.fragments.home.HomeFactory
+import com.example.spotifyclone.ui.fragments.home.HomeViewModel
+import com.example.spotifyclone.ui.fragments.home.general.FragmentPageAdapter
+import com.google.android.material.tabs.TabLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
+
+    private lateinit var adapter: FragmentPageAdapter
 
     @Inject
     lateinit var artistsApi: ArtistsApi
 
     @Inject
     lateinit var albumApi: AlbumApi
-    private lateinit var roomDB: RoomDB
+
+
+    @Inject
+    lateinit var firestore: FirebaseFirestore
+
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
+
+    @Inject
+    lateinit var tokenRefresher: TokenRefresher
+
+
     private val homeViewModel: HomeViewModel by viewModels {
         HomeFactory(
-            roomDB,
             albumApi,
-            artistsApi
+            artistsApi,
+            firestore,
+            firebaseAuth,
+            tokenRefresher
         )
     }
 
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater)
-        setBottom()
 
-        val activity = requireActivity() as MainActivity
-        activity.checkVisibility()
+        setLayout()
+        setTextHeader()
+        setDrawer()
+        setNavigation()
+        adapter = FragmentPageAdapter(
+            requireActivity().supportFragmentManager,
+            requireActivity().lifecycle
+        )
+
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText(getText(R.string.home_txt_all)))
+        binding.tabLayout.addTab(
+            binding.tabLayout.newTab().setText(getText(R.string.home_btn_music))
+        )
+
+        binding.viewPager.adapter = adapter
+
+        binding.tabLayout.setOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                if (tab != null) {
+                    binding.viewPager.currentItem = tab.position
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+
+            }
+
+        })
+
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                binding.tabLayout.selectTab(binding.tabLayout.getTabAt(position))
+            }
+        })
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        roomDB = RoomDB.accessDb(requireContext())!!
-        setTextHeader()
-        setNavigation()
 
-        homeViewModel.newReleases.observe(viewLifecycleOwner) {
-            when (it) {
-                is Resource.Success -> {
-                    binding.txtNewRelease.visibility = View.VISIBLE
-                    binding.recyclerViewNewRelease.visibility = View.VISIBLE
-                    setNewRelease(it.data)
+    private fun setLayout() {
+        val userRef = firestore.collection("users")
+        val query = userRef.whereEqualTo("userId", firebaseAuth.currentUser?.uid)
+        try {
+            query.get()
+                .addOnSuccessListener { querySnapshot ->
+                    if (!querySnapshot.isEmpty) {
+                        val gender = querySnapshot.documents[0].getString("gender")
+                        val name = querySnapshot.documents[0].getString("username")
+                        val image = querySnapshot.documents[0].getString("img")
+
+                        binding.txtNameDrawer.text = name ?: "N/A"
+                        if (image?.isEmpty() == true) {
+                            binding.imgProfileAccount.setImageResource(if (gender == "Men") R.drawable.man_icon else R.drawable.woman_icon)
+                            binding.imgProfileDrawer.setImageResource(if (gender == "Men") R.drawable.man_icon else R.drawable.woman_icon)
+                        } else {
+                            Glide.with(binding.root)
+                                .load(image.toString())
+                                .into(binding.imgProfileAccount)
+
+                            Glide.with(binding.root)
+                                .load(image.toString())
+                                .into(binding.imgProfileDrawer)
+                        }
+                    } else {
+                        binding.txtNameDrawer.text = "N/A"
+                    }
                 }
-
-                is Resource.Error -> {
-                    binding.txtNewRelease.visibility = View.GONE
-                    binding.recyclerViewNewRelease.visibility = View.GONE
-//                    Toast.makeText(requireContext(), it.exception.message ?: "", Toast.LENGTH_SHORT)
-//                        .show()
-
+                .addOnFailureListener { exception ->
+                    binding.txtNameDrawer.text = "N/A"
+                    Log.e("Firestore", "Error retrieving user data: ${exception.message}")
                 }
-
-                is Resource.Loading -> {}
-            }
-
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
         }
 
-        homeViewModel.artists.observe(viewLifecycleOwner) {
-            when (it) {
-                is Resource.Success -> {
-                    setTrySomethingElse(it.data)
-                    binding.recyclerTrySomething.visibility = View.VISIBLE
-                    binding.txtTry.visibility = View.VISIBLE
-                }
-
-                is Resource.Error -> {
-                    binding.recyclerTrySomething.visibility = View.GONE
-                    binding.txtTry.visibility = View.GONE
-//                    Toast.makeText(requireContext(), it.exception.message ?: "", Toast.LENGTH_SHORT)
-//                        .show()
-                }
-
-                is Resource.Loading -> {}
-
-
-            }
-        }
-
-        homeViewModel.popularAlbums.observe(viewLifecycleOwner) {
-            when (it) {
-                is Resource.Success -> {
-                    setPopularAlbums(it.data)
-                    binding.recyclerViewPopular.visibility = View.VISIBLE
-                    binding.txtPopularAlbums.visibility = View.VISIBLE
-                }
-
-                is Resource.Error -> {
-                    binding.recyclerViewPopular.visibility = View.GONE
-                    binding.txtPopularAlbums.visibility = View.GONE
-//                    Toast.makeText(requireContext(), it.exception.message ?: "", Toast.LENGTH_SHORT)
-//                        .show()
-                }
-
-                is Resource.Loading -> {}
-
-
-            }
-        }
-
-        homeViewModel.recommended.observe(viewLifecycleOwner) {
-            when (it) {
-                is Resource.Success -> {
-                    binding.txtRecommend.visibility = View.VISIBLE
-                    binding.recyclerViewRecommended.visibility = View.VISIBLE
-                    setRecommended(it.data)
-                }
-
-                is Resource.Error -> {
-                    binding.txtRecommend.visibility = View.GONE
-                    binding.recyclerViewRecommended.visibility = View.GONE
-//                    Toast.makeText(requireContext(), it.exception.message ?: "", Toast.LENGTH_SHORT)
-//                        .show()
-                }
-
-                is Resource.Loading -> {}
-
-
-            }
-        }
-        homeViewModel.getNewRelease()
-        homeViewModel.getRoomArtistAlbum()
-        homeViewModel.getPopularAlbums()
-        homeViewModel.setRecommended()
-
-    }
-
-    private fun setBottom() {
-        val activity = requireActivity() as? MainActivity
-        activity?.setBottomNavigation(true)
     }
 
     private fun setTextHeader() {
@@ -163,77 +155,25 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setNewRelease(list: List<Item>) {
-
-        val adapter =
-            AlbumAdapter {
-                findNavController().navigate(
-                    R.id.action_homeFragment_to_albumViewFragment,
-                    it
-                )
-            }
-        val albums = list.map { Album(it.images[0].url, it.id, it.name, emptyList()) }
-        adapter.submitList(albums)
-        binding.recyclerViewNewRelease.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.recyclerViewNewRelease.adapter = adapter
-
-    }
-
-
-    private fun setTrySomethingElse(list: List<Artist>) {
-
-
-        val adapter =
-            ArtistAdapter {
-                findNavController().navigate(
-                    R.id.action_homeFragment_to_artistViewFragment,
-                    it
-                )
-            }
-        adapter.submitList(list)
-        binding.recyclerTrySomething.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.recyclerTrySomething.adapter = adapter
-
-    }
-
-
     private fun setNavigation() {
-        binding.imgSettings.setOnClickListener {
+        binding.viewProfile.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_userLibraryFragment)
+        }
+
+        binding.viewSetting.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
         }
     }
 
-    private fun setPopularAlbums(list: List<com.example.spotifyclone.model.album.popularalbums.Album>) {
-
-        val adapter =
-            AlbumAdapter {
-                findNavController().navigate(
-                    R.id.action_homeFragment_to_albumViewFragment,
-                    it
-                )
+    private fun setDrawer() {
+        binding.imgProfileAccount.setOnClickListener {
+            if (binding.drawer2.isDrawerOpen(GravityCompat.START)) {
+                binding.drawer2.closeDrawer(GravityCompat.START)
+            } else {
+                binding.drawer2.openDrawer(GravityCompat.START)
             }
-        val albums = list.map { Album(it.images[0].url, it.id, it.name, emptyList()) }
-        adapter.submitList(albums)
-        binding.recyclerViewPopular.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.recyclerViewPopular.adapter = adapter
-    }
-
-
-    private fun setRecommended(list: List<Album>) {
-        val adapter = AlbumAdapter {
-            findNavController().navigate(
-                R.id.action_homeFragment_to_albumViewFragment,
-                it
-            )
         }
-        adapter.submitList(list)
-        binding.recyclerViewRecommended.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.recyclerViewRecommended.adapter = adapter
-
-
     }
+
+
 }

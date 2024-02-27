@@ -15,11 +15,12 @@ import com.example.spotifyclone.musicplayer.MusicPlayer
 
 class SingleAlbumTracksAdapter(
     private val img: String,
-    private val setMusicLayout: () -> Unit,
+    private val setMusicLayout: (Int) -> Unit,
     private val saveSharedPreference: (key: String, value: String) -> Unit,
     private val saveSharedPreferenceBool: (value: Boolean) -> Unit,
     private val isInSP: (value: String) -> Boolean,
-    private val setBottom: (img: String, track: String, artist: String, trackUri: String) -> Unit
+    private val setBottom: (MusicItem, String) -> Unit,
+    private val removeCurrent : ()->Unit,
 ) : RecyclerView.Adapter<SingleAlbumTracksAdapter.ViewHolder>() {
 
     private val diffCallBack = object : DiffUtil.ItemCallback<MusicItem>() {
@@ -49,6 +50,7 @@ class SingleAlbumTracksAdapter(
         return holder.bind(diffUtil.currentList[position])
     }
 
+
     inner class ViewHolder(private val binding: ItemAlbumTracksBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -69,23 +71,30 @@ class SingleAlbumTracksAdapter(
             binding.musicIcon.visibility = if (track.isPlayed) View.VISIBLE else View.GONE
 
             itemView.setOnClickListener {
-                saveSharedPreference("PlayingMusic", track.name)
-                saveSharedPreference("PlayingMusicArtist", track.artist)
+
                 saveSharedPreference("PlayingMusicImg", img)
-                saveSharedPreference("PlayingMusicUri", track.trackUri)
+                saveSharedPreference("PlayingMusic",track.name)
+                saveSharedPreference("PlayingMusicArtist",track.artist)
+                saveSharedPreference("PlayingMusicUri",track.trackUri)
                 saveSharedPreferenceBool(true)
                 track.isPlayed = true
                 notifyDataSetChanged()
-                setMusicLayout()
-                MusicPlayer.playNext(binding.root.context, track.trackUri)
+                setMusicLayout(layoutPosition)
+
             }
             binding.imgMore.setOnClickListener {
-                setBottom(img, track.name, track.artist, track.trackUri)
+                val musicItem =
+                    MusicItem(track.artist, track.id, track.name, track.trackUri, img)
+                setBottom(musicItem, track.id)
             }
         }
     }
 
     fun submitList(tracks: List<MusicItem>) {
         diffUtil.submitList(tracks)
+    }
+
+    fun getTracks(): List<MusicItem> {
+        return diffUtil.currentList
     }
 }

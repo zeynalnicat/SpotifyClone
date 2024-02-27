@@ -27,7 +27,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.06" />
+        app:layout_constraintGuide_percent="0.08" />
 
     <EditText
         android:id="@+id/edtSearch"
@@ -35,16 +35,16 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:background="@drawable/edit_search_fragment"
+        android:defaultFocusHighlightEnabled="true"
+        android:drawableStart="@drawable/baseline_search_24"
+        android:drawablePadding="10dp"
         android:ems="10"
-        android:textColor="@color/white"
         android:focusedByDefault="true"
         android:hint="@android:string/search_go"
-        android:drawableStart="@drawable/baseline_search_24"
-        android:textColorHint="@color/white"
-        android:drawablePadding="10dp"
         android:inputType="text"
+        android:textColor="@color/white"
 
-        android:defaultFocusHighlightEnabled="true"
+        android:textColorHint="@color/white"
         app:layout_constraintEnd_toStartOf="@+id/txtCancel"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toTopOf="@+id/topGuideline" />
@@ -52,11 +52,46 @@
     <TextView
         android:id="@+id/txtCancel"
         android:layout_width="wrap_content"
-        android:text="@string/search_txt_cancel"
-        android:textSize="16sp"
-        android:textColor="@color/white"
         android:layout_height="wrap_content"
+        android:text="@string/search_txt_cancel"
+        android:textColor="@color/white"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/edtSearch"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintTop_toTopOf="@+id/topGuideline" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
+        app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/edtSearch" />
+
+    <TextView
+        android:id="@+id/txtAbout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/search_txt_play_love"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/recyclerView"
+        app:layout_constraintStart_toStartOf="@+id/recyclerView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/search_txt_search_for"
+        android:textColor="@color/txt_gray"
+        app:layout_constraintEnd_toEndOf="@+id/txtAbout"
+        app:layout_constraintStart_toStartOf="@+id/txtAbout"
+        app:layout_constraintTop_toBottomOf="@+id/txtAbout" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

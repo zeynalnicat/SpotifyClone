@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "420590970604",
+    "firebase_url": "https://spotify-42372-default-rtdb.firebaseio.com",
     "project_id": "spotify-42372",
     "storage_bucket": "spotify-42372.appspot.com"
   },

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -17,13 +18,14 @@ import com.example.spotifyclone.ui.adapters.ChooseArtistAdapter
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.example.spotifyclone.databinding.FragmentChooseArtistBinding
-import com.example.spotifyclone.network.db.artist.ArtistsEntity
-import com.example.spotifyclone.network.db.RoomDB
+
 import com.example.spotifyclone.model.artist.Artist
 import com.example.spotifyclone.network.retrofit.api.ArtistsApi
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.JustifyContent
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,7 +40,18 @@ class ChooseArtist : Fragment() {
 
     @Inject
     lateinit var artistsApi: ArtistsApi
-    private val chooseArtistViewModel: ChoseArtistViewModel by viewModels { ChooseArtistFactory(artistsApi) }
+
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
+
+    @Inject
+    lateinit var firestore: FirebaseFirestore
+
+    private val chooseArtistViewModel: ChoseArtistViewModel by viewModels {
+        ChooseArtistFactory(
+            artistsApi
+        )
+    }
     private var selectedArtists = mutableListOf<Artist>()
 
     override fun onCreateView(
@@ -46,13 +59,9 @@ class ChooseArtist : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentChooseArtistBinding.inflate(inflater, container, false)
-
-
-
         search()
         setAdapter()
         setNavigation()
-
         return binding.root
     }
 
@@ -62,20 +71,23 @@ class ChooseArtist : Fragment() {
     }
 
     private fun setNavigation() {
-
+        val artistRef = firestore.collection("favArtist")
         binding.btnNext.setOnClickListener {
             selectedArtists = adapter.getSelectedArtists()
-            val roomDB = RoomDB.accessDb(requireContext())
-            lifecycleScope.launch(Dispatchers.IO) {
+            try {
                 selectedArtists.forEach {
-                    roomDB?.artistDao()?.insert(ArtistsEntity(0, it.name, it.id))
+                    val artistModel = hashMapOf(
+                        "artistId" to it.id,
+                        "artistName" to it.name,
+                        "userId" to firebaseAuth.currentUser?.uid
+                    )
+                    artistRef.add(artistModel)
                 }
-                withContext(Dispatchers.Main) {
-                    findNavController().navigate(R.id.action_chooseArtist_to_homeFragment)
-                }
+                findNavController().navigate(R.id.action_chooseArtist_to_homeFragment)
+
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
             }
-
-
         }
 
         binding.navBack.setOnClickListener {
@@ -85,6 +97,9 @@ class ChooseArtist : Fragment() {
             )
             navController.popBackStack(R.id.signUp43, false)
         }
+
+        chooseArtistViewModel.getArtists()
+
     }
 
     private fun setAdapter() {

@@ -82,7 +82,7 @@
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toBottomOf="@+id/edtUsername" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/createAcc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -179,7 +179,7 @@
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toBottomOf="@+id/txtPrivacy" />
 
-    <RadioButton
+    <androidx.appcompat.widget.AppCompatRadioButton
         android:id="@+id/radioButton"
         android:layout_width="wrap_content"
         android:scaleX="0.7"
@@ -202,7 +202,7 @@
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toBottomOf="@+id/radioButton" />
 
-    <RadioButton
+    <androidx.appcompat.widget.AppCompatRadioButton
         android:id="@+id/radioButton2"
         android:layout_width="wrap_content"
         android:scaleX="0.7"

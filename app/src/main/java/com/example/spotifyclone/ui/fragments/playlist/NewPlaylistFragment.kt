@@ -12,24 +12,41 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.FragmentNewPlaylistBinding
-import com.example.spotifyclone.network.db.RoomDB
+
 import com.example.spotifyclone.resource.Resource
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.ui.fragments.playlist.NewPlaylistViewModel
 import com.example.spotifyclone.ui.fragments.playlist.NewPlaylistFactory
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+
+@AndroidEntryPoint
 class NewPlaylistFragment : Fragment() {
     private lateinit var binding: FragmentNewPlaylistBinding
-    private lateinit var roomDB: RoomDB
-    private val newPlaylistViewModel: NewPlaylistViewModel by viewModels { NewPlaylistFactory(roomDB) }
+
+    @Inject
+    lateinit var firestore: FirebaseFirestore
+
+    private lateinit var activity:MainActivity
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
+    private val newPlaylistViewModel: NewPlaylistViewModel by viewModels {
+        NewPlaylistFactory(
+            firebaseAuth,
+            firestore
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentNewPlaylistBinding.inflate(inflater)
-        val activity = requireActivity() as MainActivity
+        activity = requireActivity() as MainActivity
         activity.setMusicPlayer(false)
         activity.setBottomNavigation(false)
         setNavigation()
@@ -38,25 +55,26 @@ class NewPlaylistFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        roomDB = RoomDB.accessDb(requireContext())!!
+
         binding.btnCreate.setOnClickListener {
             val name = binding.edtPlaylistName.text.toString()
             newPlaylistViewModel.insert(name)
         }
         newPlaylistViewModel.isSuccessful.observe(viewLifecycleOwner) {
             if (it is Resource.Success) {
+                activity.setMusicPlayer(true)
+                activity.setBottomNavigation(true)
                 findNavController().navigate(R.id.action_newPlaylistFragment_to_userLibraryFragment)
             } else if (it is Resource.Error) {
                 Toast.makeText(requireContext(), it.exception.message, Toast.LENGTH_SHORT).show()
             }
         }
 
-        val callBack = object : OnBackPressedCallback(true){
+        val callBack = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val sharedPreference = SharedPreference(requireContext())
-                val activity = requireActivity() as MainActivity
                 activity.setBottomNavigation(true)
-                if(sharedPreference.getValue("isPlaying",false)){
+                if (sharedPreference.getValue("isPlaying", false)) {
                     activity.setMusicPlayer(true)
                 }
                 findNavController().popBackStack()
@@ -70,7 +88,6 @@ class NewPlaylistFragment : Fragment() {
     }
 
     private fun setNavigation() {
-        val activity = requireActivity() as MainActivity
 
         binding.btnCancel.setOnClickListener {
             findNavController().popBackStack()

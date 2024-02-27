@@ -10,10 +10,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ItemLibraryAlbumBinding
-import com.example.spotifyclone.network.db.likedsongs.LikedSongsEntity
-import com.example.spotifyclone.model.dto.LikedSongs
 
-class LikedSongsAdapter() : RecyclerView.Adapter<LikedSongsAdapter.ViewHolder>() {
+import com.example.spotifyclone.model.dto.LikedSongs
+import com.example.spotifyclone.model.dto.MusicItem
+
+class LikedSongsAdapter(
+    private val setBottom: (LikedSongs) -> Unit,
+    private val setMusicLayout: (Int) -> Unit,
+    private val saveSharedPreference: (key: String, value: String) -> Unit,
+    private val saveSharedPreferenceBool: (value: Boolean) -> Unit,
+    private val isInSP: (value: String) -> Boolean,
+) :
+    RecyclerView.Adapter<LikedSongsAdapter.ViewHolder>() {
 
 
     private val diffCallBack = object : DiffUtil.ItemCallback<LikedSongs>() {
@@ -54,18 +62,44 @@ class LikedSongsAdapter() : RecyclerView.Adapter<LikedSongsAdapter.ViewHolder>()
     inner class ViewHolder(private val binding: ItemLibraryAlbumBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(track: LikedSongs) {
+            binding.imgMore.visibility = View.VISIBLE
             binding.cardView.setCardBackgroundColor(
                 ContextCompat.getColor(
                     itemView.context,
                     R.color.txt_gray
                 )
             )
+
+            track.isPlayed = isInSP(track.name)
             binding.txtAlbumName.text = track.name
             Glide.with(binding.root)
                 .load(track.imgUri)
                 .into(binding.imgAlbum)
 
             binding.album.text = track.artist
+
+            binding.txtAlbumName.setTextColor(
+                if (track.isPlayed) ContextCompat.getColor(
+                    itemView.context,
+                    R.color.green
+                ) else ContextCompat.getColor(itemView.context, R.color.white)
+            )
+
+            itemView.setOnClickListener {
+                saveSharedPreference("PlayingMusicImg", track.imgUri)
+                saveSharedPreference("PlayingMusic", track.name)
+                saveSharedPreference("PlayingMusicArtist", track.artist)
+                saveSharedPreference("PlayingMusicUri", track.uri)
+                saveSharedPreferenceBool(true)
+                track.isPlayed = true
+                notifyDataSetChanged()
+                setMusicLayout(layoutPosition)
+
+            }
+            binding.imgMore.setOnClickListener {
+                setBottom(track)
+            }
+
         }
     }
 

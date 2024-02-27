@@ -1,6 +1,9 @@
 package com.example.spotifyclone.ui.adapters
 
+import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -9,8 +12,10 @@ import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ItemPlaylistViewBinding
 import com.example.spotifyclone.model.dto.PlaylistModel
+import com.example.spotifyclone.ui.fragments.playlist.AddPlaylistFragment
 
-class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
+class PlaylistAdapter(private val nav: (Bundle) -> Unit?) :
+    RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
     private val diffCall = object : DiffUtil.ItemCallback<PlaylistModel>() {
         override fun areItemsTheSame(oldItem: PlaylistModel, newItem: PlaylistModel): Boolean {
             return oldItem === newItem
@@ -19,10 +24,10 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
         override fun areContentsTheSame(oldItem: PlaylistModel, newItem: PlaylistModel): Boolean {
             return oldItem == newItem
         }
-
     }
 
     private val diffUtil = AsyncListDiffer(this, diffCall)
+    private val selectedPlaylists = mutableListOf<PlaylistModel>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
@@ -40,7 +45,34 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
 
     inner class ViewHolder(private val binding: ItemPlaylistViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+
         fun bind(playlist: PlaylistModel) {
+            if (playlist.isLibrary) {
+                binding.checkBox.visibility = View.GONE
+                itemView.setOnClickListener {
+                    val bundle = Bundle()
+                    bundle.putString("id", playlist.id)
+                    nav(bundle)
+                }
+            } else {
+                binding.checkBox.visibility = View.VISIBLE
+
+            }
+
+            binding.checkBox.isChecked = playlist.isSelected
+            binding.checkBox.setOnCheckedChangeListener { buttonView, isChecked ->
+                val playlist = diffUtil.currentList[layoutPosition]
+                playlist.isSelected = isChecked
+                if (playlist.isSelected) {
+                    selectedPlaylists.add(playlist)
+                    AddPlaylistFragment.selectedPlaylists.postValue(selectedPlaylists)
+                } else {
+                    selectedPlaylists.remove(playlist)
+                    AddPlaylistFragment.selectedPlaylists.postValue(selectedPlaylists)
+                }
+            }
+
             binding.txtPlaylistName.text = playlist.name
             binding.txtCountMusic.text = playlist.countTrack.toString()
 
@@ -54,7 +86,9 @@ class PlaylistAdapter : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
         }
     }
 
+
     fun submitList(list: List<PlaylistModel>) {
         diffUtil.submitList(list)
     }
+
 }

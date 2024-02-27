@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.spotifyclone.databinding.AlbumListviewBinding
 
-import com.example.spotifyclone.databinding.TrackListviewBinding
 import com.example.spotifyclone.model.dto.Album
 
 class AlbumAdapter(private val nav: (Bundle) -> Unit) :
@@ -29,7 +29,7 @@ class AlbumAdapter(private val nav: (Bundle) -> Unit) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackAdapterHolder {
         val binding =
-            TrackListviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            AlbumListviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TrackAdapterHolder(binding)
     }
 
@@ -41,7 +41,7 @@ class AlbumAdapter(private val nav: (Bundle) -> Unit) :
         return holder.bind(diffUtil.currentList[position])
     }
 
-    inner class TrackAdapterHolder(private val binding: TrackListviewBinding) :
+    inner class TrackAdapterHolder(private val binding: AlbumListviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(current: Album) {
             Glide.with(binding.root)

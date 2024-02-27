@@ -15,9 +15,10 @@ import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.ui.adapters.LibraryAlbumAdapter
 import com.example.spotifyclone.databinding.FragmentLibraryBinding
-import com.example.spotifyclone.network.db.RoomDB
-import com.example.spotifyclone.model.dto.LibraryAlbum
+import com.example.spotifyclone.model.dto.Album
+
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
+import com.example.spotifyclone.resource.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +28,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class LibraryFragment : Fragment() {
     private lateinit var binding: FragmentLibraryBinding
-    private lateinit var roomDB: RoomDB
 
 
     @Inject
@@ -39,7 +39,14 @@ class LibraryFragment : Fragment() {
     @Inject
     lateinit var firestore: FirebaseFirestore
 
-    private val libraryViewModel: LibraryViewModel by viewModels { LibraryFactor(roomDB, albumApi) }
+    private val libraryViewModel: LibraryViewModel by viewModels {
+        LibraryFactor(
+            albumApi,
+            firebaseAuth,
+            firestore
+        )
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,16 +58,34 @@ class LibraryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        roomDB = RoomDB.accessDb(requireContext())!!
 
         libraryViewModel.getFromDB()
-        libraryViewModel.roomAlbums.observe(viewLifecycleOwner) {
+        libraryViewModel.albumIds.observe(viewLifecycleOwner) {
             libraryViewModel.getAlbumsFromApi(it)
         }
 
         libraryViewModel.count.observe(viewLifecycleOwner) {
             binding.txtNumberSongs.text = it.toString()
         }
+
+        libraryViewModel.likedAlbumsFirestore.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Success -> {
+                    binding.recyclerFirebase.visibility = View.VISIBLE
+                    setAdapterFirebase(it.data)
+                }
+
+                is Resource.Error -> {
+                    binding.recyclerFirebase.visibility = View.GONE
+                }
+
+                is Resource.Loading -> {
+
+                }
+            }
+        }
+
+        libraryViewModel.getAlbumFirestore()
 
         libraryViewModel.setSize()
         setAdapter()
@@ -141,10 +166,24 @@ class LibraryFragment : Fragment() {
                     it
                 )
             }
-            val albums = it.map { LibraryAlbum(it.id, it.name, it.images[0].url) }
+            val albums = it.map { Album(it.images[0].url, it.id, it.name, emptyList()) }
             adapter.submitList(albums)
             binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
             binding.recyclerView.adapter = adapter
         }
+    }
+
+
+    private fun setAdapterFirebase(albums: List<Album>) {
+        val adapter = LibraryAlbumAdapter {
+            findNavController().navigate(
+                R.id.action_libraryFragment_to_albumViewFragment,
+                it
+            )
+        }
+        val albumsModel = albums.map { Album(it.coverImg, it.id, it.name, it.tracks, true) }
+        adapter.submitList(albumsModel)
+        binding.recyclerFirebase.layoutManager = GridLayoutManager(requireContext(), 1)
+        binding.recyclerFirebase.adapter = adapter
     }
 }

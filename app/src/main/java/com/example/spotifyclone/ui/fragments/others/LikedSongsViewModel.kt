@@ -3,52 +3,85 @@ package com.example.spotifyclone.ui.fragments.others
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.spotifyclone.network.db.RoomDB
+
 import com.example.spotifyclone.model.dto.LikedSongs
 import com.example.spotifyclone.resource.Resource
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 
-class LikedSongsViewModel(private val roomDB: RoomDB) : ViewModel() {
+
+class LikedSongsViewModel(
+    private val firestore: FirebaseFirestore,
+    private val firebaseAuth: FirebaseAuth
+) : ViewModel() {
 
     private val _songs = MutableLiveData<Resource<List<LikedSongs>>>()
-    private val likedSongsDao = roomDB.likedSongsDao()
+
 
     val songs: LiveData<Resource<List<LikedSongs>>>
         get() = _songs
 
 
     fun getSongs() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
+        val userId = firebaseAuth.currentUser?.uid
+        val likedSongsRef = firestore.collection("likedSongs")
+        val query = likedSongsRef.whereEqualTo("userId", userId)
+        try {
+            query.get()
+                .addOnCompleteListener { task ->
+                    val result = task.result
+                    val listLikedSongs = mutableListOf<LikedSongs>()
+                    if (result != null && !result.isEmpty) {
+                        val documents = result.documents
+                        for (document in documents) {
+                            val song = LikedSongs(
+                                document["name"].toString(),
+                                document["artist"].toString(),
+                                document["imgUri"].toString(),
+                                document["musicUri"].toString()
+                            )
+                            listLikedSongs.add(song)
+                        }
+                        _songs.postValue(Resource.Success(listLikedSongs))
+                    }
 
-                val likedSongs = likedSongsDao.selectAll()
-                if (likedSongs.isNotEmpty()) {
-                    val model =
-                        likedSongs.map { LikedSongs(it.id, it.name, it.artist, it.imgUri, it.uri) }
-
-                    _songs.postValue(Resource.Success(model))
                 }
-            } catch (e: Exception) {
-                _songs.postValue(Resource.Error(e))
-            }
+
+        } catch (e: Exception) {
+            _songs.postValue(Resource.Error(e))
         }
+
     }
 
     fun search(query: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val likedSongs = likedSongsDao.search(query)
-                if (likedSongs.isNotEmpty()) {
-                    val model =
-                        likedSongs.map { LikedSongs(it.id, it.name, it.artist, it.imgUri, it.uri) }
-
-                    _songs.postValue(Resource.Success(model))
-                }
-            } catch (e: Exception) {
-                _songs.postValue(Resource.Error(e))
+        val model = _songs.value
+        if (model is Resource.Success) {
+            if (query.isEmpty()) {
+                getSongs()
+            } else {
+                val searched = model.data.filter { it.name.contains(query, ignoreCase = true) }
+                _songs.postValue(Resource.Success(searched))
             }
         }
     }
+
+
+    fun removeLikedSongs(musicName: String) {
+        val likedSongsRef = firestore.collection("likedSongs")
+        val userId = firebaseAuth.currentUser?.uid
+        val query = likedSongsRef.whereEqualTo("userId", userId).whereEqualTo("name", musicName)
+
+        query.get()
+            .addOnSuccessListener { querySnapshot ->
+                if (querySnapshot != null && !querySnapshot.isEmpty) {
+                    val document = querySnapshot.documents[0]
+                    likedSongsRef.document(document.id).delete()
+                    getSongs()
+                }
+
+            }
+
+    }
+
 }

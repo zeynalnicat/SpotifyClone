@@ -68,17 +68,23 @@ class EditProfileFragment : Fragment() {
 
         query.get()
             .addOnSuccessListener { querySnapshot ->
-                gender = querySnapshot.documents[0].getString("gender")!!
-                name = querySnapshot.documents[0].getString("username")!!
-                val img = querySnapshot.documents[0].getString("img")
-                binding.edtName.setText(name.toString())
+                if (querySnapshot !== null && !querySnapshot.isEmpty) {
+                    val document = querySnapshot.documents[0]
+                    gender = document.getString("gender") ?: ""
+                    name = document.getString("username") ?: ""
+                    val img = document.getString("img")
+                    binding.edtName.setText(name.toString())
 
-                binding.imgProfile.setImageResource(if (gender == "Men") R.drawable.man_icon else R.drawable.woman_icon)
+                    if (img.toString().isEmpty()) {
+                        binding.imgProfile.setImageResource(if (gender == "Men") R.drawable.man_icon else R.drawable.woman_icon)
+                    } else {
+                        Glide.with(binding.root)
+                            .load(img.toString())
+                            .into(binding.imgProfile)
+                    }
 
-                Glide.with(binding.root)
-                    .load(img.toString())
-                    .into(binding.imgProfile)
 
+                }
 
             }
     }
@@ -103,26 +109,29 @@ class EditProfileFragment : Fragment() {
                                 val imgUri = uri.toString()
                                 query.get()
                                     .addOnSuccessListener { querySnapshot ->
-                                        val document = querySnapshot.documents[0]
-                                        val user = hashMapOf(
-                                            "gender" to gender,
-                                            "img" to imgUri,
-                                            "userId" to firebaseAuth.currentUser?.uid,
-                                            "username" to name
-                                        )
-                                        document.reference.update(user)
-                                            .addOnSuccessListener {
-                                                binding.progressBar.visibility = View.GONE
-                                                findNavController().popBackStack()
-                                            }
-                                            .addOnFailureListener { e ->
-                                                Toast.makeText(
-                                                    requireContext(),
-                                                    e.message,
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                                binding.progressBar.visibility = View.GONE
-                                            }
+                                        if (!querySnapshot.isEmpty && querySnapshot != null) {
+                                            val document = querySnapshot.documents[0]
+                                            val user = hashMapOf(
+                                                "gender" to gender,
+                                                "img" to imgUri,
+                                                "userId" to firebaseAuth.currentUser?.uid,
+                                                "username" to name
+                                            )
+                                            document.reference.update(user)
+                                                .addOnSuccessListener {
+                                                    binding.progressBar.visibility = View.GONE
+                                                    findNavController().popBackStack()
+                                                }
+                                                .addOnFailureListener { e ->
+                                                    Toast.makeText(
+                                                        requireContext(),
+                                                        e.message,
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                    binding.progressBar.visibility = View.GONE
+                                                }
+                                        }
+
                                     }
                                     .addOnFailureListener { e ->
                                         Toast.makeText(
