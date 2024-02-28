@@ -100,9 +100,6 @@ class AlbumViewFragment : Fragment() {
                 Toast.makeText(requireContext(), "Added", Toast.LENGTH_SHORT).show()
             }
         }
-
-
-
         setLayoutButton()
 
         getAlbum()
@@ -179,6 +176,7 @@ class AlbumViewFragment : Fragment() {
         playAll()
 
 
+        val model = tracks.map { MusicItem(it.artist, it.id, it.name, it.trackUri, img) }
 
 
         adapter = SingleAlbumTracksAdapter(img,
@@ -189,7 +187,7 @@ class AlbumViewFragment : Fragment() {
             { musicItem, trackId -> setBottomSheet(musicItem, trackId) },
             { removeSp() })
 
-        adapter.submitList(tracks)
+        adapter.submitList(model)
         this.tracks = adapter.getTracks()
 
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
