@@ -14,6 +14,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.FragmentHomeBinding
+import com.example.spotifyclone.network.deezer.TrackApi
 import com.example.spotifyclone.network.retrofit.TokenRefresher
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
 import com.example.spotifyclone.network.retrofit.api.ArtistsApi
@@ -24,6 +25,8 @@ import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
 
@@ -49,6 +52,8 @@ class HomeFragment : Fragment() {
     @Inject
     lateinit var tokenRefresher: TokenRefresher
 
+    private lateinit var trackApi: TrackApi
+
 
     private val homeViewModel: HomeViewModel by viewModels {
         HomeFactory(
@@ -56,7 +61,8 @@ class HomeFragment : Fragment() {
             artistsApi,
             firestore,
             firebaseAuth,
-            tokenRefresher
+            tokenRefresher,
+            trackApi
         )
     }
 
@@ -66,7 +72,11 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater)
-
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://api.deezer.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        trackApi = retrofit.create(TrackApi::class.java)
         setLayout()
         setTextHeader()
         setDrawer()

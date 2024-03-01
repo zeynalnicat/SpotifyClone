@@ -12,6 +12,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
@@ -23,14 +24,21 @@ import com.example.spotifyclone.databinding.FragmentHomeGeneralBinding
 import com.example.spotifyclone.model.album.newrelease.Item
 import com.example.spotifyclone.model.artist.Artist
 import com.example.spotifyclone.model.dto.Album
+import com.example.spotifyclone.model.dto.LikedSongs
+import com.example.spotifyclone.model.dto.MusicItem
+import com.example.spotifyclone.network.deezer.TrackApi
 import com.example.spotifyclone.network.retrofit.TokenRefresher
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
 import com.example.spotifyclone.network.retrofit.api.ArtistsApi
 import com.example.spotifyclone.resource.Resource
 import com.example.spotifyclone.ui.activity.MainActivity
+import com.example.spotifyclone.ui.adapters.LibraryAlbumAdapter
+import com.example.spotifyclone.ui.adapters.LikedSongsAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
 
@@ -54,6 +62,8 @@ class FragmentHomeGeneral : Fragment() {
     @Inject
     lateinit var tokenRefresher: TokenRefresher
 
+    private lateinit var trackApi: TrackApi
+
 
     private val homeViewModel: HomeViewModel by viewModels {
         HomeFactory(
@@ -61,7 +71,8 @@ class FragmentHomeGeneral : Fragment() {
             artistsApi,
             firestore,
             firebaseAuth,
-            tokenRefresher
+            tokenRefresher,
+            trackApi
         )
     }
 
@@ -79,6 +90,11 @@ class FragmentHomeGeneral : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://api.deezer.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        trackApi = retrofit.create(TrackApi::class.java)
 
 
         homeViewModel.newReleases.observe(viewLifecycleOwner) {
@@ -122,6 +138,22 @@ class FragmentHomeGeneral : Fragment() {
 
             }
         }
+
+        homeViewModel.topMusics.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Success -> {
+                    setTopMusics(it.data)
+                }
+                is Resource.Error -> {
+
+                }
+
+                is Resource.Loading -> {}
+
+            }
+        }
+
+        homeViewModel.getTopMusics()
 
         homeViewModel.popularAlbums.observe(viewLifecycleOwner) {
             when (it) {
@@ -168,6 +200,16 @@ class FragmentHomeGeneral : Fragment() {
         homeViewModel.getArtist()
         homeViewModel.getPopularAlbums()
         homeViewModel.setRecommended()
+
+    }
+
+    private fun setTopMusics(data: List<MusicItem>) {
+        val adapter = LikedSongsAdapter(saveSharedPreference = { a, b -> println() })
+        val model = data.map { LikedSongs(it.name,it.artist,it.img,it.trackUri, isTopTracks = true) }
+        adapter.submitList(model)
+
+        binding.recyclerTopMusics.layoutManager = GridLayoutManager(requireContext(),2)
+        binding.recyclerTopMusics.adapter =adapter
 
     }
 

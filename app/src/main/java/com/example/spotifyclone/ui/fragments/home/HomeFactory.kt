@@ -2,6 +2,7 @@ package com.example.spotifyclone.ui.fragments.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.spotifyclone.network.deezer.TrackApi
 import com.example.spotifyclone.network.retrofit.TokenRefresher
 
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
@@ -14,10 +15,11 @@ class HomeFactory(
     private val artistApi: ArtistsApi,
     private val firestore: FirebaseFirestore,
     private val firebaseAuth: FirebaseAuth,
-    private val tokenRefresher: TokenRefresher
+    private val tokenRefresher: TokenRefresher,
+    private val trackApi: TrackApi
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return HomeViewModel(albumApi, artistApi, firestore, firebaseAuth, tokenRefresher) as T
+        return HomeViewModel(albumApi, artistApi, firestore, firebaseAuth, tokenRefresher,trackApi) as T
     }
 }

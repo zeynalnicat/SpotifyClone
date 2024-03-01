@@ -11,7 +11,7 @@ import com.example.spotifyclone.databinding.ItemLibraryAlbumBinding
 import com.example.spotifyclone.model.dto.Album
 import com.example.spotifyclone.model.dto.LibraryAlbum
 
-class LibraryAlbumAdapter(private val nav :(Bundle)->Unit) : RecyclerView.Adapter<LibraryAlbumAdapter.ViewHolder>() {
+class LibraryAlbumAdapter(private val nav :(Bundle)->Unit={}) : RecyclerView.Adapter<LibraryAlbumAdapter.ViewHolder>() {
 
     private val diffCallBack = object : DiffUtil.ItemCallback<Album>() {
         override fun areItemsTheSame(oldItem: Album, newItem: Album): Boolean {

@@ -14,6 +14,17 @@
             tools:context=".ui.fragments.home0.HomeFragment">
 
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerTopMusics"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/rightGuideline"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+                app:layout_constraintTop_toTopOf="@id/topGuideline" />
+
             <TextView
                 android:id="@+id/txtNewRelease"
                 android:layout_width="wrap_content"
@@ -50,7 +61,7 @@
                 android:visibility="gone"
                 style="@style/BoldText"
                 app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-                app:layout_constraintTop_toBottomOf="@id/topGuideline" />
+                app:layout_constraintTop_toBottomOf="@id/recyclerTopMusics" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerRecentlyPlayed"

@@ -7,7 +7,8 @@
 
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp"
+    android:layout_marginBottom="8dp"
+    android:layout_marginEnd="8dp"
     android:backgroundTint="@color/filled_gray">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,6 +31,7 @@
             android:id="@+id/imgAlbum"
             android:layout_width="64dp"
             android:layout_height="64dp"
+            android:scaleType="fitXY"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />

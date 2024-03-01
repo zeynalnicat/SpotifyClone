@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.spotifyclone.model.album.newrelease.Item
 import com.example.spotifyclone.model.artist.Artist
+import com.example.spotifyclone.model.dto.MusicItem
 import com.example.spotifyclone.model.firebase.Albums
 import com.example.spotifyclone.model.firebase.Tracks
+import com.example.spotifyclone.network.deezer.TrackApi
 import com.example.spotifyclone.network.retrofit.TokenRefresher
 import com.example.spotifyclone.resource.Resource
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
@@ -32,7 +34,8 @@ class HomeViewModel(
     private val artistApi: ArtistsApi,
     private val firestore: FirebaseFirestore,
     private val firebaseAuth: FirebaseAuth,
-    private val tokenRefresher: TokenRefresher
+    private val tokenRefresher: TokenRefresher,
+    private val trackApi: TrackApi
 ) : ViewModel() {
 
     private val _date = MutableLiveData<String>()
@@ -42,6 +45,10 @@ class HomeViewModel(
     private val _artists = MutableLiveData<Resource<List<Artist>>>()
     private val _recommended =
         MutableLiveData<Resource<List<com.example.spotifyclone.model.dto.Album>>>()
+
+    private val _topMusics = MutableLiveData<Resource<List<MusicItem>>>()
+
+    val topMusics : LiveData<Resource<List<MusicItem>>> get() = _topMusics
 
     val date: LiveData<String>
         get() = _date
@@ -226,6 +233,32 @@ class HomeViewModel(
             })
         } catch (e: Exception) {
             _recommended.postValue(Resource.Error(e))
+        }
+
+    }
+
+
+    fun getTopMusics(){
+        val idsMusic = listOf(89077549,509382892,82715364,6461432)
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val listMusic = mutableListOf<MusicItem>()
+
+                idsMusic.forEach{
+                    val response = trackApi.getTrack(it)
+                    if(response.isSuccessful){
+                        val result = response.body()
+                        result?.let {track->
+                            val musicItem = MusicItem(track.artist.name,"",track.title,track.preview,track.album.cover_medium)
+                            listMusic.add(musicItem)
+                        }
+                    }
+
+                    _topMusics.postValue(Resource.Success(listMusic))
+            }
+            }catch (e:Exception){
+                _topMusics.postValue(Resource.Error(e))
+            }
         }
 
     }
