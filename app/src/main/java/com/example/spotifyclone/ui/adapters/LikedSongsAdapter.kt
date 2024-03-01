@@ -15,11 +15,11 @@ import com.example.spotifyclone.model.dto.LikedSongs
 import com.example.spotifyclone.model.dto.MusicItem
 
 class LikedSongsAdapter(
-    private val setBottom: (LikedSongs) -> Unit,
-    private val setMusicLayout: (Int) -> Unit,
+    private val setBottom: (LikedSongs) -> Unit={},
+    private val setMusicLayout: (Int) -> Unit={},
     private val saveSharedPreference: (key: String, value: String) -> Unit,
-    private val saveSharedPreferenceBool: (value: Boolean) -> Unit,
-    private val isInSP: (value: String) -> Boolean,
+    private val saveSharedPreferenceBool: (value: Boolean) -> Unit={},
+    private val isInSP: (value: String) -> Boolean = {false},
 ) :
     RecyclerView.Adapter<LikedSongsAdapter.ViewHolder>() {
 
@@ -62,7 +62,14 @@ class LikedSongsAdapter(
     inner class ViewHolder(private val binding: ItemLibraryAlbumBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(track: LikedSongs) {
-            binding.imgMore.visibility = View.VISIBLE
+
+            if(track.isTopTracks){
+                binding.imgMore.visibility = View.GONE
+            }
+            else{
+                binding.imgMore.visibility = View.VISIBLE
+            }
+            binding.album.text = track.artist
             binding.cardView.setCardBackgroundColor(
                 ContextCompat.getColor(
                     itemView.context,
@@ -76,7 +83,6 @@ class LikedSongsAdapter(
                 .load(track.imgUri)
                 .into(binding.imgAlbum)
 
-            binding.album.text = track.artist
 
             binding.txtAlbumName.setTextColor(
                 if (track.isPlayed) ContextCompat.getColor(

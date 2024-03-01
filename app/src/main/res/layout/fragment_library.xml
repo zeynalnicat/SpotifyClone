@@ -18,14 +18,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.06" />
+            app:layout_constraintGuide_percent="0.04" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/rightGuideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.94" />
+            app:layout_constraintGuide_percent="0.96" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
@@ -36,8 +36,8 @@
 
         <ImageView
             android:id="@+id/imgProfileAccount"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="58dp"
+            android:layout_height="58dp"
             android:background="@drawable/img_artist"
             android:clipToOutline="true"
             app:layout_constraintStart_toStartOf="@+id/leftGuideline"
@@ -50,6 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:text="@string/library_txt_header"
+            style="@style/BoldText"
             android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="@+id/imgProfileAccount"
@@ -68,8 +69,8 @@
 
         <ImageView
             android:id="@+id/imgPlaylistLiked"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:layout_marginTop="24dp"
             android:src="@drawable/icon_library_liked"
             app:layout_constraintStart_toStartOf="@+id/leftGuideline"
@@ -152,7 +153,7 @@
             android:id="@+id/recyclerView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
             app:layout_constraintStart_toStartOf="@+id/leftGuideline"
             app:layout_constraintTop_toBottomOf="@+id/imgPlaylistLiked" />

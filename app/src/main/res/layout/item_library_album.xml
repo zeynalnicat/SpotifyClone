@@ -5,9 +5,10 @@
     xmlns:vumeter="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardView"
     android:layout_width="match_parent"
-    android:backgroundTint="@color/primary"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp">
+    android:layout_marginEnd="8dp"
+    android:layout_marginBottom="8dp"
+    android:backgroundTint="@color/filled_gray">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -21,13 +22,15 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/album"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/txtAlbumName"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.7"
             app:srcCompat="@drawable/icon_more" />
 
         <ImageView
             android:id="@+id/imgAlbum"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:scaleType="fitXY"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
@@ -37,8 +40,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="8dp"
+            android:maxLines="1"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -53,10 +57,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="Album"
+            android:maxLines="1"
             android:textColor="@color/txt_gray"
             app:layout_constraintStart_toStartOf="@+id/txtAlbumName"
             app:layout_constraintTop_toBottomOf="@+id/txtAlbumName" />
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

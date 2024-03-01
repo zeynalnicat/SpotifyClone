@@ -31,7 +31,8 @@ class NewPlaylistFragment : Fragment() {
     @Inject
     lateinit var firestore: FirebaseFirestore
 
-    private lateinit var activity:MainActivity
+    private lateinit var activity: MainActivity
+
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
     private val newPlaylistViewModel: NewPlaylistViewModel by viewModels {
@@ -88,11 +89,14 @@ class NewPlaylistFragment : Fragment() {
     }
 
     private fun setNavigation() {
-
+        val sharedPreference = SharedPreference(requireContext())
         binding.btnCancel.setOnClickListener {
             findNavController().popBackStack()
-            activity.setMusicPlayer(true)
             activity.setBottomNavigation(true)
+            if (sharedPreference.getValue("isPlaying", false)) {
+                activity.setMusicPlayer(true)
+            }
+
         }
     }
 }

@@ -8,5 +8,6 @@ data class Album (
     val id: String,
     val name: String,
     val tracks: List<Tracks>,
-    var isFirebase : Boolean = false
+    var isFirebase : Boolean = false,
+    var isLibrary : Boolean = false
 ):Serializable

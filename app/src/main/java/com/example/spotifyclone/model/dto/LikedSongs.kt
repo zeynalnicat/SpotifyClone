@@ -5,5 +5,6 @@ data class LikedSongs(
     val artist: String,
     val imgUri: String,
     val uri: String,
-    var isPlayed: Boolean = false
+    var isPlayed: Boolean = false,
+    var isTopTracks : Boolean = false
 )

@@ -37,15 +37,15 @@
     <string name="home_txt_welcome">Good morning!</string>
     <string name="home_btn_music">Music</string>
     <string name="home_btn_podcast">Podcasts</string>
-    <string name="home_txt_recently">Recently Played</string>
+    <string name="home_txt_recently">Recently played</string>
     <string name="home_txt_try">Because you love</string>
-    <string name="home_txt_popular">Popular Albums</string>
-    <string name="home_txt_recommended">Recommended Albums</string>
-    <string name="home_txt_new">New Release</string>
+    <string name="home_txt_popular">Popular albums</string>
+    <string name="home_txt_recommended">Recommended albums</string>
+    <string name="home_txt_new">New release</string>
     <string name="home_txt_all">All</string>
 
 
-    <string name="search_txt_search">WHAT DO YOU WANT TO LISTEN TO?</string>
+    <string name="search_txt_search">What do you want to listen to?</string>
     <string name="search_txt_top_genre">Your top genres</string>
     <string name="search_txt_popular_genre">Popular podcast categories</string>
     <string name="search_txt_browse_all">Browse All</string>

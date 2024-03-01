@@ -14,6 +14,17 @@
             tools:context=".ui.fragments.home0.HomeFragment">
 
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerTopMusics"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/rightGuideline"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/leftGuideline"
+                app:layout_constraintTop_toTopOf="@id/topGuideline" />
+
             <TextView
                 android:id="@+id/txtNewRelease"
                 android:layout_width="wrap_content"
@@ -22,6 +33,7 @@
                 android:text="@string/home_txt_new"
                 android:textColor="@color/white"
                 android:textSize="20sp"
+                style="@style/BoldText"
                 android:textStyle="bold"
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@+id/leftGuideline"
@@ -47,8 +59,9 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:visibility="gone"
+                style="@style/BoldText"
                 app:layout_constraintStart_toStartOf="@+id/leftGuideline"
-                app:layout_constraintTop_toBottomOf="@id/topGuideline" />
+                app:layout_constraintTop_toBottomOf="@id/recyclerTopMusics" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerRecentlyPlayed"
@@ -100,6 +113,7 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/home_txt_try"
                 android:textColor="@color/white"
+                style="@style/BoldText"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:visibility="gone"
@@ -116,6 +130,7 @@
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                style="@style/BoldText"
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@+id/leftGuideline"
                 app:layout_constraintTop_toBottomOf="@+id/recyclerViewNewRelease" />
@@ -138,6 +153,7 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/home_txt_recommended"
                 android:textColor="@color/white"
+                style="@style/BoldText"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/leftGuideline"

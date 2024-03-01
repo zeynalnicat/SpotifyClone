@@ -14,6 +14,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.FragmentHomeBinding
+import com.example.spotifyclone.network.deezer.TrackApi
 import com.example.spotifyclone.network.retrofit.TokenRefresher
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
 import com.example.spotifyclone.network.retrofit.api.ArtistsApi
@@ -24,6 +25,8 @@ import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
 
@@ -49,6 +52,8 @@ class HomeFragment : Fragment() {
     @Inject
     lateinit var tokenRefresher: TokenRefresher
 
+    private lateinit var trackApi: TrackApi
+
 
     private val homeViewModel: HomeViewModel by viewModels {
         HomeFactory(
@@ -56,7 +61,8 @@ class HomeFragment : Fragment() {
             artistsApi,
             firestore,
             firebaseAuth,
-            tokenRefresher
+            tokenRefresher,
+            trackApi
         )
     }
 
@@ -66,7 +72,11 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater)
-
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://api.deezer.com/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        trackApi = retrofit.create(TrackApi::class.java)
         setLayout()
         setTextHeader()
         setDrawer()
@@ -75,6 +85,7 @@ class HomeFragment : Fragment() {
             requireActivity().supportFragmentManager,
             requireActivity().lifecycle
         )
+        binding.viewPager.isUserInputEnabled = false
 
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText(getText(R.string.home_txt_all)))
         binding.tabLayout.addTab(
@@ -83,10 +94,10 @@ class HomeFragment : Fragment() {
 
         binding.viewPager.adapter = adapter
 
-        binding.tabLayout.setOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                if (tab != null) {
-                    binding.viewPager.currentItem = tab.position
+                tab?.let {
+                    binding.viewPager.currentItem = it.position
                 }
             }
 
@@ -97,7 +108,6 @@ class HomeFragment : Fragment() {
             override fun onTabReselected(tab: TabLayout.Tab?) {
 
             }
-
         })
 
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -151,7 +161,7 @@ class HomeFragment : Fragment() {
     private fun setTextHeader() {
         homeViewModel.setDateText()
         homeViewModel.date.observe(viewLifecycleOwner) {
-            binding.txtGood.text = it
+//            binding.txtGood.text = it
         }
     }
 

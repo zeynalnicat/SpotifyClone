@@ -71,7 +71,6 @@ class SingleAlbumTracksAdapter(
             binding.musicIcon.visibility = if (track.isPlayed) View.VISIBLE else View.GONE
 
             itemView.setOnClickListener {
-
                 saveSharedPreference("PlayingMusicImg", img)
                 saveSharedPreference("PlayingMusic",track.name)
                 saveSharedPreference("PlayingMusicArtist",track.artist)
