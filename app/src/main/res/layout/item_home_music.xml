@@ -18,6 +18,7 @@
         <TextView
             android:id="@+id/txtArtist"
             android:layout_width="wrap_content"
+            style="@style/BoldText"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
@@ -32,6 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:text="-"
+            style="@style/BoldText"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/txtArtist"
             app:layout_constraintStart_toEndOf="@+id/txtArtist"
@@ -43,6 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="TextView"
+            style="@style/BoldText"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/textView11"
             app:layout_constraintStart_toEndOf="@+id/txtArtist"
@@ -73,13 +76,14 @@
 
         <TextView
             android:id="@+id/txtTrack"
+            style="@style/BoldText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:text="TextView"
             android:textColor="@color/white"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/imgAlbum"
             app:layout_constraintTop_toTopOf="@+id/imgAlbum" />

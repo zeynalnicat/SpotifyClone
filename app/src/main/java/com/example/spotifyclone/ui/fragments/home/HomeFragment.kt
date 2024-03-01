@@ -75,6 +75,7 @@ class HomeFragment : Fragment() {
             requireActivity().supportFragmentManager,
             requireActivity().lifecycle
         )
+        binding.viewPager.isUserInputEnabled = false
 
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText(getText(R.string.home_txt_all)))
         binding.tabLayout.addTab(
@@ -83,10 +84,10 @@ class HomeFragment : Fragment() {
 
         binding.viewPager.adapter = adapter
 
-        binding.tabLayout.setOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                if (tab != null) {
-                    binding.viewPager.currentItem = tab.position
+                tab?.let {
+                    binding.viewPager.currentItem = it.position
                 }
             }
 
@@ -97,7 +98,6 @@ class HomeFragment : Fragment() {
             override fun onTabReselected(tab: TabLayout.Tab?) {
 
             }
-
         })
 
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -151,7 +151,7 @@ class HomeFragment : Fragment() {
     private fun setTextHeader() {
         homeViewModel.setDateText()
         homeViewModel.date.observe(viewLifecycleOwner) {
-            binding.txtGood.text = it
+//            binding.txtGood.text = it
         }
     }
 
