@@ -166,7 +166,7 @@ class LibraryFragment : Fragment() {
                     it
                 )
             }
-            val albums = it.map { Album(it.images[0].url, it.id, it.name, emptyList()) }
+            val albums = it.map { Album(it.images[0].url, it.id, it.name, emptyList(), isLibrary = true) }
             adapter.submitList(albums)
             binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
             binding.recyclerView.adapter = adapter
@@ -181,7 +181,7 @@ class LibraryFragment : Fragment() {
                 it
             )
         }
-        val albumsModel = albums.map { Album(it.coverImg, it.id, it.name, it.tracks, true) }
+        val albumsModel = albums.map { Album(it.coverImg, it.id, it.name, it.tracks, true,true) }
         adapter.submitList(albumsModel)
         binding.recyclerFirebase.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerFirebase.adapter = adapter

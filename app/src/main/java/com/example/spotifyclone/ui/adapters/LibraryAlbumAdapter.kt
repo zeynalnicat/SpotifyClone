@@ -3,15 +3,18 @@ package com.example.spotifyclone.ui.adapters
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ItemLibraryAlbumBinding
 import com.example.spotifyclone.model.dto.Album
 import com.example.spotifyclone.model.dto.LibraryAlbum
 
-class LibraryAlbumAdapter(private val nav :(Bundle)->Unit={}) : RecyclerView.Adapter<LibraryAlbumAdapter.ViewHolder>() {
+class LibraryAlbumAdapter(private val nav: (Bundle) -> Unit = {}) :
+    RecyclerView.Adapter<LibraryAlbumAdapter.ViewHolder>() {
 
     private val diffCallBack = object : DiffUtil.ItemCallback<Album>() {
         override fun areItemsTheSame(oldItem: Album, newItem: Album): Boolean {
@@ -44,6 +47,15 @@ class LibraryAlbumAdapter(private val nav :(Bundle)->Unit={}) : RecyclerView.Ada
     inner class ViewHolder(private val binding: ItemLibraryAlbumBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(album: Album) {
+
+            if (!album.isLibrary) {
+                binding.cardView.setCardBackgroundColor(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.primary
+                    )
+                )
+            }
             Glide.with(binding.root)
                 .load(album.coverImg)
                 .into(binding.imgAlbum)
@@ -52,7 +64,7 @@ class LibraryAlbumAdapter(private val nav :(Bundle)->Unit={}) : RecyclerView.Ada
             itemView.setOnClickListener {
                 itemView.setOnClickListener {
                     val bundle = Bundle()
-                    bundle.putSerializable("album",album)
+                    bundle.putSerializable("album", album)
                     nav(bundle)
                 }
             }
