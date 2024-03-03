@@ -2,21 +2,22 @@ package com.example.spotifyclone.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.graphics.Color
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.databinding.ItemSearchCardBinding
-import com.example.spotifyclone.model.categories.Item
+import com.example.spotifyclone.model.dto.Category
 
 class SearchCardAdapter : RecyclerView.Adapter<SearchCardAdapter.ViewHolder>() {
 
-    val diffCallBack = object : DiffUtil.ItemCallback<Item>() {
-        override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
+    val diffCallBack = object : DiffUtil.ItemCallback<Category>() {
+        override fun areItemsTheSame(oldItem: Category, newItem: Category): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean {
+        override fun areContentsTheSame(oldItem: Category, newItem: Category): Boolean {
             return oldItem == newItem
         }
 
@@ -38,16 +39,22 @@ class SearchCardAdapter : RecyclerView.Adapter<SearchCardAdapter.ViewHolder>() {
         return holder.bind(diffUtil.currentList[position])
     }
 
-    fun submitList(list: List<Item>) {
+    fun submitList(list: List<Category>) {
         diffUtil.submitList(list)
     }
 
     inner class ViewHolder(private val binding: ItemSearchCardBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(current: Item) {
+        fun bind(current: Category) {
+            val color = if (!current.color.isNullOrEmpty()) {
+                Color.parseColor(current.color)
+            } else {
+                Color.WHITE
+            }
+            binding.cardView.setCardBackgroundColor(color)
             binding.txtCardTitle.text = current.name
             Glide.with(binding.root)
-                .load(current.icons[0].url)
+                .load(current.img)
                 .into(binding.imgCard)
 
         }

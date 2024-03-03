@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
@@ -102,10 +103,16 @@ class SearchNextFragment : Fragment() {
 
             }
         }
+        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
         binding.edtSearch.requestFocus()
+        binding.edtSearch.setOnFocusChangeListener { view, b ->
+            requireActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+        }
         val inputMethodManager =
             requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.showSoftInput(binding.edtSearch, InputMethodManager.SHOW_IMPLICIT)
+
+
     }
 
     private fun setNavigation() {
@@ -116,6 +123,8 @@ class SearchNextFragment : Fragment() {
 
 
     private fun search() {
+
+
         binding.edtSearch.doAfterTextChanged {
             searchNextViewModel.search(it.toString())
         }

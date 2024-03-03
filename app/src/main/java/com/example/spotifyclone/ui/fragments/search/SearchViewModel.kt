@@ -3,24 +3,42 @@ package com.example.spotifyclone.ui.fragments.search
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.spotifyclone.model.categories.Item
-import com.example.spotifyclone.network.retrofit.api.CategoriesApi
-import kotlinx.coroutines.launch
 
-class SearchViewModel(private val categoriesApi: CategoriesApi) : ViewModel() {
-    private val _categories = MutableLiveData<List<Item>>()
+import com.example.spotifyclone.model.dto.Category
+import com.example.spotifyclone.resource.Resource
+import com.google.firebase.firestore.FirebaseFirestore
 
-    val categories: LiveData<List<Item>>
+
+class SearchViewModel(
+    private val firestore: FirebaseFirestore
+) : ViewModel() {
+    private val _categories = MutableLiveData<Resource<List<Category>>>()
+
+    val categories: LiveData<Resource<List<Category>>>
         get() = _categories
 
 
     fun getCategories() {
-        viewModelScope.launch {
-            val response = categoriesApi.getCategories()
-            if (response.isSuccessful) {
-                _categories.postValue(response.body()?.categories?.items)
+        val categoryRef = firestore.collection("categories")
+        categoryRef.get()
+            .addOnSuccessListener { querySnapshot ->
+                if (querySnapshot != null && !querySnapshot.isEmpty) {
+                    val listCategory = mutableListOf<Category>()
+                    val documents = querySnapshot.documents
+                    for (document in documents) {
+                        val category = Category(
+                            document["name"].toString(),
+                            document["color"].toString(),
+                            document["img"].toString(),
+                            document["tracks"] as List<String>
+                        )
+                        listCategory.add(category)
+                    }
+                    _categories.postValue(Resource.Success(listCategory))
+                }
             }
-        }
+            .addOnFailureListener {
+                _categories.postValue(Resource.Error(it))
+            }
     }
 }

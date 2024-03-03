@@ -1,23 +1,19 @@
 package com.example.spotifyclone.di
 
-import com.example.spotifyclone.model.deezer.search.Search
 import com.example.spotifyclone.network.retrofit.TokenRefresher
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
 import com.example.spotifyclone.network.retrofit.api.ArtistsApi
-import com.example.spotifyclone.network.retrofit.api.CategoriesApi
 import com.example.spotifyclone.network.retrofit.api.deezer.SearchApi
 import com.example.spotifyclone.network.retrofit.api.deezer.TrackApi
 import com.example.spotifyclone.network.retrofit.consts.ConstValues
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.internal.managers.ApplicationComponentManager
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -63,10 +59,6 @@ class NetworkModule {
     @Provides
     fun provideArtistsApi(retrofit: Retrofit): ArtistsApi = retrofit.create(ArtistsApi::class.java)
 
-    @Singleton
-    @Provides
-    fun provideCategoriesApi(retrofit: Retrofit): CategoriesApi =
-        retrofit.create(CategoriesApi::class.java)
 
     @Singleton
     @Provides

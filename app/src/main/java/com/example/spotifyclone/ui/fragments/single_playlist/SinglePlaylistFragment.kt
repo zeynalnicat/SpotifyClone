@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
@@ -233,6 +234,10 @@ class SinglePlaylistFragment : Fragment() {
 
 
     private fun search() {
+        binding.edtSearch.setOnFocusChangeListener { view, b ->
+            requireActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
+        }
+
         binding.edtSearch.doAfterTextChanged {
             singleViewModel.search(it.toString())
         }

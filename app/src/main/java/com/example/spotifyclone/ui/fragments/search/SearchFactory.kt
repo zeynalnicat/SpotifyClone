@@ -2,11 +2,11 @@ package com.example.spotifyclone.ui.fragments.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.spotifyclone.network.retrofit.api.CategoriesApi
+import com.google.firebase.firestore.FirebaseFirestore
 
-class SearchFactory(private val categoriesApi: CategoriesApi):ViewModelProvider.Factory {
+class SearchFactory(private val firestore: FirebaseFirestore):ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return SearchViewModel(categoriesApi) as T
+        return SearchViewModel(firestore) as T
     }
 }
