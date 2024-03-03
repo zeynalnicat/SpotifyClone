@@ -69,7 +69,6 @@ class LikedSongsAdapter(
         fun bind(track: LikedSongs) {
 
 
-
             if(track.isTopTracks){
                 binding.imgMore.visibility = View.GONE
                 val layoutParams = binding.imgAlbum.layoutParams
@@ -89,7 +88,21 @@ class LikedSongsAdapter(
                 layoutParams.width = pixels
                 binding.album.visibility = View.GONE
                 binding.container.setBackgroundColor(ContextCompat.getColor(binding.root.context,R.color.filled_gray))
+            }  else if(track.isFromGenre){
+                val layoutParams = binding.imgAlbum.layoutParams
+                val desiredHeightInDp = 64
+                val displayMetrics = binding.root.resources.displayMetrics
+                val pixels = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    desiredHeightInDp.toFloat(),
+                    displayMetrics
+                ).toInt()
+                layoutParams.height = pixels
+                layoutParams.width = pixels
+                binding.imgMore.visibility = View.GONE
+                binding.container.setBackgroundColor(ContextCompat.getColor(binding.root.context,R.color.filled_gray))
             }
+
             else{
                 binding.imgMore.visibility = View.VISIBLE
                 binding.container.setBackgroundColor(ContextCompat.getColor(binding.root.context,R.color.primary))

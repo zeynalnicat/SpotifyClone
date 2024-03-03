@@ -19,7 +19,7 @@ import com.example.spotifyclone.util.GsonHelper
 class MusicPlayerService : Service() {
 
     lateinit var mediaPlayer: MediaPlayer
-    var songIndex  = MutableLiveData(0)
+    var songIndex = MutableLiveData(0)
     var tracks = MutableLiveData<List<MusicItem>>()
     private var currentUri = ""
     val musicIsPlaying = MutableLiveData<Boolean>()
@@ -46,21 +46,26 @@ class MusicPlayerService : Service() {
             if (!it.isEmpty() && it != null) {
                 val index = songIndex.value!!
                 sharedPreference.saveValue("Position", index)
-                saveSharedPreference(it[index].img,it[index].name,it[index].artist,it[index].trackUri)
+                saveSharedPreference(
+                    it[index].img,
+                    it[index].name,
+                    it[index].artist,
+                    it[index].trackUri
+                )
                 playMusic(it[index].trackUri)
             }
 
         }
 
-        songIndex.observeForever{
+        songIndex.observeForever {
             if (it != null) {
-                val track = tracks.value?.get(it)
-                sharedPreference.saveValue("Position", it)
-                track?.let {track->
-                    saveSharedPreference(track.img,track.name,track.artist,track.trackUri)
+                if (tracks.value != null && tracks.value?.isNotEmpty()==true &&  it< tracks.value?.size!!) {
+                    val track = tracks.value?.get(it)!!
+                    sharedPreference.saveValue("Position", it)
+                    saveSharedPreference(track.img, track.name, track.artist, track.trackUri)
                     playMusic(track.trackUri)
-                }
 
+                }
             }
         }
 
@@ -68,9 +73,9 @@ class MusicPlayerService : Service() {
     }
 
 
-    fun saveSharedPreference( img:String , name:String , artist:String , uri:String){
-        sharedPreference.saveValue("PlayingMusicImg",img)
-        sharedPreference.saveValue("PlayingMusic",name)
+    fun saveSharedPreference(img: String, name: String, artist: String, uri: String) {
+        sharedPreference.saveValue("PlayingMusicImg", img)
+        sharedPreference.saveValue("PlayingMusic", name)
         sharedPreference.saveValue("PlayingMusicArtist", artist)
         sharedPreference.saveValue("PlayingMusicUri", uri)
     }
@@ -85,7 +90,7 @@ class MusicPlayerService : Service() {
         songIndex.postValue(position)
     }
 
-    fun setPosition(pos:Int){
+    fun setPosition(pos: Int) {
         songIndex.postValue(pos)
     }
 
@@ -148,7 +153,12 @@ class MusicPlayerService : Service() {
         Log.e("Tracks", tracks.value.toString())
         songIndex.value = newIndex
         sharedPreference.saveValue("Position", newIndex)
-        saveSharedPreference(tracks.value?.get(newIndex)?.img?:"",tracks.value?.get(newIndex)?.name?:"",tracks.value?.get(newIndex)?.artist?:"",tracks.value?.get(newIndex)?.trackUri?:"")
+        saveSharedPreference(
+            tracks.value?.get(newIndex)?.img ?: "",
+            tracks.value?.get(newIndex)?.name ?: "",
+            tracks.value?.get(newIndex)?.artist ?: "",
+            tracks.value?.get(newIndex)?.trackUri ?: ""
+        )
         val songUri: String = tracks.value?.get(newIndex)?.trackUri ?: ""
         playMusic(songUri)
     }
@@ -158,10 +168,16 @@ class MusicPlayerService : Service() {
         mediaPlayer.reset()
         val index = songIndex.value!!
         val newIndex = (index - 1) % (tracks.value?.size ?: 0)
-        songIndex.value = newIndex
-        sharedPreference.saveValue("Position", newIndex)
-        saveSharedPreference(tracks.value?.get(newIndex)?.img?:"",tracks.value?.get(newIndex)?.name?:"",tracks.value?.get(newIndex)?.artist?:"",tracks.value?.get(newIndex)?.trackUri?:"")
-        val songUri = tracks.value?.get(newIndex)?.trackUri ?: ""
+        val currentIndex = if (newIndex < 0) tracks.value?.size!!-1  else newIndex
+        songIndex.value = currentIndex
+        sharedPreference.saveValue("Position", songIndex.value!!)
+        saveSharedPreference(
+            tracks.value?.get(currentIndex)?.img ?: "",
+            tracks.value?.get(currentIndex)?.name ?: "",
+            tracks.value?.get(currentIndex)?.artist ?: "",
+            tracks.value?.get(currentIndex)?.trackUri ?: ""
+        )
+        val songUri = tracks.value?.get(currentIndex)?.trackUri ?: ""
         playMusic(songUri)
     }
 

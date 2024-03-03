@@ -108,7 +108,7 @@ class SingleCategoryFragment : Fragment() {
                 it.artist.name,
                 it.album.cover_medium,
                 it.preview,
-                isTopTracks = true
+                isFromGenre = true
             )
         }
         adapter.submitList(model)
