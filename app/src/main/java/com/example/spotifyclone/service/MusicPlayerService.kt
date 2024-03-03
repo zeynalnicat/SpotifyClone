@@ -10,20 +10,16 @@ import android.media.MediaPlayer
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
-import androidx.core.app.NotificationCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.spotifyclone.model.dto.MusicItem
 import com.example.spotifyclone.sp.SharedPreference
-import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
 import com.example.spotifyclone.util.GsonHelper
-import com.google.gson.Gson
 
 class MusicPlayerService : Service() {
 
     lateinit var mediaPlayer: MediaPlayer
-    private lateinit var musicPlayerViewModel: MusicPlayerViewModel
-    var songIndex  = MutableLiveData<Int>(0)
+    var songIndex  = MutableLiveData(0)
     var tracks = MutableLiveData<List<MusicItem>>()
     private var currentUri = ""
     val musicIsPlaying = MutableLiveData<Boolean>()
@@ -49,6 +45,7 @@ class MusicPlayerService : Service() {
         tracks.observeForever {
             if (!it.isEmpty() && it != null) {
                 val index = songIndex.value!!
+                sharedPreference.saveValue("Position", index)
                 saveSharedPreference(it[index].img,it[index].name,it[index].artist,it[index].trackUri)
                 playMusic(it[index].trackUri)
             }
@@ -58,6 +55,7 @@ class MusicPlayerService : Service() {
         songIndex.observeForever{
             if (it != null) {
                 val track = tracks.value?.get(it)
+                sharedPreference.saveValue("Position", it)
                 track?.let {track->
                     saveSharedPreference(track.img,track.name,track.artist,track.trackUri)
                     playMusic(track.trackUri)
@@ -104,7 +102,7 @@ class MusicPlayerService : Service() {
         ) {
             return
         } else if (tracks.value?.isNotEmpty() == true) {
-            val track = tracks.value?.get(index)
+            sharedPreference.saveValue("Position", index)
             mediaPlayer.stop()
             mediaPlayer.reset()
             currentUri = songUri
@@ -148,7 +146,7 @@ class MusicPlayerService : Service() {
         val index = songIndex.value!!
         val newIndex = (index + 1) % (tracks.value?.size ?: 0)
         Log.e("Tracks", tracks.value.toString())
-        songIndex.postValue(newIndex)
+        songIndex.value = newIndex
         sharedPreference.saveValue("Position", newIndex)
         saveSharedPreference(tracks.value?.get(newIndex)?.img?:"",tracks.value?.get(newIndex)?.name?:"",tracks.value?.get(newIndex)?.artist?:"",tracks.value?.get(newIndex)?.trackUri?:"")
         val songUri: String = tracks.value?.get(newIndex)?.trackUri ?: ""
@@ -160,7 +158,7 @@ class MusicPlayerService : Service() {
         mediaPlayer.reset()
         val index = songIndex.value!!
         val newIndex = (index - 1) % (tracks.value?.size ?: 0)
-        songIndex.postValue(newIndex)
+        songIndex.value = newIndex
         sharedPreference.saveValue("Position", newIndex)
         saveSharedPreference(tracks.value?.get(newIndex)?.img?:"",tracks.value?.get(newIndex)?.name?:"",tracks.value?.get(newIndex)?.artist?:"",tracks.value?.get(newIndex)?.trackUri?:"")
         val songUri = tracks.value?.get(newIndex)?.trackUri ?: ""

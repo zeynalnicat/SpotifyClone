@@ -1,8 +1,13 @@
 package com.example.spotifyclone.ui.adapters
 
+import android.app.ActionBar.LayoutParams
+import android.util.TypedValue
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.text.font.Typeface
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -63,19 +68,34 @@ class LikedSongsAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(track: LikedSongs) {
 
+
+
             if(track.isTopTracks){
                 binding.imgMore.visibility = View.GONE
+                val layoutParams = binding.imgAlbum.layoutParams
+                val desiredHeightInDp = 56
+                val layoutTxt = binding.txtAlbumName.layoutParams as ConstraintLayout.LayoutParams
+                layoutTxt.verticalBias = 0.3F
+                binding.txtAlbumName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+                binding.txtAlbumName.layoutParams = layoutTxt
+                binding.txtAlbumName.setTextAppearance(R.style.BoldText)
+                val displayMetrics = binding.root.resources.displayMetrics
+                val pixels = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    desiredHeightInDp.toFloat(),
+                    displayMetrics
+                ).toInt()
+                layoutParams.height = pixels
+                layoutParams.width = pixels
+                binding.album.visibility = View.GONE
+                binding.container.setBackgroundColor(ContextCompat.getColor(binding.root.context,R.color.filled_gray))
             }
             else{
                 binding.imgMore.visibility = View.VISIBLE
+                binding.container.setBackgroundColor(ContextCompat.getColor(binding.root.context,R.color.primary))
             }
             binding.album.text = track.artist
-            binding.cardView.setCardBackgroundColor(
-                ContextCompat.getColor(
-                    itemView.context,
-                    R.color.txt_gray
-                )
-            )
+
 
             track.isPlayed = isInSP(track.name)
             binding.txtAlbumName.text = track.name

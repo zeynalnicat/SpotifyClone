@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -31,9 +32,12 @@ import com.example.spotifyclone.network.retrofit.TokenRefresher
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
 import com.example.spotifyclone.network.retrofit.api.ArtistsApi
 import com.example.spotifyclone.resource.Resource
+import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
+import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
 import com.example.spotifyclone.ui.adapters.LibraryAlbumAdapter
 import com.example.spotifyclone.ui.adapters.LikedSongsAdapter
+import com.example.spotifyclone.util.GsonHelper
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
@@ -65,6 +69,14 @@ class FragmentHomeGeneral : Fragment() {
     @Inject
     lateinit var trackApi: TrackApi
 
+    private val musicPlayerViewModel: MusicPlayerViewModel by activityViewModels()
+
+    private lateinit var acitivity: MainActivity
+
+    private var tracks: List<MusicItem> = emptyList()
+
+    private lateinit var sharedPreference: SharedPreference
+
 
     private val homeViewModel: HomeViewModel by viewModels {
         HomeFactory(
@@ -82,9 +94,9 @@ class FragmentHomeGeneral : Fragment() {
     ): View? {
         binding = FragmentHomeGeneralBinding.inflate(inflater)
         setBottom()
-
-        val activity = requireActivity() as MainActivity
-        activity.checkVisibility()
+        acitivity = requireActivity() as MainActivity
+        sharedPreference = SharedPreference(requireContext())
+        acitivity.checkVisibility()
         return binding.root
     }
 
@@ -139,6 +151,7 @@ class FragmentHomeGeneral : Fragment() {
                 is Resource.Success -> {
                     setTopMusics(it.data)
                 }
+
                 is Resource.Error -> {
 
                 }
@@ -199,13 +212,39 @@ class FragmentHomeGeneral : Fragment() {
     }
 
     private fun setTopMusics(data: List<MusicItem>) {
-        val adapter = LikedSongsAdapter(saveSharedPreference = { a, b -> println() })
-        val model = data.map { LikedSongs(it.name,it.artist,it.img,it.trackUri, isTopTracks = true) }
+        val adapter = LikedSongsAdapter(
+            isInSP = { isInSP(it) },
+            setMusicLayout = { setMusicTrack(it) },
+            saveSharedPreference = { key, value -> saveSharedPreference(key, value) },
+            saveSharedPreferenceBool = { value -> saveSharedPreference(value) },
+        )
+        val model =
+            data.map { LikedSongs(it.name, it.artist, it.img, it.trackUri, isTopTracks = true) }
         adapter.submitList(model)
+        tracks = data
+        binding.recyclerTopMusics.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.recyclerTopMusics.adapter = adapter
 
-        binding.recyclerTopMusics.layoutManager = GridLayoutManager(requireContext(),2)
-        binding.recyclerTopMusics.adapter =adapter
+    }
 
+    private fun saveSharedPreference(key: String, value: String) {
+        sharedPreference.saveValue(key, value)
+    }
+
+    private fun saveSharedPreference(value: Boolean) {
+        sharedPreference.saveIsPlaying(value)
+    }
+
+    private fun setMusicTrack(position: Int) {
+        sharedPreference.saveValue("Position", position)
+        GsonHelper.serializeTracks(requireContext().applicationContext, tracks)
+        musicPlayerViewModel.setSelectedTrackPosition(position)
+        musicPlayerViewModel.setTracks(tracks)
+
+    }
+
+    private fun isInSP(value: String): Boolean {
+        return sharedPreference.containsValue(value)
     }
 
 

@@ -8,11 +8,13 @@
     android:layout_height="wrap_content"
     android:layout_marginEnd="8dp"
     android:layout_marginBottom="8dp"
-    android:backgroundTint="@color/filled_gray">
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/primary">
 
         <ImageView
             android:id="@+id/imgMore"
@@ -42,13 +44,16 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="8dp"
+            app:layout_constraintVertical_bias="0.1"
             android:maxLines="1"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/imgMore"
             app:layout_constraintStart_toEndOf="@+id/imgAlbum"
             app:layout_constraintTop_toTopOf="@+id/imgAlbum"
+            app:layout_goneMarginTop="10dp"
             tools:text="TextView" />
 
         <TextView

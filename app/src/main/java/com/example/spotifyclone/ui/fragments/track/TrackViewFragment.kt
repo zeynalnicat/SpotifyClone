@@ -127,7 +127,7 @@ class TrackViewFragment : Fragment() {
 //                    MusicPlayerService.ACTION_PREVIOUS
 //                )
 //                LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent)
-                activity.nextSong()
+                activity.prevSong()
                 activity.getCurrentTrack()
 
                 binding.seekBar.progress = 0

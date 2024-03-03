@@ -13,11 +13,8 @@ import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.remember
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.Glide
@@ -31,6 +28,9 @@ import com.example.spotifyclone.ui.fragments.track.TrackViewFragment
 import com.example.spotifyclone.util.GsonHelper
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -66,17 +66,20 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(binding.bottomNav, navController)
         setNavigation()
 
-        musicPlayerViewModel.selectedTrackPosition.observe(this) { position ->
-            this.position = position
-            setMusicPlayer(true)
-        }
 
-        musicPlayerViewModel.tracks.observe(this) { tracks ->
-            val intent = Intent(this, MusicPlayerService::class.java)
-            intent.action = MusicPlayerService.ACTION_SET_TRACKS
-            intent.putExtra(MusicPlayerService.EXTRA_TRACKS_JSON, ArrayList(tracks))
-            this.startService(intent)
-        }
+            musicPlayerViewModel.tracks.observe(this@MainActivity) { tracks ->
+                val intent = Intent(this@MainActivity, MusicPlayerService::class.java)
+                intent.action = MusicPlayerService.ACTION_SET_TRACKS
+                intent.putExtra(MusicPlayerService.EXTRA_TRACKS_JSON, ArrayList(tracks))
+                this@MainActivity.startService(intent)
+            }
+
+            musicPlayerViewModel.selectedTrackPosition.observe(this@MainActivity) { position ->
+                this@MainActivity.position = position
+                setMusicPlayer(true)
+            }
+
+
 
         musicPlayerViewModel.selectedTrackPosition.observe(this){
             musicPlayerService?.setPosition(it)
