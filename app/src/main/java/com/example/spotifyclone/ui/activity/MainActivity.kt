@@ -78,6 +78,10 @@ class MainActivity : AppCompatActivity() {
             this.startService(intent)
         }
 
+        musicPlayerViewModel.selectedTrackPosition.observe(this){
+            musicPlayerService?.setPosition(it)
+        }
+
         repository.loadTracks()
 
         repository.tracksLiveData.observeForever { newTracks ->
@@ -85,6 +89,7 @@ class MainActivity : AppCompatActivity() {
                 handleTracksUpdate(it)
             }
         }
+
 
     }
 

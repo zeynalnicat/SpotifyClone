@@ -197,10 +197,10 @@ class AlbumViewFragment : Fragment() {
 
     private fun setMusicTrack(position: Int) {
         sharedPreference.saveValue("Position", position)
-
         GsonHelper.serializeTracks(requireContext().applicationContext, tracks)
         musicPlayerViewModel.setSelectedTrackPosition(position)
         musicPlayerViewModel.setTracks(tracks)
+        musicPlayerViewModel.setPosition(position)
 
 
     }

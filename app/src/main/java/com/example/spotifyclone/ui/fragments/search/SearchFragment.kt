@@ -60,9 +60,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun setAdapter(data: List<Category>) {
-
-
-            val adapter = SearchCardAdapter()
+            val adapter = SearchCardAdapter{findNavController().navigate(R.id.action_searchFragment_to_singleCategoryFragment,it)}
             adapter.submitList(data)
             binding.recyclerView.layoutManager =
                 GridLayoutManager(requireContext(), 2)

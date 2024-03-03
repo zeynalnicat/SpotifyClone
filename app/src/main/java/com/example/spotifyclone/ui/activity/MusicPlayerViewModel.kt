@@ -32,4 +32,8 @@ class MusicPlayerViewModel : ViewModel() {
         _currentTrack.postValue(musicItem)
     }
 
+    fun setPosition(pos:Int){
+        _selectedTrackPosition.postValue(pos)
+    }
+
 }

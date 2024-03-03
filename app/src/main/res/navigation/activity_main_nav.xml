@@ -39,6 +39,9 @@
         <action
             android:id="@+id/action_searchFragment_to_searchNextFragment"
             app:destination="@id/searchNextFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_singleCategoryFragment"
+            app:destination="@id/singleCategoryFragment" />
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
@@ -237,6 +240,11 @@
         android:name="com.example.spotifyclone.ui.fragments.single_playlist.SinglePlaylistFragment"
         android:label="fragment_single_playlist"
         tools:layout="@layout/fragment_single_playlist" />
+    <fragment
+        android:id="@+id/singleCategoryFragment"
+        android:name="com.example.spotifyclone.ui.fragments.single_genre.SingleCategoryFragment"
+        android:label="fragment_single_category"
+        tools:layout="@layout/fragment_single_category" />
 
 
 </navigation>
