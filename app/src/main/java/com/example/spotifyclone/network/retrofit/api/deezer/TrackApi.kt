@@ -1,4 +1,4 @@
-package com.example.spotifyclone.network.deezer
+package com.example.spotifyclone.network.retrofit.api.deezer
 
 import com.example.spotifyclone.model.deezer.DeezerTrack
 import retrofit2.Response

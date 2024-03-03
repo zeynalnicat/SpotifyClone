@@ -10,7 +10,7 @@ import com.example.spotifyclone.model.artist.Artist
 import com.example.spotifyclone.model.dto.MusicItem
 import com.example.spotifyclone.model.firebase.Albums
 import com.example.spotifyclone.model.firebase.Tracks
-import com.example.spotifyclone.network.deezer.TrackApi
+import com.example.spotifyclone.network.retrofit.api.deezer.TrackApi
 import com.example.spotifyclone.network.retrofit.TokenRefresher
 import com.example.spotifyclone.resource.Resource
 import com.example.spotifyclone.network.retrofit.api.AlbumApi

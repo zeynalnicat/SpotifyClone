@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.spotifyclone.model.dto.SearchModel
-import com.example.spotifyclone.network.deezer.SearchApi
+import com.example.spotifyclone.network.retrofit.api.deezer.SearchApi
 import com.example.spotifyclone.resource.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -13,7 +13,7 @@ import com.google.firebase.firestore.Query
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SearchNextViewModel(private val searchApi: SearchApi, private val firestore: FirebaseFirestore,private val firebaseAuth: FirebaseAuth) : ViewModel() {
+class SearchNextViewModel(private val searchApi: SearchApi, private val firestore: FirebaseFirestore, private val firebaseAuth: FirebaseAuth) : ViewModel() {
     private val _searchResults = MutableLiveData<Resource<List<SearchModel>>>()
 
     val searchResults: LiveData<Resource<List<SearchModel>>> get() = _searchResults

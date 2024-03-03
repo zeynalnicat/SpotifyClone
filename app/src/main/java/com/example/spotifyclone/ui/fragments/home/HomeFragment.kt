@@ -14,7 +14,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.FragmentHomeBinding
-import com.example.spotifyclone.network.deezer.TrackApi
+import com.example.spotifyclone.network.retrofit.api.deezer.TrackApi
 import com.example.spotifyclone.network.retrofit.TokenRefresher
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
 import com.example.spotifyclone.network.retrofit.api.ArtistsApi

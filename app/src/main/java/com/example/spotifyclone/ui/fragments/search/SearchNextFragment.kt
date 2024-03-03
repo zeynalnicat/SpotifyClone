@@ -19,7 +19,7 @@ import com.example.spotifyclone.databinding.FragmentSearchNextBinding
 import com.example.spotifyclone.model.dto.LikedSongs
 import com.example.spotifyclone.model.dto.MusicItem
 import com.example.spotifyclone.model.dto.SearchModel
-import com.example.spotifyclone.network.deezer.SearchApi
+import com.example.spotifyclone.network.retrofit.api.deezer.SearchApi
 import com.example.spotifyclone.resource.Resource
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
@@ -38,7 +38,8 @@ import javax.inject.Inject
 class SearchNextFragment : Fragment() {
     private lateinit var binding: FragmentSearchNextBinding
 
-    private lateinit var searchApi: SearchApi
+    @Inject
+    lateinit var searchApi: SearchApi
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
@@ -76,12 +77,6 @@ class SearchNextFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.deezer.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        searchApi = retrofit.create(SearchApi::class.java)
         search()
 
         searchNextViewModel.searchResults.observe(viewLifecycleOwner) {

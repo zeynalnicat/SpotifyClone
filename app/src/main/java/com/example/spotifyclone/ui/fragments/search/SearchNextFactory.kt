@@ -2,7 +2,7 @@ package com.example.spotifyclone.ui.fragments.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.spotifyclone.network.deezer.SearchApi
+import com.example.spotifyclone.network.retrofit.api.deezer.SearchApi
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 

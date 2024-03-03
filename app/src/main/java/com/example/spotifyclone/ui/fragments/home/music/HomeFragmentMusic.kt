@@ -11,16 +11,20 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.spotifyclone.databinding.FragmentHomeMusicBinding
 import com.example.spotifyclone.model.deezer.DeezerTrack
-import com.example.spotifyclone.network.deezer.TrackApi
+import com.example.spotifyclone.network.retrofit.api.deezer.TrackApi
 import com.example.spotifyclone.resource.Resource
 import com.example.spotifyclone.ui.fragments.home.music.adapter.TrackAdapter
+import dagger.hilt.android.AndroidEntryPoint
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class HomeFragmentMusic : Fragment() {
     private lateinit var binding: FragmentHomeMusicBinding
 
 
+    @Inject
     lateinit var trackApi: TrackApi
 
     private val homeMusicViewModel: HomeMusicViewModel by viewModels { HomeMusicFactory(trackApi) }
@@ -35,11 +39,7 @@ class HomeFragmentMusic : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.deezer.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        trackApi = retrofit.create(TrackApi::class.java)
+
         homeMusicViewModel.getTracks()
 
         homeMusicViewModel.tracks.observe(viewLifecycleOwner) {

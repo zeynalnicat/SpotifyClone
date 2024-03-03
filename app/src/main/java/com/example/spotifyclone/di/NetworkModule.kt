@@ -1,9 +1,12 @@
 package com.example.spotifyclone.di
 
+import com.example.spotifyclone.model.deezer.search.Search
 import com.example.spotifyclone.network.retrofit.TokenRefresher
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
 import com.example.spotifyclone.network.retrofit.api.ArtistsApi
 import com.example.spotifyclone.network.retrofit.api.CategoriesApi
+import com.example.spotifyclone.network.retrofit.api.deezer.SearchApi
+import com.example.spotifyclone.network.retrofit.api.deezer.TrackApi
 import com.example.spotifyclone.network.retrofit.consts.ConstValues
 import dagger.Module
 import dagger.Provides
@@ -14,9 +17,12 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
+import javax.inject.Named
 import javax.inject.Singleton
 
 const val url = "https://api.spotify.com/v1/"
+const val urlDeezer = "https://api.deezer.com/"
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
@@ -83,6 +89,25 @@ class NetworkModule {
     fun provideTokenRefresher(constValues: ConstValues, okHttpClient: OkHttpClient): TokenRefresher {
         return TokenRefresher(constValues, okHttpClient)
     }
+
+
+    @Named("DeezerApi")
+    @Singleton
+    @Provides
+    fun provideDeezerRetrofit():Retrofit{
+        return Retrofit.Builder()
+            .baseUrl(urlDeezer)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideSearchApi(@Named("DeezerApi") retrofit: Retrofit):SearchApi = retrofit.create(SearchApi::class.java)
+
+    @Singleton
+    @Provides
+    fun provideTrackApi(@Named("DeezerApi") retrofit: Retrofit):TrackApi = retrofit.create(TrackApi::class.java)
 
 
 }

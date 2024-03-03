@@ -26,7 +26,7 @@ import com.example.spotifyclone.model.artist.Artist
 import com.example.spotifyclone.model.dto.Album
 import com.example.spotifyclone.model.dto.LikedSongs
 import com.example.spotifyclone.model.dto.MusicItem
-import com.example.spotifyclone.network.deezer.TrackApi
+import com.example.spotifyclone.network.retrofit.api.deezer.TrackApi
 import com.example.spotifyclone.network.retrofit.TokenRefresher
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
 import com.example.spotifyclone.network.retrofit.api.ArtistsApi
@@ -62,7 +62,8 @@ class FragmentHomeGeneral : Fragment() {
     @Inject
     lateinit var tokenRefresher: TokenRefresher
 
-    private lateinit var trackApi: TrackApi
+    @Inject
+    lateinit var trackApi: TrackApi
 
 
     private val homeViewModel: HomeViewModel by viewModels {
@@ -89,12 +90,6 @@ class FragmentHomeGeneral : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.deezer.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        trackApi = retrofit.create(TrackApi::class.java)
 
 
         homeViewModel.newReleases.observe(viewLifecycleOwner) {

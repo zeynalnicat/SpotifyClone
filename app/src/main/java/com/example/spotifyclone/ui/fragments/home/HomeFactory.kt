@@ -2,7 +2,7 @@ package com.example.spotifyclone.ui.fragments.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.spotifyclone.network.deezer.TrackApi
+import com.example.spotifyclone.network.retrofit.api.deezer.TrackApi
 import com.example.spotifyclone.network.retrofit.TokenRefresher
 
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
