@@ -43,6 +43,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sharedPreference: SharedPreference
     private var position = 0
 
+    override fun attachBaseContext(newBase: Context) {
+        val updatedContext = updateLocale(newBase)
+        super.attachBaseContext(updatedContext)
+    }
+
+    private fun updateLocale(context: Context): Context {
+        val savedLanguage = LanguageHelper.getSavedLanguage(context)
+        return LanguageHelper.setLocale(context, savedLanguage)
+    }
     override fun onStart() {
         super.onStart()
         startService()

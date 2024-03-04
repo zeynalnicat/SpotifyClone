@@ -54,19 +54,19 @@ class SignUp2 : Fragment() {
             when {
                 password.isEmpty() -> Snackbar.make(
                     requireView(),
-                    "Password is missing",
+                    R.string.sign_missing_password,
                     Snackbar.LENGTH_SHORT
                 ).view
 
                 email.isEmpty() -> Snackbar.make(
                     requireView(),
-                    "Email is missing ",
+                    R.string.sign_missing_email,
                     Snackbar.LENGTH_SHORT
                 ).view
 
                 email.isEmpty() && password.isEmpty() -> Snackbar.make(
                     requireView(),
-                    "Email and password missing",
+                    R.string.sign_missing_both,
                     Snackbar.LENGTH_SHORT
                 ).view
 
@@ -93,8 +93,8 @@ class SignUp2 : Fragment() {
 
     private fun adaptLayout() {
         binding.edtEmail.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
-        binding.txtNeed.text = "Use at least 8 characters."
-        binding.labelEdt.text = "Create a password"
+        binding.txtNeed.setText(R.string.sign_use_at_least)
+        binding.labelEdt.setText(R.string.sign_create_password)
         binding.edtEmail.inputType =
             InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
     }

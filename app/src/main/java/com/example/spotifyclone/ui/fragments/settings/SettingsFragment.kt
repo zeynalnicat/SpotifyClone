@@ -88,16 +88,16 @@ class SettingsFragment : Fragment() {
 
     private fun setAdapter() {
         val settingsItem = listOf(
-            SettingItem("Account"),
-            SettingItem("Data Saver"),
-            SettingItem("Languages", true),
-            SettingItem("Playback"),
-            SettingItem("Explicit Content"),
-            SettingItem("Devices"),
-            SettingItem("Car"),
-            SettingItem("Social"),
-            SettingItem("Storage"),
-            SettingItem("Log out", isLogout = true)
+            SettingItem(R.string.setting_account),
+            SettingItem(R.string.setting_data),
+            SettingItem(R.string.setting_language, true,R.id.action_settingsFragment_to_chooseLanguageFragment),
+            SettingItem(R.string.setting_playback),
+            SettingItem(R.string.setting_explicit),
+            SettingItem(R.string.setting_device),
+            SettingItem(R.string.setting_car),
+            SettingItem(R.string.setting_social),
+            SettingItem(R.string.setting_storage),
+            SettingItem(R.string.setting_logout, isLogout = true)
         )
         val adapter = SettingsAdapter({ findNavController().navigate(it) }, { logout() })
         adapter.submitList(settingsItem)

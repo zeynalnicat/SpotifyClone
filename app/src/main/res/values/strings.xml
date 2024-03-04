@@ -87,5 +87,40 @@
     <string name="search_txt_play_love">Play what you love</string>
     <string name="search_txt_search_for">Search for songs</string>
 
+    <string name="language">Choose language</string>
+
+
+    <string name="navigation_home">Home</string>
+    <string name="navigation_search">Search</string>
+    <string name="navigation_library">Your Library</string>
+
+    <string name="txt_playlist_edit">Edit</string>
+
+
+    <string name="setting_account">Account</string>
+    <string name="setting_data">Data Saver</string>
+    <string name="setting_language">Languages</string>
+    <string name="setting_playback">Playback</string>
+    <string name="setting_explicit">Explicit Content</string>
+    <string name="setting_device">Devices</string>
+    <string name="setting_car">Car</string>
+    <string name="setting_social">Social</string>
+    <string name="setting_storage">Storage</string>
+    <string name="setting_logout">Log out</string>
+
+    <string name="sign_create_password">Create a password </string>
+
+    <string name="sign_use_at_least">Use at least 8 characters.</string>
+
+    <string name="sign_missing_password">Password is missing!</string>
+    <string name="sign_missing_email">Email is missing!</string>
+    <string name="sign_missing_both">Email and password missing!</string>
+
+
+    <string name="login_email">Email or username</string>
+    <string name="login_password">Password</string>
+    <string name="login_login">Log in</string>
+
+    <string name="sign_snackbar_email">Fill the user credential!</string>
 
 </resources>

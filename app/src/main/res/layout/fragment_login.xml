@@ -44,7 +44,7 @@
         android:id="@+id/labelEdt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Email or username"
+        android:text="@string/login_email"
         android:textColor="@color/white"
         android:textSize="35sp"
         android:textStyle="bold"
@@ -71,7 +71,7 @@
     android:id="@+id/txtPassword"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="Password"
+    android:text="@string/login_password"
     android:textColor="@color/white"
     android:layout_marginTop="20dp"
     android:textSize="35sp"
@@ -109,13 +109,13 @@
     </FrameLayout>
 
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnNext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:background="@drawable/btn_next"
-        android:text="Log in"
+        android:text="@string/login_login"
         android:textAllCaps="false"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"

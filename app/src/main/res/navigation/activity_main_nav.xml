@@ -177,6 +177,9 @@
             app:destination="@id/startFragment"
             app:popUpTo="@id/activity_main_nav"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_settingsFragment_to_chooseLanguageFragment"
+            app:destination="@id/chooseLanguageFragment" />
     </fragment>
     <fragment
         android:id="@+id/userLibraryFragment"
@@ -245,6 +248,10 @@
         android:name="com.example.spotifyclone.ui.fragments.single_genre.SingleCategoryFragment"
         android:label="fragment_single_category"
         tools:layout="@layout/fragment_single_category" />
-
+    <fragment
+        android:id="@+id/chooseLanguageFragment"
+        android:name="com.example.spotifyclone.ui.fragments.choose_lang.ChooseLanguageFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_choose_language" />
 
 </navigation>

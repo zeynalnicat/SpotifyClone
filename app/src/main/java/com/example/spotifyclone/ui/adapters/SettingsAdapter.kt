@@ -39,7 +39,7 @@ class SettingsAdapter(private val nav: (Int) -> Unit, private val logout: () -> 
     inner class ViewHolder(private val binding: ItemSettingsBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(current: SettingItem) {
-            binding.txtSectionName.text = current.name
+            binding.txtSectionName.setText(current.name)
             if (current.canNavigate) {
                 binding.cardView.setOnClickListener {
                     current.navTo?.let {

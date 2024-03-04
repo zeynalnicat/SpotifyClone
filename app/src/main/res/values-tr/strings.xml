@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SpotifyClone</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Merhaba boş fragman</string>
+    <string name="startL_header1">Milyonlarca Şarkı.</string>
+    <string name="startL_header2">Spotify\'da Ücretsiz.</string>
+    <string name="startL_btn_signUp">Ücretsiz Kaydol</string>
+    <string name="startL_btn_google">Google ile Devam Et</string>
+    <string name="startL_btn_facebook">Facebook ile Devam Et</string>
+    <string name="startL_txt_login">Giriş Yap</string>
+
+    <string name="sign_txt_create">Hesap Oluştur</string>
+    <string name="sign_txt_label">E-postanız nedir?</string>
+    <string name="sign_txt_description">Bu e-postayı daha sonra onaylamanız gerekecek.</string>
+    <string name="sign_btn_next">Sonraki</string>
+
+    <string name="sign3_txt_label">Cinsiyetiniz nedir?</string>
+    <string name="sign3_btn_men">Erkek</string>
+    <string name="sign3_btn_women">Kadın</string>
+    <string name="sign3_btn_other">Diğer</string>
+
+    <string name="sign4_txt_label">Adınız nedir?</string>
+    <string name="sign4_txt_description">Bu, Spotify profilinizde görünecek.</string>
+    <string name="sign4_txt_agree">Hesap Oluştur\'a dokunarak, Spotify Kullanım Koşullarını kabul edersiniz.</string>
+    <string name="sign4_txt_terms">Kullanım Koşulları</string>
+    <string name="sign4_txt_agree2">Spotify\'ın kişisel verilerinizi nasıl topladığını, kullandığını, paylaştığını ve koruduğunu öğrenmek için lütfen Spotify Gizlilik Politikasını inceleyin.</string>
+    <string name="sign4_txt_privacy">Gizlilik Politikası</string>
+    <string name="sign4_txt_accept">Lütfen bana Spotify\'dan haber ve teklifler gönderin</string>
+    <string name="sign4_txt_accept2">Kayıt verilerimi Spotify\'ın içerik sağlayıcılarıyla pazarlama amaçlarıyla paylaşın</string>
+    <string name="sign4_btn_create">Hesap Oluştur</string>
+
+    <string name="choose_txt_header">Beğendiğiniz 3 veya daha fazla sanatçı seçin.</string>
+
+    <string name="home_txt_welcome">Günaydın!</string>
+    <string name="home_btn_music">Müzik</string>
+    <string name="home_btn_podcast">Podcast\'ler</string>
+    <string name="home_txt_recently">Son Oynatılanlar</string>
+    <string name="home_txt_try">Çünkü sevdiğiniz için</string>
+    <string name="home_txt_popular">Popüler Albümler</string>
+    <string name="home_txt_recommended">Önerilen Albümler</string>
+    <string name="home_txt_new">Yeni Çıkışlar</string>
+    <string name="home_txt_all">Hepsi</string>
+
+    <string name="search_txt_search">Ne dinlemek istersiniz?</string>
+    <string name="search_txt_top_genre">En çok dinlediğiniz türler</string>
+    <string name="search_txt_popular_genre">Popüler podcast kategorileri</string>
+    <string name="search_txt_browse_all">Tümünü Gözat</string>
+    <string name="search_txt_cancel">İptal</string>
+
+    <string name="library_txt_header">Kütüphaneniz</string>
+    <string name="library_txt_liked_songs">Beğenilen Şarkılar</string>
+
+    <string name="library_txt_playlist">Çalma Listesi</string>
+    <string name="library_txt_songs">şarkılar</string>
+
+    <string name="settings_txt_header">Ayarlar</string>
+    <string name="settings_txt_view_profile">Profili Görüntüle</string>
+
+    <string name="playlist_txt_header">Çalma listenize bir isim verin</string>
+    <string name="playlist_txt_create">Oluştur</string>
+    <string name="playlist_txt_saves">kaydetme</string>
+    <string name="playlist_txt_find">Çalma listesinde bul</string>
+    <string name="playlist_txt_remove">Çalma listesinden kaldır</string>
+
+    <string name="bottom_sheet_txt_liked">Beğenilen Şarkılara Ekle</string>
+    <string name="bottom_sheet_txt_playlist">Çalma listesine ekle</string>
+    <string name="bottom_sheet_txt_remove">Beğenilen Şarkılardan Kaldır</string>
+
+    <string name="add_playlist_txt">Çalma listesine ekle</string>
+    <string name="add_playlist_txt_find">Çalma listesini bul</string>
+    <string name="add_playlist_btn_done">Tamamlandı</string>
+
+    <string name="liked_songs_txt_find">Beğenilen şarkılarda bul</string>
+    <string name="liked_songs_txt_header">Beğenilen Şarkılar</string>
+
+    <string name="edit_txt_edit">Profili Düzenle</string>
+    <string name="edit_text_save">Kaydet</string>
+    <string name="edit_txt_name">Ad</string>
+
+    <string name="search_txt_play_love">Sevdiğin şeyi çal</string>
+    <string name="search_txt_search_for">Şarkı ara</string>
+
+    <string name="language">Dil Seçimi</string>
+
+    <string name="navigation_home">Ana Sayfa</string>
+    <string name="navigation_search">Ara</string>
+    <string name="navigation_library">Kütüphaneniz</string>
+
+    <string name="txt_playlist_edit">Düzenle</string>
+
+    <string name="setting_account">Hesap</string>
+    <string name="setting_data">Veri Tasarrufu</string>
+    <string name="setting_language">Diller</string>
+    <string name="setting_playback">Oynatma</string>
+    <string name="setting_explicit">Açık İçerik</string>
+    <string name="setting_device">Cihazlar</string>
+    <string name="setting_car">Araç</string>
+    <string name="setting_social">Sosyal</string>
+    <string name="setting_storage">Depolama</string>
+    <string name="setting_logout">Çıkış Yap</string>
+
+
+    <string name="sign_create_password">Şifreni oluştur</string>
+    <string name="sign_use_at_least">En az 8 karakter kullan</string>
+
+    <string name="sign_missing_password">Şifre girin!</string>
+    <string name="sign_missing_email">E-posta adresini girin!</string>
+    <string name="sign_missing_both">E-posta adresi və şifreni girin!</string>
+
+    <string name="login_email">E-posta adresi</string>
+    <string name="login_password">Şifre</string>
+    <string name="login_login">Giriş yapın</string>
+    <string name="sign_snackbar_email">E-posta adresini girin!</string>
+</resources>

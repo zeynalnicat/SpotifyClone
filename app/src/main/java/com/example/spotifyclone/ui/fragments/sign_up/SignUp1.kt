@@ -43,7 +43,7 @@ class SignUp1 : Fragment() {
         binding.btnNext.setOnClickListener {
             val edtEmail = binding.edtEmail.text.toString()
             if (edtEmail.isEmpty()) {
-                Snackbar.make(requireView(), "Fill the user credential", Snackbar.LENGTH_SHORT)
+                Snackbar.make(requireView(), R.string.sign_snackbar_email, Snackbar.LENGTH_SHORT)
                     .show()
             } else {
                 val bundle = Bundle()
