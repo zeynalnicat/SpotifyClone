@@ -22,17 +22,21 @@ class HomeMusicViewModel(private val trackApi: TrackApi) : ViewModel() {
 
         _tracks.postValue(Resource.Loading)
         val ids = listOf(
-            3135556,
-            3135544,
-            3135534,
+            655096022,
+            66402090,
+            1157470,
             3135524,
-            3135539,
-            3135512,
-            3135598,
-            3135584,
-            3135571,
-            3135559,
-            3135542
+            2317363,
+            1474534502,
+            117300904,
+            67064117,
+            528330501,
+            416180702,
+            1733665717,
+            831601252,
+            595112162,
+            64482460
+
         )
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -47,12 +51,9 @@ class HomeMusicViewModel(private val trackApi: TrackApi) : ViewModel() {
                             track?.let {
                                 list.add(it)
                             }
+                            _tracks.postValue(Resource.Success(list))
                         }
                     }
-                }
-
-                withContext(Dispatchers.Main){
-                    _tracks.postValue(Resource.Success(list))
                 }
 
             } catch (e: Exception) {

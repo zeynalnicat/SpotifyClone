@@ -69,6 +69,8 @@ class AddPlaylistFragment : Fragment() {
             track = it.getSerializable("track") as MusicItem
         }
 
+        Log.d("track",track.toString())
+
         addPlaylistViewModel.playlists.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Success -> {
@@ -96,6 +98,7 @@ class AddPlaylistFragment : Fragment() {
 
                     binding.btnAdd.setOnClickListener { view ->
                         addPlaylistViewModel.addFirebase(it, track!!)
+
                     }
 
                 }

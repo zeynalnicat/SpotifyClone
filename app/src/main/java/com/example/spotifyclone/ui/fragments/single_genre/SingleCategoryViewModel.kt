@@ -33,10 +33,11 @@ class SingleCategoryViewModel(private val trackApi: TrackApi):ViewModel() {
                             response.body()?.let {
                                 listTracks.add(it)
                             }
+                            _tracks.postValue(Resource.Success(listTracks))
                         }
                     }
                 }
-                _tracks.postValue(Resource.Success(listTracks))
+
 
             }catch (e:Exception){
                     _tracks.postValue(Resource.Error(e))

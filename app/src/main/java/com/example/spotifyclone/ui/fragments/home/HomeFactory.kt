@@ -16,10 +16,11 @@ class HomeFactory(
     private val firestore: FirebaseFirestore,
     private val firebaseAuth: FirebaseAuth,
     private val tokenRefresher: TokenRefresher,
-    private val trackApi: TrackApi
+    private val trackApi: TrackApi,
+    private val albumDeezerApi: com.example.spotifyclone.network.retrofit.api.deezer.AlbumApi
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return HomeViewModel(albumApi, artistApi, firestore, firebaseAuth, tokenRefresher,trackApi) as T
+        return HomeViewModel(albumApi, artistApi, firestore, firebaseAuth, tokenRefresher,trackApi,albumDeezerApi) as T
     }
 }

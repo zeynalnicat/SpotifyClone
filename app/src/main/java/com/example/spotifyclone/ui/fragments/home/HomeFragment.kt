@@ -52,8 +52,11 @@ class HomeFragment : Fragment() {
     @Inject
     lateinit var tokenRefresher: TokenRefresher
 
-    private lateinit var trackApi: TrackApi
+    @Inject
+    lateinit var trackApi: TrackApi
 
+    @Inject
+    lateinit var albumDeezerApi: com.example.spotifyclone.network.retrofit.api.deezer.AlbumApi
 
     private val homeViewModel: HomeViewModel by viewModels {
         HomeFactory(
@@ -62,7 +65,8 @@ class HomeFragment : Fragment() {
             firestore,
             firebaseAuth,
             tokenRefresher,
-            trackApi
+            trackApi,
+            albumDeezerApi
         )
     }
 
@@ -72,11 +76,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater)
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://api.deezer.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        trackApi = retrofit.create(TrackApi::class.java)
+
         setLayout()
         setTextHeader()
         setDrawer()

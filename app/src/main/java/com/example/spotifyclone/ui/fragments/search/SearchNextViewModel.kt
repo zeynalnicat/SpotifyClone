@@ -36,7 +36,7 @@ class SearchNextViewModel(private val searchApi: SearchApi, private val firestor
                             SearchModel(
                                 it.title,
                                 it.artist.name,
-                                it.album.cover_medium,
+                                it.album.cover_xl,
                                 it.preview
                             )
                         }

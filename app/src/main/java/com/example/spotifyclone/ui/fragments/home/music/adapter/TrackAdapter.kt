@@ -47,7 +47,7 @@ class TrackAdapter : RecyclerView.Adapter<TrackAdapter.ViewHolder>() {
             binding.txtTrackName.text = current.title
 
             Glide.with(binding.root)
-                .load(current.album.cover_medium)
+                .load(current.album.cover_xl)
                 .into(binding.imgTrack)
 
             Glide.with(binding.root)

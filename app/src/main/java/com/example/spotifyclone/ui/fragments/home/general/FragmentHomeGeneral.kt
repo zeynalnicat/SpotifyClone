@@ -1,20 +1,26 @@
 package com.example.spotifyclone.ui.fragments.home
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.ui.adapters.ArtistAdapter
@@ -77,6 +83,8 @@ class FragmentHomeGeneral : Fragment() {
 
     private lateinit var sharedPreference: SharedPreference
 
+    @Inject
+    lateinit var albumDeezerApi: com.example.spotifyclone.network.retrofit.api.deezer.AlbumApi
 
     private val homeViewModel: HomeViewModel by viewModels {
         HomeFactory(
@@ -85,7 +93,8 @@ class FragmentHomeGeneral : Fragment() {
             firestore,
             firebaseAuth,
             tokenRefresher,
-            trackApi
+            trackApi,
+            albumDeezerApi
         )
     }
 
@@ -103,6 +112,18 @@ class FragmentHomeGeneral : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        observeDatas()
+
+        homeViewModel.getNewRelease()
+        homeViewModel.getArtist()
+        homeViewModel.getPopularAlbums()
+        homeViewModel.setRecommended()
+        homeViewModel.getTopMusics()
+
+
+    }
+
+    private fun observeDatas() {
 
         homeViewModel.newReleases.observe(viewLifecycleOwner) {
             when (it) {
@@ -161,7 +182,7 @@ class FragmentHomeGeneral : Fragment() {
             }
         }
 
-        homeViewModel.getTopMusics()
+
 
         homeViewModel.popularAlbums.observe(viewLifecycleOwner) {
             when (it) {
@@ -204,11 +225,25 @@ class FragmentHomeGeneral : Fragment() {
 
             }
         }
-        homeViewModel.getNewRelease()
-        homeViewModel.getArtist()
-        homeViewModel.getPopularAlbums()
-        homeViewModel.setRecommended()
 
+        homeViewModel.someAlbums.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Success -> {
+                    deezerAlbums(it.data)
+                }
+
+                is Resource.Error -> {
+                    binding.txtRecommend.visibility = View.GONE
+                    binding.recyclerViewRecommended.visibility = View.GONE
+//                    Toast.makeText(requireContext(), it.exception.message ?: "", Toast.LENGTH_SHORT)
+//                        .show()
+                }
+
+                is Resource.Loading -> {}
+
+
+            }
+        }
     }
 
     private fun setTopMusics(data: List<MusicItem>) {
@@ -254,7 +289,7 @@ class FragmentHomeGeneral : Fragment() {
     }
 
 
-    private fun setNewRelease(list: List<Item>) {
+    private fun setNewRelease(list: List<Album>) {
 
         val adapter =
             AlbumAdapter {
@@ -263,8 +298,7 @@ class FragmentHomeGeneral : Fragment() {
                     it
                 )
             }
-        val albums = list.map { Album(it.images[0].url, it.id, it.name, emptyList()) }
-        adapter.submitList(albums)
+        adapter.submitList(list)
         binding.recyclerViewNewRelease.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.recyclerViewNewRelease.adapter = adapter
@@ -289,7 +323,7 @@ class FragmentHomeGeneral : Fragment() {
     }
 
 
-    private fun setPopularAlbums(list: List<com.example.spotifyclone.model.album.popularalbums.Album>) {
+    private fun setPopularAlbums(list: List<Album>) {
 
         val adapter =
             AlbumAdapter {
@@ -298,8 +332,8 @@ class FragmentHomeGeneral : Fragment() {
                     it
                 )
             }
-        val albums = list.map { Album(it.images[0].url, it.id, it.name, emptyList()) }
-        adapter.submitList(albums)
+
+        adapter.submitList(list)
         binding.recyclerViewPopular.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.recyclerViewPopular.adapter = adapter
@@ -322,4 +356,105 @@ class FragmentHomeGeneral : Fragment() {
     }
 
 
+    private fun deezerAlbums(list: List<Album>) {
+
+    }
 }
+
+
+//  val constraintLayout: ConstraintLayout = binding.constraintLayout
+//        var previousViewId = binding.recyclerViewRecommended.id
+//
+//        // Create layout params for TextView
+//        val textLayoutParams = ConstraintLayout.LayoutParams(
+//            0,
+//            ConstraintLayout.LayoutParams.WRAP_CONTENT
+//        )
+//
+//
+//        val textView = TextView(requireContext())
+//        textView.id = View.generateViewId()
+//        textView.text = "For you"
+//        textView.setTextColor(Color.WHITE)
+//        textView.textSize = 20f
+//        constraintLayout.addView(textView, textLayoutParams)
+//
+//        // Create layout params for RecyclerView
+//        val recyclerLayoutParams = ConstraintLayout.LayoutParams(
+//            0,
+//            ConstraintLayout.LayoutParams.WRAP_CONTENT
+//        )
+//
+//
+//        val recyclerView = RecyclerView(requireContext()).apply {
+//            id = View.generateViewId()
+//            itemAnimator = null
+//            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+//        }
+//
+//
+//
+//
+//        constraintLayout.addView(recyclerView, recyclerLayoutParams)
+//
+//
+//        val textViewConstraints = ConstraintSet()
+//        textViewConstraints.clone(constraintLayout)
+//
+//        textViewConstraints.connect(
+//            textView.id,
+//            ConstraintSet.TOP,
+//            previousViewId,
+//            ConstraintSet.BOTTOM
+//        )
+//        textViewConstraints.connect(
+//            textView.id,
+//            ConstraintSet.START,
+//            binding.recyclerViewRecommended.id,
+//            ConstraintSet.START
+//        )
+//        textViewConstraints.connect(
+//            textView.id,
+//            ConstraintSet.END,
+//            binding.recyclerViewRecommended.id,
+//            ConstraintSet.END
+//        )
+//
+//        val adapter = AlbumAdapter {
+//            findNavController().navigate(
+//                R.id.action_homeFragment_to_albumViewFragment,
+//                it
+//            )
+//        }
+//
+//        adapter.submitList(list.toMutableList())
+//        recyclerView.adapter = adapter
+//        textViewConstraints.applyTo(constraintLayout)
+//
+//        textViewConstraints.clone(constraintLayout)
+//
+//        textViewConstraints.connect(
+//            recyclerView.id,
+//            ConstraintSet.TOP,
+//            textView.id,
+//            ConstraintSet.BOTTOM
+//        )
+//        textViewConstraints.connect(
+//            recyclerView.id,
+//            ConstraintSet.START,
+//            binding.recyclerViewRecommended.id,
+//            ConstraintSet.START
+//        )
+//        textViewConstraints.connect(
+//            recyclerView.id,
+//            ConstraintSet.END,
+//            binding.recyclerViewRecommended.id,
+//            ConstraintSet.END
+//        )
+//
+//        textViewConstraints.applyTo(constraintLayout)
+//
+//        previousViewId = recyclerView.id
+//
+//    }
+

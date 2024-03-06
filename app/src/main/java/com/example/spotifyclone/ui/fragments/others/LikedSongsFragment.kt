@@ -151,7 +151,7 @@ class LikedSongsFragment : Fragment() {
 
         view.viewAddPlaylist.setOnClickListener {
             val bundle = Bundle()
-            val model = MusicItem(musicItem.artist, musicItem.name, musicItem.imgUri, musicItem.uri)
+            val model = MusicItem(artist = musicItem.artist, id="" , name = musicItem.name, img = musicItem.imgUri, trackUri = musicItem.uri)
             bundle.putSerializable("track", model)
             findNavController().navigate(
                 R.id.action_likedSongsFragment_to_addPlaylistFragment,

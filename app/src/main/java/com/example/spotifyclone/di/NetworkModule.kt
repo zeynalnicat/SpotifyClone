@@ -1,5 +1,6 @@
 package com.example.spotifyclone.di
 
+import com.example.spotifyclone.model.deezer.album.Album
 import com.example.spotifyclone.network.retrofit.TokenRefresher
 import com.example.spotifyclone.network.retrofit.api.AlbumApi
 import com.example.spotifyclone.network.retrofit.api.ArtistsApi
@@ -100,6 +101,10 @@ class NetworkModule {
     @Singleton
     @Provides
     fun provideTrackApi(@Named("DeezerApi") retrofit: Retrofit):TrackApi = retrofit.create(TrackApi::class.java)
+
+    @Singleton
+    @Provides
+    fun provideDeezerAlbumApi(@Named("DeezerApi") retrofit: Retrofit):com.example.spotifyclone.network.retrofit.api.deezer.AlbumApi = retrofit.create(com.example.spotifyclone.network.retrofit.api.deezer.AlbumApi::class.java)
 
 
 }

@@ -104,15 +104,15 @@ class SingleCategoryFragment : Fragment() {
         )
         val model = data.map {
             LikedSongs(
-                it.title,
-                it.artist.name,
-                it.album.cover_medium,
-                it.preview,
+                name = it.title,
+                artist = it.artist.name,
+                imgUri = it.album.cover_medium,
+                uri = it.preview,
                 isFromGenre = true
             )
         }
         adapter.submitList(model)
-        tracks = model.map { MusicItem(it.artist,"",it.name,it.uri,it.imgUri) }
+        tracks = model.map { MusicItem(artist = it.artist,id= "", name = it.name, trackUri = it.uri, img = it.imgUri) }
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.recyclerView.adapter = adapter
     }

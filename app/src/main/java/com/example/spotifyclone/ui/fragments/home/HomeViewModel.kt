@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.spotifyclone.model.album.newrelease.Item
 import com.example.spotifyclone.model.artist.Artist
+import com.example.spotifyclone.model.dto.Album
 import com.example.spotifyclone.model.dto.MusicItem
 import com.example.spotifyclone.model.firebase.Albums
 import com.example.spotifyclone.model.firebase.Tracks
@@ -35,36 +36,40 @@ class HomeViewModel(
     private val firestore: FirebaseFirestore,
     private val firebaseAuth: FirebaseAuth,
     private val tokenRefresher: TokenRefresher,
-    private val trackApi: TrackApi
+    private val trackApi: TrackApi,
+    private val albumDeezerApi: com.example.spotifyclone.network.retrofit.api.deezer.AlbumApi
 ) : ViewModel() {
 
     private val _date = MutableLiveData<String>()
-    private val _newReleases = MutableLiveData<Resource<List<Item>>>()
+    private val _newReleases = MutableLiveData<Resource<List<Album>>>()
     private val _popularAlbums =
-        MutableLiveData<Resource<List<com.example.spotifyclone.model.album.popularalbums.Album>>>()
+        MutableLiveData<Resource<List<Album>>>()
     private val _artists = MutableLiveData<Resource<List<Artist>>>()
     private val _recommended =
-        MutableLiveData<Resource<List<com.example.spotifyclone.model.dto.Album>>>()
+        MutableLiveData<Resource<List<Album>>>()
 
     private val _topMusics = MutableLiveData<Resource<List<MusicItem>>>()
 
-    val topMusics : LiveData<Resource<List<MusicItem>>> get() = _topMusics
+    private val _someAlbums =
+        MutableLiveData<Resource<List<Album>>>()
 
+    val topMusics: LiveData<Resource<List<MusicItem>>> get() = _topMusics
+
+    val someAlbums: LiveData<Resource<List<Album>>> get() = _someAlbums
     val date: LiveData<String>
         get() = _date
 
-    val newReleases: LiveData<Resource<List<Item>>>
+    val newReleases: LiveData<Resource<List<Album>>>
         get() = _newReleases
 
-    val popularAlbums: LiveData<Resource<List<com.example.spotifyclone.model.album.popularalbums.Album>>>
+    val popularAlbums: LiveData<Resource<List<Album>>>
         get() = _popularAlbums
 
     val artists: LiveData<Resource<List<Artist>>>
         get() = _artists
 
-    val recommended: LiveData<Resource<List<com.example.spotifyclone.model.dto.Album>>>
+    val recommended: LiveData<Resource<List<Album>>>
         get() = _recommended
-
 
 
     private suspend fun <T> refreshTokenAndExecute(apiCall: suspend () -> Response<T>): Response<T> {
@@ -95,18 +100,21 @@ class HomeViewModel(
     fun getNewRelease() {
         viewModelScope.launch {
             try {
-                val response =  albumApi.getNewReleases()
+                val response = albumApi.getNewReleases()
                 if (response.isSuccessful) {
                     val result = response.body()?.albums?.items
                     result?.let {
-                        _newReleases.postValue(Resource.Success(it))
+                        val model = it.map { Album(it.images[0].url,it.id,it.name, emptyList()) }
+                        _newReleases.postValue(Resource.Success(model))
                     }
 
                 } else {
                     _newReleases.postValue(Resource.Error(Exception("There was an error")))
+                    getDeezerAlbums()
                 }
             } catch (e: Exception) {
                 _newReleases.postValue(Resource.Error(e))
+                getDeezerAlbums()
             }
 
         }
@@ -117,19 +125,22 @@ class HomeViewModel(
             try {
                 val query =
                     "7bPTIw59JU8w3NntSpmEzo,78bpIziExqiI9qztvNFlQu,5pSk3c3wVwnb2arb6ohCPU,5VoeRuTrGhTbKelUfwymwu,0ODLCdHBFVvKwJGeSfd1jy"
-                val response =  albumApi.getSomeAlbums(query)
+                val response = albumApi.getSomeAlbums(query)
                 if (response.isSuccessful) {
                     val result = response.body()?.albums
                     result?.let {
-                        _popularAlbums.postValue(Resource.Success(it))
+                        val model = it.map { Album(it.images[0].url,it.id,it.name, emptyList()) }
+                        _popularAlbums.postValue(Resource.Success(model))
                     }
 
                 } else {
                     _popularAlbums.postValue(Resource.Error(Exception("There was an error")))
+                    getSomeAlbums()
                 }
 
             } catch (e: Exception) {
                 _popularAlbums.postValue(Resource.Error(e))
+                getSomeAlbums()
             }
 
         }
@@ -238,28 +249,110 @@ class HomeViewModel(
     }
 
 
-    fun getTopMusics(){
-        val idsMusic = listOf(89077549,509382892,82715364,6461432)
+    fun getTopMusics() {
+        val idsMusic = listOf(89077549, 509382892, 82715364, 6461432, 1151534112, 74427068)
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val listMusic = mutableListOf<MusicItem>()
 
-                idsMusic.forEach{
+                idsMusic.forEach {
                     val response = trackApi.getTrack(it)
-                    if(response.isSuccessful){
+                    if (response.isSuccessful) {
                         val result = response.body()
-                        result?.let {track->
-                            val musicItem = MusicItem(track.artist.name,"",track.title,track.preview,track.album.cover_medium)
+                        result?.let { track ->
+                            val musicItem = MusicItem(
+                                track.artist.name,
+                                "",
+                                track.title,
+                                track.preview,
+                                track.album.cover_xl
+                            )
                             listMusic.add(musicItem)
                         }
                     }
 
                     _topMusics.postValue(Resource.Success(listMusic))
-            }
-            }catch (e:Exception){
+                }
+            } catch (e: Exception) {
                 _topMusics.postValue(Resource.Error(e))
             }
         }
 
     }
+
+    fun getSomeAlbums() {
+        val albumIds = listOf(104188,988431,91598612, 7350949, 365439377, 219247562)
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val listMusic = mutableListOf<Album>()
+
+                albumIds.forEach {
+                    val response = albumDeezerApi.getAlbum(it)
+                    if (response.isSuccessful) {
+                        val result = response.body()
+                        result?.let {
+                            val albumItem = Album(
+                                it.cover_xl,
+                                "",
+                                it.title,
+                                it.tracks.data.map { track ->
+                                    Tracks(
+                                        track.artist.name,
+                                        "",
+                                        track.title,
+                                        track.preview,
+                                    )
+                                },isFirebase = true)
+                            listMusic.add(albumItem)
+                        }
+                        _popularAlbums.postValue(Resource.Success(listMusic))
+
+                    }
+                }
+
+            } catch (e: Exception) {
+                _popularAlbums.postValue(Resource.Error(e))
+            }
+        }
+    }
+
+
+    fun getDeezerAlbums(){
+        val albumIds = listOf(6470389,8864149,125290822,6000937,215835692)
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val listMusic = mutableListOf<Album>()
+
+                albumIds.forEach {
+                    val response = albumDeezerApi.getAlbum(it)
+                    if (response.isSuccessful) {
+                        val result = response.body()
+                        result?.let {
+                            val albumItem = Album(
+                                it.cover_xl,
+                                "",
+                                it.title,
+                                it.tracks.data.map { track ->
+                                    Tracks(
+                                        track.artist.name,
+                                        "",
+                                        track.title,
+                                        track.preview,
+                                    )
+                                },isFirebase = true)
+                            listMusic.add(albumItem)
+                        }
+                        _newReleases.postValue(Resource.Success(listMusic))
+
+                    }
+                }
+
+            } catch (e: Exception) {
+                _newReleases.postValue(Resource.Error(e))
+            }
+        }
+    }
+
 }
