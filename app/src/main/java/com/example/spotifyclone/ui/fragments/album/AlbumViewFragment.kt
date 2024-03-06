@@ -122,11 +122,19 @@ class AlbumViewFragment : Fragment() {
 
     private fun getAlbum() {
         if (album.isFirebase) {
-            saveAlbumDb(true)
+
+            if(album.isDeezer){
+               saveAlbumDb(true,true)
+                albumViewModel.checkInDB(album.id, true,true)
+            }else{
+                saveAlbumDb(true)
+                albumViewModel.checkInDB(album.id, true)
+            }
+
             binding.txtAlbumName.text = album.name
             binding.txtArtistName.text = album.tracks[0].artist
             imgAlbum = album.coverImg
-            albumViewModel.checkInDB(album.id, true)
+
             Glide.with(binding.root)
                 .load(album.coverImg)
                 .into(binding.imgAlbum)
@@ -269,9 +277,9 @@ class AlbumViewFragment : Fragment() {
         return sharedPreference.containsValue(value)
     }
 
-    private fun saveAlbumDb(isFirebase: Boolean) {
+    private fun saveAlbumDb(isFirebase: Boolean,isDeezer:Boolean=false) {
         binding.imgLike.setOnClickListener {
-            albumViewModel.saveDB(album.id, isFirebase)
+            albumViewModel.saveDB(album.id, isFirebase,isDeezer)
         }
 
     }

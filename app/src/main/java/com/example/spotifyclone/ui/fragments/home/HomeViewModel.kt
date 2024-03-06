@@ -262,7 +262,7 @@ class HomeViewModel(
                         result?.let { track ->
                             val musicItem = MusicItem(
                                 track.artist.name,
-                                "",
+                                ""+track.id,
                                 track.title,
                                 track.preview,
                                 track.album.cover_xl
@@ -294,7 +294,7 @@ class HomeViewModel(
                         result?.let {
                             val albumItem = Album(
                                 it.cover_xl,
-                                "",
+                                ""+it.id,
                                 it.title,
                                 it.tracks.data.map { track ->
                                     Tracks(
@@ -303,7 +303,7 @@ class HomeViewModel(
                                         track.title,
                                         track.preview,
                                     )
-                                },isFirebase = true)
+                                },isFirebase = true, isDeezer = true)
                             listMusic.add(albumItem)
                         }
                         _popularAlbums.postValue(Resource.Success(listMusic))
@@ -332,7 +332,7 @@ class HomeViewModel(
                         result?.let {
                             val albumItem = Album(
                                 it.cover_xl,
-                                "",
+                                ""+it.id,
                                 it.title,
                                 it.tracks.data.map { track ->
                                     Tracks(
@@ -341,7 +341,7 @@ class HomeViewModel(
                                         track.title,
                                         track.preview,
                                     )
-                                },isFirebase = true)
+                                },isFirebase = true, isDeezer = true)
                             listMusic.add(albumItem)
                         }
                         _newReleases.postValue(Resource.Success(listMusic))

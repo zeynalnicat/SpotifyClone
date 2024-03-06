@@ -9,5 +9,6 @@ data class Album (
     val name: String,
     val tracks: List<Tracks>,
     var isFirebase : Boolean = false,
-    var isLibrary : Boolean = false
+    var isLibrary : Boolean = false,
+    var isDeezer: Boolean = false
 ):Serializable

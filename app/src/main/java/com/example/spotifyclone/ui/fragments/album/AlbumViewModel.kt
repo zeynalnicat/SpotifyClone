@@ -50,12 +50,20 @@ class AlbumViewModel(
         }
     }
 
-    fun saveDB(albumId: String, isFirebase: Boolean) {
+    fun saveDB(albumId: String, isFirebase: Boolean,isDeezer:Boolean = false) {
         val userId = firebaseAuth.currentUser?.uid
         if (isFirebase) {
-            val albumRef = firestore.collection("firebaseAlbum")
-            val query = albumRef.whereEqualTo("userId", userId).whereEqualTo("albumId", albumId)
-            addFirebaseAlbum(query, albumRef, albumId, userId.toString())
+
+            if(isDeezer){
+                val albumRef = firestore.collection("deezerAlbum")
+                val query = albumRef.whereEqualTo("userId", userId).whereEqualTo("albumId", albumId)
+                addFirebaseAlbum(query, albumRef, albumId, userId.toString())
+            }else{
+                val albumRef = firestore.collection("firebaseAlbum")
+                val query = albumRef.whereEqualTo("userId", userId).whereEqualTo("albumId", albumId)
+                addFirebaseAlbum(query, albumRef, albumId, userId.toString())
+            }
+
         } else {
             val albumRef = firestore.collection("retrofitAlbum")
             val query = albumRef.whereEqualTo("userId", userId).whereEqualTo("albumId", albumId)
@@ -99,12 +107,19 @@ class AlbumViewModel(
     }
 
 
-    fun checkInDB(albumId: String, isFirebase: Boolean) {
+    fun checkInDB(albumId: String, isFirebase: Boolean,isDeezer: Boolean=false) {
         val userId = firebaseAuth.currentUser?.uid
         if (isFirebase) {
-            val albumRef = firestore.collection("firebaseAlbum")
-            val query = albumRef.whereEqualTo("userId", userId).whereEqualTo("albumId", albumId)
-            checkFirestore(query)
+            if(isDeezer){
+                val albumRef = firestore.collection("deezerAlbum")
+                val query = albumRef.whereEqualTo("userId", userId).whereEqualTo("albumId", albumId)
+                checkFirestore(query)
+            }else{
+                val albumRef = firestore.collection("firebaseAlbum")
+                val query = albumRef.whereEqualTo("userId", userId).whereEqualTo("albumId", albumId)
+                checkFirestore(query)
+            }
+
         } else {
             val albumRef = firestore.collection("retrofitAlbum")
             val query = albumRef.whereEqualTo("userId", userId).whereEqualTo("albumId", albumId)

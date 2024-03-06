@@ -39,11 +39,15 @@ class LibraryFragment : Fragment() {
     @Inject
     lateinit var firestore: FirebaseFirestore
 
+    @Inject
+    lateinit var deezerAlbumApi: com.example.spotifyclone.network.retrofit.api.deezer.AlbumApi
+
     private val libraryViewModel: LibraryViewModel by viewModels {
         LibraryFactor(
             albumApi,
             firebaseAuth,
-            firestore
+            firestore,
+            deezerAlbumApi
         )
     }
 
@@ -85,13 +89,34 @@ class LibraryFragment : Fragment() {
             }
         }
 
-        libraryViewModel.getAlbumFirestore()
+        libraryViewModel.deezerAlbums.observe(viewLifecycleOwner) {
+            when (it) {
+                is Resource.Success -> {
+                    binding.recyclerFirebase.visibility = View.VISIBLE
+                    setAdapterDeezer(it.data)
+                }
 
+                is Resource.Error -> {
+
+                }
+
+                is Resource.Loading -> {
+
+                }
+            }
+        }
+
+
+
+
+        libraryViewModel.getAlbumFirestore()
+        libraryViewModel.getDeezerAlbum()
         libraryViewModel.setSize()
         setAdapter()
         setNavigation()
         setDrawer()
     }
+
 
     private fun setNavigation() {
 
@@ -166,11 +191,26 @@ class LibraryFragment : Fragment() {
                     it
                 )
             }
-            val albums = it.map { Album(it.images[0].url, it.id, it.name, emptyList(), isLibrary = true) }
+            val albums =
+                it.map { Album(it.images[0].url, it.id, it.name, emptyList(), isLibrary = true) }
             adapter.submitList(albums)
             binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
             binding.recyclerView.adapter = adapter
         }
+    }
+
+    private fun setAdapterDeezer(data: List<Album>) {
+        val adapter = LibraryAlbumAdapter {
+            findNavController().navigate(
+                R.id.action_libraryFragment_to_albumViewFragment,
+                it
+            )
+        }
+        val albumsModel =
+            data.map { Album(it.coverImg, it.id, it.name, it.tracks, true, true, isDeezer = true) }
+        adapter.submitList(albumsModel)
+        binding.recyclerDeezer.layoutManager = GridLayoutManager(requireContext(), 1)
+        binding.recyclerDeezer.adapter = adapter
     }
 
 
@@ -181,7 +221,7 @@ class LibraryFragment : Fragment() {
                 it
             )
         }
-        val albumsModel = albums.map { Album(it.coverImg, it.id, it.name, it.tracks, true,true) }
+        val albumsModel = albums.map { Album(it.coverImg, it.id, it.name, it.tracks, true, true) }
         adapter.submitList(albumsModel)
         binding.recyclerFirebase.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerFirebase.adapter = adapter

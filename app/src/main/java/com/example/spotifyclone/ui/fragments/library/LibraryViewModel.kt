@@ -18,14 +18,18 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class LibraryViewModel(
     private val albumApi: AlbumApi,
     private val firebaseAuth: FirebaseAuth,
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
+    private val deezerApi: com.example.spotifyclone.network.retrofit.api.deezer.AlbumApi
 ) : ViewModel() {
 
     private val _likedAlbums = MutableLiveData<List<Album>>()
+    private val _deezerAlbums =
+        MutableLiveData<Resource<List<com.example.spotifyclone.model.dto.Album>>>()
     private val _albumIds = MutableLiveData<List<String>>()
     private val _count = MutableLiveData<Int>(0)
 
@@ -40,6 +44,9 @@ class LibraryViewModel(
 
     val albumIds: LiveData<List<String>>
         get() = _albumIds
+
+    val deezerAlbums: LiveData<Resource<List<com.example.spotifyclone.model.dto.Album>>>
+        get() = _deezerAlbums
 
     val likedAlbumsFirestore: LiveData<Resource<List<com.example.spotifyclone.model.dto.Album>>> get() = _likedAlbumsFirestore
 
@@ -85,8 +92,8 @@ class LibraryViewModel(
                         }
                         listAlbumIds.forEach {
                             refAlbums.orderByChild("id").equalTo(it).get()
-                                .addOnSuccessListener { snapshot->
-                                    for(ds in snapshot.children){
+                                .addOnSuccessListener { snapshot ->
+                                    for (ds in snapshot.children) {
                                         val albumMap = ds.value as HashMap<*, *>
                                         val tracksMap = albumMap["tracks"] as List<Map<*, *>>
                                         val trackList = tracksMap.map { track ->
@@ -132,6 +139,57 @@ class LibraryViewModel(
         }
     }
 
+    fun getDeezerAlbum() {
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val ids = getDeezerIds()
+                val listAlbum = mutableListOf<com.example.spotifyclone.model.dto.Album>()
+                for (id in ids) {
+                    val response = deezerApi.getAlbum(id)
+                    if (response.isSuccessful) {
+                        val result = response.body()
+                        result?.let {
+                            val model = com.example.spotifyclone.model.dto.Album(
+                                it.cover_xl,
+                                "" + it.id,
+                                it.title,
+                                it.tracks.data.map { track ->
+                                    Tracks(
+                                        track.artist.name,
+                                        "",
+                                        track.title,
+                                        track.preview,
+                                    )
+                                }, isFirebase = true
+                            )
+                            listAlbum.add(model)
+                        }
+                        _deezerAlbums.postValue(Resource.Success(listAlbum))
+                    }
+                }
+
+            } catch (e: Exception) {
+                _deezerAlbums.postValue(Resource.Error(e))
+            }
+        }
+
+    }
+
+
+    suspend fun getDeezerIds(): List<Int> {
+        val userId = firebaseAuth.currentUser?.uid
+        val albumRef = firestore.collection("deezerAlbum")
+        val query = albumRef.whereEqualTo("userId", userId).get().await()
+        var ids = mutableListOf<Int>()
+
+        for (document in query.documents) {
+            ids.add(document["albumId"].toString().toInt())
+        }
+        return ids
+
+    }
+
     fun getAlbumsFromApi(albumIDs: List<String>) {
         viewModelScope.launch(Dispatchers.IO) {
             val query = albumIDs.joinToString(",")
@@ -146,7 +204,7 @@ class LibraryViewModel(
     fun setSize() {
         val userId = firebaseAuth.currentUser?.uid
         val likedSongsRef = firestore.collection("likedSongs")
-        val query = likedSongsRef.whereEqualTo("userId",userId)
+        val query = likedSongsRef.whereEqualTo("userId", userId)
 
         try {
             query.get()
@@ -158,8 +216,8 @@ class LibraryViewModel(
                     val size = 0
                     _count.postValue(0)
                 }
-        }catch (e:Exception){
-               _count.postValue(0)
+        } catch (e: Exception) {
+            _count.postValue(0)
         }
     }
 }
