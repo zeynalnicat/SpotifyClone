@@ -37,7 +37,7 @@ class SearchNextViewModel(private val searchApi: SearchApi, private val firestor
                                 it.title,
                                 it.artist.name,
                                 it.album.cover_xl,
-                                it.preview
+                                it.preview,
                             )
                         }
                         _searchResults.postValue(Resource.Success(model))

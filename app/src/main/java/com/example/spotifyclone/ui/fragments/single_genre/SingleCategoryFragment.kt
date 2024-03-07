@@ -106,7 +106,7 @@ class SingleCategoryFragment : Fragment() {
             LikedSongs(
                 name = it.title,
                 artist = it.artist.name,
-                imgUri = it.album.cover_medium,
+                imgUri = it.album.cover_xl,
                 uri = it.preview,
                 isFromGenre = true
             )
