@@ -121,12 +121,6 @@ class TrackViewFragment : Fragment() {
             }
 
             binding.imgPrevious.setOnClickListener {
-//                val intent = Intent(MusicPlayerService.BROADCAST_ACTION)
-//                intent.putExtra(
-//                    MusicPlayerService.EXTRA_ACTION_TYPE,
-//                    MusicPlayerService.ACTION_PREVIOUS
-//                )
-//                LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent)
                 activity.prevSong()
                 activity.getCurrentTrack()
 

@@ -23,6 +23,7 @@ import com.example.spotifyclone.model.dto.SearchModel
 import com.example.spotifyclone.network.retrofit.api.deezer.SearchApi
 import com.example.spotifyclone.resource.Resource
 import com.example.spotifyclone.sp.SharedPreference
+import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
 import com.example.spotifyclone.ui.adapters.LikedSongsAdapter
 import com.example.spotifyclone.util.GsonHelper
@@ -70,6 +71,8 @@ class SearchNextFragment : Fragment() {
     ): View? {
         binding = FragmentSearchNextBinding.inflate(inflater)
         sharedPreference = SharedPreference(requireContext())
+        val activity = requireActivity() as MainActivity
+        activity.setBottomNavigation(false)
         setNavigation()
 
         return binding.root
@@ -103,7 +106,6 @@ class SearchNextFragment : Fragment() {
 
             }
         }
-        activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
         binding.edtSearch.requestFocus()
         binding.edtSearch.setOnFocusChangeListener { view, b ->
             requireActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
@@ -169,6 +171,8 @@ class SearchNextFragment : Fragment() {
             searchNextViewModel.insertLikedSongs(
                 musicItem.name, musicItem.artist, musicItem.imgUri, musicItem.uri
             )
+
+            dialog.hide()
 
         }
 

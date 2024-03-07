@@ -63,7 +63,6 @@ class NewPlaylistFragment : Fragment() {
         }
         newPlaylistViewModel.isSuccessful.observe(viewLifecycleOwner) {
             if (it is Resource.Success) {
-                activity.setMusicPlayer(true)
                 activity.setBottomNavigation(true)
                 findNavController().navigate(R.id.action_newPlaylistFragment_to_userLibraryFragment)
             } else if (it is Resource.Error) {

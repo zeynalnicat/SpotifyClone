@@ -61,13 +61,22 @@ class LibraryAlbumAdapter(private val nav: (Bundle) -> Unit = {}) :
                 .into(binding.imgAlbum)
             binding.txtAlbumName.text = album.name
 
+
             itemView.setOnClickListener {
-                itemView.setOnClickListener {
-                    val bundle = Bundle()
-                    bundle.putSerializable("album", album)
-                    nav(bundle)
-                }
+                itemView.animate()
+                    .scaleX(0.6f)
+                    .scaleY(0.6f)
+                    .setDuration(100)
+                    .withEndAction {
+                        itemView.scaleX = 1.0f
+                        itemView.scaleY = 1.0f
+                    }
+                    .start()
+                val bundle = Bundle()
+                bundle.putSerializable("album", album)
+                nav(bundle)
             }
+
         }
     }
 

@@ -113,4 +113,6 @@
     <string name="login_login">Daxil olun</string>
 
     <string name="sign_snackbar_email">E-poçta adresini daxil et!</string>
+
+    <string name="txt_remove_playlist">Playlisti sil</string>
 </resources>

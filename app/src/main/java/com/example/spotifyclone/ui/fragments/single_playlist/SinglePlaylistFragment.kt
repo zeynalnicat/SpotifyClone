@@ -172,6 +172,7 @@ class SinglePlaylistFragment : Fragment() {
         view.txtTrackName.text = musicItem.name
         view.txtPlaylist.text = getText(R.string.playlist_txt_remove)
 
+        view.imageView3.setImageResource(R.drawable.icon_delete)
         view.viewAddLiked.setOnClickListener {
             singleViewModel.insertLikedSongs(
                 musicItem.name, musicItem.artist, musicItem.imgUri, musicItem.uri

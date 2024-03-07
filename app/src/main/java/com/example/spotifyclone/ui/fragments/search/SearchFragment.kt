@@ -13,6 +13,7 @@ import com.example.spotifyclone.ui.adapters.SearchCardAdapter
 import com.example.spotifyclone.databinding.FragmentSearchBinding
 import com.example.spotifyclone.model.dto.Category
 import com.example.spotifyclone.resource.Resource
+import com.example.spotifyclone.ui.activity.MainActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -36,6 +37,8 @@ class SearchFragment : Fragment() {
     ): View? {
         binding = FragmentSearchBinding.inflate(inflater)
         setNavigation()
+        val activity = requireActivity() as MainActivity
+        activity.setBottomNavigation(true)
         return binding.root
     }
 

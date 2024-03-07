@@ -112,4 +112,6 @@
     <string name="login_password">Şifre</string>
     <string name="login_login">Giriş yapın</string>
     <string name="sign_snackbar_email">E-posta adresini girin!</string>
+
+    <string name="txt_remove_playlist">Playlisti kaldır</string>
 </resources>

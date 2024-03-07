@@ -31,12 +31,15 @@ class UserLibraryViewModel(
 
                 val playlistModels = playlistsModel()
                 val playlistMap = playlistTrackCounts()
+                val listPlaylist = mutableListOf<PlaylistModel>()
 
                 playlistModels.forEach {
                     it.countTrack = playlistMap[it.id] ?: 0
+                    listPlaylist.add(it)
+                    _playlists.postValue(Resource.Success(listPlaylist))
                 }
 
-                _playlists.postValue(Resource.Success(playlistModels))
+
             }catch (e:Exception){
                 _playlists.postValue(Resource.Error(e))
             }
@@ -87,5 +90,37 @@ class UserLibraryViewModel(
         }
         return playlistMap
     }
+
+
+    fun removeFromPlaylist(id:String){
+        val userId = firebaseAuth.currentUser?.uid
+        val playlistRef = firestore.collection("playlists")
+        val query = playlistRef.whereEqualTo("userId",userId).whereEqualTo("id",id)
+
+
+        viewModelScope.launch(Dispatchers.IO) {
+            removeRelatedTracks(id)
+            query.get().addOnSuccessListener {querySnapshot->
+                if(!querySnapshot.isEmpty && querySnapshot!=null){
+                    playlistRef.document(querySnapshot.documents[0].id).delete()
+                    getPlaylists()
+                }
+            }
+
+        }
+
+    }
+
+
+    suspend fun removeRelatedTracks(id: String) {
+        val userId = firebaseAuth.currentUser?.uid
+        val playlistRef = firestore.collection("playlistTracks")
+        val query = playlistRef.whereEqualTo("userId",userId).whereEqualTo("id",id).get().await()
+
+        for(document in query.documents ){
+            playlistRef.document(document.id).delete()
+        }
+    }
+
 
 }

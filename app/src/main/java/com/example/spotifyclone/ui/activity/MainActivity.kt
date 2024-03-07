@@ -164,6 +164,7 @@ class MainActivity : AppCompatActivity() {
             sharedPreference.updateValue("PlayingMusic", "")
             sharedPreference.updateValue("PlayingMusicUri", "")
             sharedPreference.updateValue("PlayingMusicArtist", "")
+            sharedPreference.updateValue("PlayingMusicImg","")
             setMusicPlayer(false)
             GsonHelper.serializeTracks(this, emptyList())
             musicPlayerService?.tracks?.postValue(emptyList())

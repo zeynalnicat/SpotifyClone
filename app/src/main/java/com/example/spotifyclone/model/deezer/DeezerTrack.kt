@@ -25,5 +25,6 @@ data class DeezerTrack(
     val title_short: String,
     val title_version: String,
     val track_position: Int,
-    val type: String
+    val type: String,
+    var isPlayed:Boolean = false
 )

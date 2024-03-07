@@ -13,8 +13,12 @@ import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ItemPlaylistViewBinding
 import com.example.spotifyclone.model.dto.PlaylistModel
 import com.example.spotifyclone.ui.fragments.playlist.AddPlaylistFragment
+import kotlin.math.log
 
-class PlaylistAdapter(private val nav: (Bundle) -> Unit?) :
+class PlaylistAdapter(
+    private val nav: (Bundle) -> Unit?,
+    private val setBottom: (PlaylistModel) -> Unit?
+) :
     RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
     private val diffCall = object : DiffUtil.ItemCallback<PlaylistModel>() {
         override fun areItemsTheSame(oldItem: PlaylistModel, newItem: PlaylistModel): Boolean {
@@ -71,6 +75,23 @@ class PlaylistAdapter(private val nav: (Bundle) -> Unit?) :
                     selectedPlaylists.remove(playlist)
                     AddPlaylistFragment.selectedPlaylists.postValue(selectedPlaylists)
                 }
+            }
+
+            itemView.setOnLongClickListener {
+                itemView.animate()
+                    .scaleX(0.95f)
+                    .scaleY(0.95f)
+                    .setDuration(300)
+                    .alpha(0.6f)
+                    .withEndAction {
+                        itemView.scaleX = 1.0f
+                        itemView.scaleY = 1.0f
+                        itemView.alpha = 1.0f
+                    }
+                    .start()
+                setBottom(playlist)
+
+                true
             }
 
             binding.txtPlaylistName.text = playlist.name

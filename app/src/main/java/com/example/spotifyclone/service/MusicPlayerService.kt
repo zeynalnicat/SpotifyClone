@@ -95,9 +95,11 @@ class MusicPlayerService : Service() {
     }
 
     fun playAll() {
-        songIndex.postValue(0)
-        val index = songIndex.value!!
-        playMusic(tracks.value?.get(index)?.trackUri ?: "")
+        if(tracks.value?.isNotEmpty()==true){
+            songIndex.postValue(0)
+            sharedPreference.saveIsPlaying(true)
+        }
+
     }
 
     fun playMusic(songUri: String) {

@@ -95,9 +95,10 @@
             android:layout_height="wrap_content"
             android:text="@string/bottom_sheet_txt_playlist"
             android:textColor="@color/white"
+            android:layout_marginStart="8dp"
             app:layout_constraintBottom_toBottomOf="@+id/imageView3"
-            app:layout_constraintEnd_toEndOf="@+id/txtLiked"
-            app:layout_constraintStart_toStartOf="@+id/txtLiked"
+            app:layout_constraintEnd_toEndOf="@+id/txtTrackName"
+            app:layout_constraintStart_toEndOf="@+id/imageView3"
             app:layout_constraintTop_toTopOf="@+id/imageView3" />
 
         <View

@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -61,6 +62,7 @@ class AlbumViewFragment : Fragment() {
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
 
+    private val isPlaying = MutableLiveData<Boolean>(false)
     private lateinit var acitivity: MainActivity
     private val albumViewModel: AlbumViewModel by viewModels {
         AlbumFactory(
@@ -69,7 +71,7 @@ class AlbumViewFragment : Fragment() {
             firestore
         )
     }
-    private lateinit var tracks: List<MusicItem>
+    private var tracks: List<MusicItem> = emptyList()
     private var imgAlbum = ""
     private lateinit var adapter: SingleAlbumTracksAdapter
     private lateinit var sharedPreference: SharedPreference
@@ -90,6 +92,7 @@ class AlbumViewFragment : Fragment() {
         setNavigation()
         getAlbumId()
 
+
         albumViewModel.insertionLiked.observe(viewLifecycleOwner) {
             if (it == -1L) {
                 Toast.makeText(requireContext(), "Something wrong!", Toast.LENGTH_SHORT).show()
@@ -103,6 +106,22 @@ class AlbumViewFragment : Fragment() {
         setLayoutButton()
 
         getAlbum()
+
+        if (this.tracks == musicPlayerViewModel.tracks.value || this.tracks.equals(musicPlayerViewModel.tracks.value) && mediaPlayer?.isPlaying==true) {
+            isPlaying.postValue(true)
+        }
+        else{
+            isPlaying.postValue(false)
+
+        }
+
+        isPlaying.observe(viewLifecycleOwner){
+            if(it){
+                binding.imgPlay.setImageResource(R.drawable.icon_album_pause)
+            }else{
+                binding.imgPlay.setImageResource(R.drawable.icon_play)
+            }
+        }
 
 
     }
@@ -181,7 +200,7 @@ class AlbumViewFragment : Fragment() {
         tracks: List<MusicItem>
     ) {
         MusicPlayer.setListOfTracks(tracks)
-        playAll()
+
 
 
         val model = tracks.map { MusicItem(it.artist, it.id, it.name, it.trackUri, img) }
@@ -198,6 +217,10 @@ class AlbumViewFragment : Fragment() {
         adapter.submitList(model)
         this.tracks = adapter.getTracks()
 
+
+
+        playAll()
+
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerView.adapter = adapter
 
@@ -208,8 +231,6 @@ class AlbumViewFragment : Fragment() {
         GsonHelper.serializeTracks(requireContext().applicationContext, tracks)
         musicPlayerViewModel.setTracks(tracks)
         musicPlayerViewModel.setSelectedTrackPosition(position)
-
-
 
     }
 
@@ -296,11 +317,12 @@ class AlbumViewFragment : Fragment() {
     }
 
     private fun playAll() {
-
         mediaPlayer = MusicPlayer.getMediaPlayer()
-
         binding.imgPlay.setOnClickListener {
-            acitivity.setTracksAndPosition(tracks, 0)
+            isPlaying.postValue(true)
+            GsonHelper.serializeTracks(requireContext().applicationContext, tracks)
+            musicPlayerViewModel.setTracks(tracks)
+            musicPlayerViewModel.setPosition(0)
             acitivity.playAll()
         }
     }

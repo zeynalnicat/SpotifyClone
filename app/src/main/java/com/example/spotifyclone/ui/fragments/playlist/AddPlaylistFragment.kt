@@ -137,7 +137,7 @@ class AddPlaylistFragment : Fragment() {
     }
 
     private fun setAdapter(playlists: List<PlaylistModel>) {
-        adapter = PlaylistAdapter {}
+        adapter = PlaylistAdapter ({},{})
         adapter.submitList(playlists)
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerView.adapter = adapter

@@ -13,11 +13,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 
 import com.example.spotifyclone.R
+import com.example.spotifyclone.databinding.BottomSheetTrackBinding
 import com.example.spotifyclone.ui.adapters.PlaylistAdapter
 import com.example.spotifyclone.databinding.FragmentUserLibraryBinding
+import com.example.spotifyclone.model.dto.MusicItem
 
 import com.example.spotifyclone.model.dto.PlaylistModel
 import com.example.spotifyclone.resource.Resource
+import com.example.spotifyclone.sp.SharedPreference
+import com.example.spotifyclone.ui.activity.MainActivity
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,6 +52,14 @@ class UserLibraryFragment : Fragment() {
     ): View? {
         binding = FragmentUserLibraryBinding.inflate(inflater)
         setNavigation()
+        val activity = requireActivity() as MainActivity
+        val sp = SharedPreference(requireContext())
+
+        if(sp.getValue("isPlaying",false)){
+            activity.setMusicPlayer(true)
+        }else{
+            activity.setMusicPlayer(false)
+        }
         setLayout()
         return binding.root
     }
@@ -123,16 +136,44 @@ class UserLibraryFragment : Fragment() {
 
     private fun setAdapter(list: List<PlaylistModel>) {
         val adapter =
-            PlaylistAdapter { bundle ->
+            PlaylistAdapter ({ bundle ->
                 findNavController().navigate(
                     R.id.action_userLibraryFragment_to_singlePlaylistFragment,
                     bundle
                 )
-            }
+            },{setBottomSheet(it)})
         adapter.submitList(list)
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerView.adapter = adapter
 
     }
+
+
+    private fun setBottomSheet(playlistModel: PlaylistModel) {
+        val dialog = BottomSheetDialog(requireContext())
+        val view = BottomSheetTrackBinding.inflate(layoutInflater)
+
+        dialog.setCancelable(true)
+        dialog.setContentView(view.root)
+        view.txtLiked.visibility = View.GONE
+        view.iconLibrary.visibility= View.GONE
+        view.txtPlaylist.setText(R.string.txt_remove_playlist)
+        view.txtArtistName.text = playlistModel.countTrack.toString() + " " +  getString(R.string.library_txt_songs)
+        view.txtTrackName.text = playlistModel.name
+        view.viewAddLiked.visibility = View.GONE
+        view.imgAlbum.setImageResource(R.drawable.playlist_image)
+        view.imageView3.setImageResource(R.drawable.icon_delete)
+
+
+        view.viewAddPlaylist.setOnClickListener {
+           userLibraryViewModel.removeFromPlaylist(playlistModel.id)
+           dialog.hide()
+        }
+        dialog.show()
+
+    }
+
+
+
 
 }
