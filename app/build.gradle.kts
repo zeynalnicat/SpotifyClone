@@ -123,4 +123,6 @@ dependencies {
     implementation("com.google.firebase:firebase-storage")
 
 
+    implementation("androidx.media:media:1.7.0")
+
 }

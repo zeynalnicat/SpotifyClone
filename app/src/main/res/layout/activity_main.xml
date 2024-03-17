@@ -11,8 +11,8 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@color/black"
+        android:layout_height="100dp"
+        android:background="@drawable/layout_bottom_navigation"
         android:paddingVertical="5dp"
         android:visibility="gone"
         app:itemIconTint="#777777"

@@ -35,7 +35,6 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var handler: android.os.Handler
     private var musicPlayerService: MusicPlayerService? = null
     private lateinit var musicPlayerViewModel: MusicPlayerViewModel
 
@@ -81,6 +80,7 @@ class MainActivity : AppCompatActivity() {
                 intent.action = MusicPlayerService.ACTION_SET_TRACKS
                 intent.putExtra(MusicPlayerService.EXTRA_TRACKS_JSON, ArrayList(tracks))
                 this@MainActivity.startService(intent)
+
             }
 
             musicPlayerViewModel.selectedTrackPosition.observe(this@MainActivity) { position ->
@@ -119,6 +119,7 @@ class MainActivity : AppCompatActivity() {
     private fun startService() {
         val intent = Intent(this, MusicPlayerService::class.java)
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+        musicPlayerService?.setNotification()
     }
 
     private val serviceConnection = object : ServiceConnection {

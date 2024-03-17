@@ -9,12 +9,17 @@ import android.content.IntentFilter
 import android.media.MediaPlayer
 import android.os.Binder
 import android.os.IBinder
+import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
+import androidx.core.app.NotificationCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.media.app.NotificationCompat.MediaStyle
+import com.example.spotifyclone.R
 import com.example.spotifyclone.model.dto.MusicItem
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.util.GsonHelper
+
 
 class MusicPlayerService : Service() {
 
@@ -23,6 +28,7 @@ class MusicPlayerService : Service() {
     var tracks = MutableLiveData<List<MusicItem>>()
     private var currentUri = ""
     val musicIsPlaying = MutableLiveData<Boolean>()
+    private lateinit var mediaSession : MediaSessionCompat
     private lateinit var sharedPreference: SharedPreference
 
     companion object {
@@ -32,6 +38,10 @@ class MusicPlayerService : Service() {
         const val BROADCAST_ACTION = "com.example.spotifyclone.BROADCAST_ACTION"
         const val ACTION_NEXT = "com.example.spotifyclone.ACTION_NEXT"
         const val ACTION_PREVIOUS = "com.example.spotifyclone.ACTION_PREVIOUS"
+    }
+
+    enum class Actions() {
+        START, STOP
     }
 
     override fun onCreate() {
@@ -59,7 +69,7 @@ class MusicPlayerService : Service() {
 
         songIndex.observeForever {
             if (it != null) {
-                if (tracks.value != null && tracks.value?.isNotEmpty()==true &&  it< tracks.value?.size!!) {
+                if (tracks.value != null && tracks.value?.isNotEmpty() == true && it < tracks.value?.size!!) {
                     val track = tracks.value?.get(it)!!
                     sharedPreference.saveValue("Position", it)
                     saveSharedPreference(track.img, track.name, track.artist, track.trackUri)
@@ -85,6 +95,46 @@ class MusicPlayerService : Service() {
         fun getService(): MusicPlayerService = this@MusicPlayerService
     }
 
+
+    fun setNotification() {
+        val track = tracks.value?.get(songIndex.value ?: 0) ?: return
+
+        val notification = NotificationCompat.Builder(this, "running_channel")
+            .setContentTitle(track.name)
+            .setContentText(track.artist)
+            .setSmallIcon(R.drawable.logo)
+            .setStyle(MediaStyle().setMediaSession(mediaSession.sessionToken))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setOnlyAlertOnce(true)
+            .addAction(
+                NotificationCompat.Action.Builder(
+                    R.drawable.icon_music_view_previous,
+                    "Previous",
+                    null
+                ).build()
+            )
+            .addAction(
+                NotificationCompat.Action.Builder(
+                    R.drawable.icon_music_play,
+                    if (mediaPlayer.isPlaying) "Pause" else "Play",  // Change text based on playback state
+                    null
+                ).build()
+            )
+            .addAction(
+                NotificationCompat.Action.Builder(
+                    R.drawable.icon_music_view_next,
+                    "Next",
+                    null
+                ).build()
+            )
+            .build()
+
+//        startForeground(1, notification)
+    }
+
+
+
     fun setTracks(tracks: List<MusicItem>, position: Int) {
         this.tracks.postValue(tracks)
         songIndex.postValue(position)
@@ -95,7 +145,7 @@ class MusicPlayerService : Service() {
     }
 
     fun playAll() {
-        if(tracks.value?.isNotEmpty()==true){
+        if (tracks.value?.isNotEmpty() == true) {
             songIndex.postValue(0)
             sharedPreference.saveIsPlaying(true)
         }
@@ -109,6 +159,7 @@ class MusicPlayerService : Service() {
         ) {
             return
         } else if (tracks.value?.isNotEmpty() == true) {
+            setNotification()
             sharedPreference.saveValue("Position", index)
             mediaPlayer.stop()
             mediaPlayer.reset()
@@ -117,7 +168,9 @@ class MusicPlayerService : Service() {
             mediaPlayer.setOnPreparedListener {
                 mediaPlayer.start()
                 musicIsPlaying.postValue(true)
+
             }
+
 
             mediaPlayer.prepareAsync()
             if (!GsonHelper.hasTracks(applicationContext)) {
@@ -170,7 +223,7 @@ class MusicPlayerService : Service() {
         mediaPlayer.reset()
         val index = songIndex.value!!
         val newIndex = (index - 1) % (tracks.value?.size ?: 0)
-        val currentIndex = if (newIndex < 0) tracks.value?.size!!-1  else newIndex
+        val currentIndex = if (newIndex < 0) tracks.value?.size!! - 1 else newIndex
         songIndex.value = currentIndex
         sharedPreference.saveValue("Position", songIndex.value!!)
         saveSharedPreference(
@@ -224,7 +277,10 @@ class MusicPlayerService : Service() {
 
 
     override fun onBind(intent: Intent): IBinder {
-
+        mediaSession = MediaSessionCompat(baseContext,"Spotify")
+//        mediaPlayer.setOnCompletionListener {
+//            nextSong()
+//        }
         return MusicPlayerBinder()
     }
 
@@ -233,8 +289,8 @@ class MusicPlayerService : Service() {
         super.onTaskRemoved(rootIntent)
     }
 
-    override fun onDestroy() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
-        super.onDestroy()
-    }
+//    override fun onDestroy() {
+//        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
+//        super.onDestroy()
+//    }
 }
