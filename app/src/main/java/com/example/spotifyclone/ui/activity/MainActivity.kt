@@ -92,16 +92,10 @@ class MainActivity : AppCompatActivity() {
 
 
                 intent.putExtra(MusicPlayerService.EXTRA_TRACKS_JSON, ArrayList(tracks))
-                this@MainActivity.startService(intent)
+                startService(intent)
 
             }
 
-           musicPlayerService?.let {
-               it.current.observeForever {
-                   Toast.makeText(this,it.name,Toast.LENGTH_LONG).show()
-                   setMusicLayout(it.name,it.img,it.trackUri)
-               }
-           }
 
             musicPlayerViewModel.selectedTrackPosition.observe(this@MainActivity) { position ->
                 this@MainActivity.position = position
@@ -157,6 +151,12 @@ class MainActivity : AppCompatActivity() {
             val binder = service as MusicPlayerService.MusicPlayerBinder
             musicPlayerService = binder.getService()
 
+            musicPlayerService?.let {
+                it.current.observe(this@MainActivity) {music->
+                    setMusicLayout(music.name,music.img,music.trackUri)
+                    musicPlayerViewModel.setCurrentMusic(music)
+                }
+            }
             handleMusic()
             updateProgress()
             checkVisibility()
@@ -173,8 +173,6 @@ class MainActivity : AppCompatActivity() {
         musicPlayerService?.let {
             val mediaPlayer = it.mediaPlayer
             cancelMusic()
-
-
 
             binding.imgPause.setOnClickListener { view ->
                 if (mediaPlayer.isPlaying) {

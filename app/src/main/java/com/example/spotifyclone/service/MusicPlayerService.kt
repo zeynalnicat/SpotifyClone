@@ -73,9 +73,6 @@ class MusicPlayerService : Service() {
 
         }
 
-        current.observeForever {
-            getCurrentTrack(it)
-        }
 
         songIndex.observeForever {
             if (it != null) {
