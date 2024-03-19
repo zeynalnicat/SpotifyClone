@@ -1,6 +1,9 @@
 package com.example.spotifyclone.service
 
 import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -18,7 +21,9 @@ import androidx.media.app.NotificationCompat.MediaStyle
 import com.example.spotifyclone.R
 import com.example.spotifyclone.model.dto.MusicItem
 import com.example.spotifyclone.sp.SharedPreference
+import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
 import com.example.spotifyclone.util.GsonHelper
+import com.example.spotifyclone.util.NotificationReceiver
 
 
 class MusicPlayerService : Service() {
@@ -26,10 +31,12 @@ class MusicPlayerService : Service() {
     lateinit var mediaPlayer: MediaPlayer
     var songIndex = MutableLiveData(0)
     var tracks = MutableLiveData<List<MusicItem>>()
+     val current = MutableLiveData<MusicItem>()
     private var currentUri = ""
     val musicIsPlaying = MutableLiveData<Boolean>()
-    private lateinit var mediaSession : MediaSessionCompat
+    private lateinit var mediaSession: MediaSessionCompat
     private lateinit var sharedPreference: SharedPreference
+
 
     companion object {
         const val ACTION_SET_TRACKS = "com.example.spotifyclone.SET_TRACKS"
@@ -38,15 +45,14 @@ class MusicPlayerService : Service() {
         const val BROADCAST_ACTION = "com.example.spotifyclone.BROADCAST_ACTION"
         const val ACTION_NEXT = "com.example.spotifyclone.ACTION_NEXT"
         const val ACTION_PREVIOUS = "com.example.spotifyclone.ACTION_PREVIOUS"
-    }
+        const val ACTION_PAUSE = "com.example.spotifyclone.ACTION_PAUSE"
 
-    enum class Actions() {
-        START, STOP
     }
 
     override fun onCreate() {
         super.onCreate()
         mediaPlayer = MediaPlayer()
+        mediaSession = MediaSessionCompat(baseContext, "Spotify")
 
         sharedPreference = SharedPreference(applicationContext)
         LocalBroadcastManager.getInstance(this)
@@ -67,6 +73,10 @@ class MusicPlayerService : Service() {
 
         }
 
+        current.observeForever {
+            getCurrentTrack(it)
+        }
+
         songIndex.observeForever {
             if (it != null) {
                 if (tracks.value != null && tracks.value?.isNotEmpty() == true && it < tracks.value?.size!!) {
@@ -79,9 +89,12 @@ class MusicPlayerService : Service() {
             }
         }
 
-
     }
 
+
+    fun getCurrentTrack(musicItem: MusicItem):MusicItem{
+        return musicItem
+    }
 
     fun saveSharedPreference(img: String, name: String, artist: String, uri: String) {
         sharedPreference.saveValue("PlayingMusicImg", img)
@@ -98,7 +111,31 @@ class MusicPlayerService : Service() {
 
     fun setNotification() {
         val track = tracks.value?.get(songIndex.value ?: 0) ?: return
+        val playPauseActionIcon = if (mediaPlayer.isPlaying) R.drawable.icon_music_pause else R.drawable.icon_music_play
 
+        val nextIntent = Intent(baseContext, NotificationReceiver::class.java).setAction(ACTION_NEXT)
+        val nextPendingIntent = PendingIntent.getBroadcast(
+            baseContext,
+            0,
+            nextIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val prevIntent = Intent(baseContext, NotificationReceiver::class.java).setAction(ACTION_PREVIOUS)
+        val prevPendingIntent = PendingIntent.getBroadcast(
+            baseContext,
+            0,
+            prevIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val pauseIntent = Intent(baseContext, NotificationReceiver::class.java).setAction(ACTION_PAUSE)
+        val pausePendingIntent = PendingIntent.getBroadcast(
+            baseContext,
+            0,
+            pauseIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
         val notification = NotificationCompat.Builder(this, "running_channel")
             .setContentTitle(track.name)
             .setContentText(track.artist)
@@ -107,32 +144,40 @@ class MusicPlayerService : Service() {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setOnlyAlertOnce(true)
+            .setProgress(mediaPlayer.duration, mediaPlayer.currentPosition, false)
             .addAction(
                 NotificationCompat.Action.Builder(
                     R.drawable.icon_music_view_previous,
                     "Previous",
-                    null
+                    prevPendingIntent
                 ).build()
             )
             .addAction(
                 NotificationCompat.Action.Builder(
-                    R.drawable.icon_music_play,
-                    if (mediaPlayer.isPlaying) "Pause" else "Play",  // Change text based on playback state
-                    null
+                    playPauseActionIcon,
+                    if (mediaPlayer.isPlaying) "Pause" else "Play",
+                    pausePendingIntent
                 ).build()
             )
             .addAction(
                 NotificationCompat.Action.Builder(
                     R.drawable.icon_music_view_next,
                     "Next",
-                    null
+                    nextPendingIntent
                 ).build()
             )
             .build()
 
-//        startForeground(1, notification)
-    }
+        val notificationManager = getSystemService(NotificationManager::class.java)
+        val channel = NotificationChannel(
+            "running_channel",
+            "Spotify",
+            NotificationManager.IMPORTANCE_HIGH
+        )
+        notificationManager.createNotificationChannel(channel)
 
+        startForeground(1, notification)
+    }
 
 
     fun setTracks(tracks: List<MusicItem>, position: Int) {
@@ -159,8 +204,9 @@ class MusicPlayerService : Service() {
         ) {
             return
         } else if (tracks.value?.isNotEmpty() == true) {
-            setNotification()
+            current.postValue(tracks.value?.get(songIndex.value?:0))
             sharedPreference.saveValue("Position", index)
+            setNotification()
             mediaPlayer.stop()
             mediaPlayer.reset()
             currentUri = songUri
@@ -239,7 +285,8 @@ class MusicPlayerService : Service() {
     fun pauseMusic() {
         if (mediaPlayer.isPlaying) {
             mediaPlayer.pause()
-
+        }else{
+            mediaPlayer.start()
         }
     }
 
@@ -277,10 +324,7 @@ class MusicPlayerService : Service() {
 
 
     override fun onBind(intent: Intent): IBinder {
-        mediaSession = MediaSessionCompat(baseContext,"Spotify")
-//        mediaPlayer.setOnCompletionListener {
-//            nextSong()
-//        }
+
         return MusicPlayerBinder()
     }
 

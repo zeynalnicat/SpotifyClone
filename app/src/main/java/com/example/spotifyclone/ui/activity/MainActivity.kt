@@ -3,6 +3,7 @@ package com.example.spotifyclone.ui.activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.media.MediaPlayer
 import android.os.Build
@@ -11,6 +12,7 @@ import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -26,6 +28,7 @@ import com.example.spotifyclone.service.MusicRepository
 import com.example.spotifyclone.sp.SharedPreference
 import com.example.spotifyclone.ui.fragments.track.TrackViewFragment
 import com.example.spotifyclone.util.GsonHelper
+import com.example.spotifyclone.util.NotificationReceiver
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -35,12 +38,19 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private var musicPlayerService: MusicPlayerService? = null
     private lateinit var musicPlayerViewModel: MusicPlayerViewModel
 
     private lateinit var repository: MusicRepository
     private lateinit var sharedPreference: SharedPreference
     private var position = 0
+
+    companion object {
+        private var musicPlayerService: MusicPlayerService? = null
+
+        fun getMusicPlayerService(): MusicPlayerService? {
+            return musicPlayerService
+        }
+    }
 
     override fun attachBaseContext(newBase: Context) {
         val updatedContext = updateLocale(newBase)
@@ -57,6 +67,7 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,13 +89,23 @@ class MainActivity : AppCompatActivity() {
             musicPlayerViewModel.tracks.observe(this@MainActivity) { tracks ->
                 val intent = Intent(this@MainActivity, MusicPlayerService::class.java)
                 intent.action = MusicPlayerService.ACTION_SET_TRACKS
+
+
                 intent.putExtra(MusicPlayerService.EXTRA_TRACKS_JSON, ArrayList(tracks))
                 this@MainActivity.startService(intent)
 
             }
 
+           musicPlayerService?.let {
+               it.current.observeForever {
+                   Toast.makeText(this,it.name,Toast.LENGTH_LONG).show()
+                   setMusicLayout(it.name,it.img,it.trackUri)
+               }
+           }
+
             musicPlayerViewModel.selectedTrackPosition.observe(this@MainActivity) { position ->
                 this@MainActivity.position = position
+
                 setMusicPlayer(true)
             }
 
@@ -100,7 +121,16 @@ class MainActivity : AppCompatActivity() {
             newTracks?.let {
                 handleTracksUpdate(it)
             }
+
         }
+
+
+        musicPlayerViewModel.current.observe(this){
+            setMusicLayout(it.name,it.img,it.trackUri)
+        }
+
+
+
 
 
     }
@@ -119,7 +149,7 @@ class MainActivity : AppCompatActivity() {
     private fun startService() {
         val intent = Intent(this, MusicPlayerService::class.java)
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
-        musicPlayerService?.setNotification()
+        startForegroundService(intent)
     }
 
     private val serviceConnection = object : ServiceConnection {
