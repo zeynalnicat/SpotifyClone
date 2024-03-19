@@ -272,7 +272,7 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener {
     }
 
     private fun setMusicLayout(name: String, img: String, uri: String) {
-//        binding.musicPla   yer.o
+
 
         musicPlayerService?.playMusic(uri)
 

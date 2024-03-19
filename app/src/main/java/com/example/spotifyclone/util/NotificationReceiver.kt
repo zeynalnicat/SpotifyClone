@@ -7,9 +7,9 @@ import com.example.spotifyclone.service.MusicPlayerService
 import com.example.spotifyclone.ui.activity.MainActivity
 
 class NotificationReceiver : BroadcastReceiver() {
-
+    private var musicService:MusicPlayerService? = null
     override fun onReceive(context: Context?, intent: Intent?) {
-        val musicService = MainActivity.getMusicPlayerService()
+        musicService = MainActivity.getMusicPlayerService()
         when (intent?.action) {
             MusicPlayerService.ACTION_NEXT -> {
                 musicService?.nextSong()
@@ -23,6 +23,12 @@ class NotificationReceiver : BroadcastReceiver() {
             }
         }
     }
+
+
+    fun playMusic(){
+        MusicPlayerService
+    }
+
 
 
 

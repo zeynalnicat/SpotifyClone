@@ -113,9 +113,9 @@ class MusicPlayerService : Service() {
     }
 
 
-    fun setNotification() {
+    private fun setNotification(img:Int) {
         val track = tracks.value?.get(songIndex.value ?: 0) ?: return
-        val playPauseActionIcon = if (mediaPlayer.isPlaying) R.drawable.icon_music_pause else R.drawable.icon_music_play
+        val playPauseActionIcon = R.drawable.icon_music_pause
 
         val nextIntent = Intent(baseContext, NotificationReceiver::class.java).setAction(ACTION_NEXT)
         val nextPendingIntent = PendingIntent.getBroadcast(
@@ -145,7 +145,7 @@ class MusicPlayerService : Service() {
             .setContentTitle(track.name)
             .setContentText(track.artist)
             .setSmallIcon(R.drawable.logo)
-            .setLargeIcon(largeIconBitmap)
+            .setLargeIcon(BitmapFactory.decodeResource(resources,R.drawable.facebook))
             .setStyle(MediaStyle().setMediaSession(mediaSession.sessionToken))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -153,21 +153,21 @@ class MusicPlayerService : Service() {
             .setProgress(mediaPlayer.duration, mediaPlayer.currentPosition, false)
             .addAction(
                 NotificationCompat.Action.Builder(
-                    R.drawable.icon_music_view_previous,
+                    R.drawable.icon_music_notification_previous,
                     "Previous",
                     prevPendingIntent
                 ).build()
             )
             .addAction(
                 NotificationCompat.Action.Builder(
-                    playPauseActionIcon,
+                    img,
                     if (mediaPlayer.isPlaying) "Pause" else "Play",
                     pausePendingIntent
                 ).build()
             )
             .addAction(
                 NotificationCompat.Action.Builder(
-                    R.drawable.icon_music_view_next,
+                    R.drawable.icon_music_notification_next,
                     "Next",
                     nextPendingIntent
                 ).build()
@@ -229,7 +229,7 @@ class MusicPlayerService : Service() {
         } else if (tracks.value?.isNotEmpty() == true) {
             current.postValue(tracks.value?.get(songIndex.value?:0))
             sharedPreference.saveValue("Position", index)
-            setNotification()
+            setNotification(R.drawable.icon_music_pause)
             mediaPlayer.stop()
             mediaPlayer.reset()
             currentUri = songUri
@@ -312,8 +312,11 @@ class MusicPlayerService : Service() {
     fun pauseMusic() {
         if (mediaPlayer.isPlaying) {
             mediaPlayer.pause()
+            setNotification(R.drawable.icon_music_play)
+
         }else{
             mediaPlayer.start()
+            setNotification(R.drawable.icon_music_pause)
         }
     }
 

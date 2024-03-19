@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:maxLines="1"
-        android:textColor="@color/btn_gray"
+        android:textColor="@color/input_gray"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="@+id/imgArtist"
         app:layout_constraintStart_toStartOf="@+id/imgArtist"
