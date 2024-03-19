@@ -9,7 +9,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
 import android.support.v4.media.session.MediaSessionCompat
@@ -21,9 +24,13 @@ import androidx.media.app.NotificationCompat.MediaStyle
 import com.example.spotifyclone.R
 import com.example.spotifyclone.model.dto.MusicItem
 import com.example.spotifyclone.sp.SharedPreference
+import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
 import com.example.spotifyclone.util.GsonHelper
 import com.example.spotifyclone.util.NotificationReceiver
+import java.io.FileNotFoundException
+import java.io.IOException
+import java.io.InputStream
 
 
 class MusicPlayerService : Service() {
@@ -133,10 +140,12 @@ class MusicPlayerService : Service() {
             pauseIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
+        val largeIconBitmap: Bitmap? = uriStringToBitmap(baseContext, track.img)
         val notification = NotificationCompat.Builder(this, "running_channel")
             .setContentTitle(track.name)
             .setContentText(track.artist)
             .setSmallIcon(R.drawable.logo)
+            .setLargeIcon(largeIconBitmap)
             .setStyle(MediaStyle().setMediaSession(mediaSession.sessionToken))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -176,6 +185,23 @@ class MusicPlayerService : Service() {
         startForeground(1, notification)
     }
 
+    fun uriStringToBitmap(context: Context, uriString: String): Bitmap? {
+        val uri = Uri.parse(uriString)
+        var inputStream: InputStream? = null
+        return try {
+            inputStream = context.contentResolver.openInputStream(uri)
+            BitmapFactory.decodeStream(inputStream)
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+            null
+        } finally {
+            try {
+                inputStream?.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
 
     fun setTracks(tracks: List<MusicItem>, position: Int) {
         this.tracks.postValue(tracks)
@@ -261,6 +287,10 @@ class MusicPlayerService : Service() {
         playMusic(songUri)
     }
 
+    fun removeNotification() {
+        stopForeground(true)
+    }
+
     fun prevSong() {
 
         mediaPlayer.reset()
@@ -330,8 +360,13 @@ class MusicPlayerService : Service() {
         super.onTaskRemoved(rootIntent)
     }
 
-//    override fun onDestroy() {
-//        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
-//        super.onDestroy()
-//    }
+    override fun onDestroy() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
+
+        stopForeground(true)
+        mediaPlayer.stop()
+        mediaPlayer.release()
+        super.onDestroy()
+    }
+
 }

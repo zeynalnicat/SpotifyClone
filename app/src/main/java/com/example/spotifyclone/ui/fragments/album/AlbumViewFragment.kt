@@ -253,6 +253,16 @@ class AlbumViewFragment : Fragment() {
         view.txtTrackName.text = musicItem.name
 
         view.viewAddLiked.setOnClickListener {
+            it.animate()
+                .scaleX(0.95f)
+                .scaleY(0.95f)
+                .setDuration(300)
+                .alpha(0.6f)
+                .withEndAction {
+                    it.scaleX = 1.0f
+                    it.scaleY = 1.0f
+                    it.alpha = 1.0f
+                }.start()
             albumViewModel.insertLikedSongs(
                 musicItem.name,
                 musicItem.artist,
@@ -263,6 +273,7 @@ class AlbumViewFragment : Fragment() {
         }
 
         albumViewModel.isInLiked.observe(viewLifecycleOwner) {
+
             if (it) {
                 view.txtLiked.setText(R.string.bottom_sheet_txt_remove)
             } else {
@@ -273,6 +284,16 @@ class AlbumViewFragment : Fragment() {
         albumViewModel.checkLikedSongs(musicItem.name)
 
         view.viewAddPlaylist.setOnClickListener {
+            it.animate()
+                .scaleX(0.95f)
+                .scaleY(0.95f)
+                .setDuration(300)
+                .alpha(0.6f)
+                .withEndAction {
+                    it.scaleX = 1.0f
+                    it.scaleY = 1.0f
+                    it.alpha = 1.0f
+                }.start()
             val bundle = Bundle()
             bundle.putSerializable("track", musicItem)
             findNavController().navigate(

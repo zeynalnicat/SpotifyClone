@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.SeekBar
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
@@ -108,6 +109,18 @@ class TrackViewFragment : Fragment() {
             setMusic()
 
             binding.imgNext.setOnClickListener {
+                it.animate()
+                    .scaleX(0.95f)
+                    .scaleY(0.95f)
+                    .setDuration(300)
+                    .alpha(0.6f)
+                    .withEndAction {
+                        it.scaleX = 1.0f
+                        it.scaleY = 1.0f
+                        it.alpha = 1.0f
+                    }
+                    .start()
+
 //                val intent = Intent(MusicPlayerService.BROADCAST_ACTION)
 //                intent.putExtra(
 //                    MusicPlayerService.EXTRA_ACTION_TYPE,
@@ -121,6 +134,17 @@ class TrackViewFragment : Fragment() {
             }
 
             binding.imgPrevious.setOnClickListener {
+                it.animate()
+                    .scaleX(0.95f)
+                    .scaleY(0.95f)
+                    .setDuration(300)
+                    .alpha(0.6f)
+                    .withEndAction {
+                        it.scaleX = 1.0f
+                        it.scaleY = 1.0f
+                        it.alpha = 1.0f
+                    }
+                    .start()
                 activity.prevSong()
                 activity.getCurrentTrack()
 
@@ -140,6 +164,17 @@ class TrackViewFragment : Fragment() {
 
     private fun setNavigation() {
         binding.imgShrink.setOnClickListener {
+            it.animate()
+                .scaleX(0.95f)
+                .scaleY(0.95f)
+                .setDuration(300)
+                .alpha(0.6f)
+                .withEndAction {
+                    it.scaleX = 1.0f
+                    it.scaleY = 1.0f
+                    it.alpha = 1.0f
+                }
+                .start()
             activity.setMusicPlayer(true)
             activity.setBottomNavigation(true)
             activity.supportFragmentManager.popBackStack()
@@ -155,6 +190,17 @@ class TrackViewFragment : Fragment() {
             var totalTime = 0
 
             binding.imgPause.setOnClickListener { view ->
+                view.animate()
+                    .scaleX(0.95f)
+                    .scaleY(0.95f)
+                    .setDuration(300)
+                    .alpha(0.6f)
+                    .withEndAction {
+                        view.scaleX = 1.0f
+                        view.scaleY = 1.0f
+                        view.alpha = 1.0f
+                    }
+                    .start()
                 if (media.isPlaying) {
                     media.pause()
                     binding.imgPause.setImageResource(R.drawable.icon_music_view_resume)

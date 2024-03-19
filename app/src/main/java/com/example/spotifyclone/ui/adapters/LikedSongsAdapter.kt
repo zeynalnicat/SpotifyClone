@@ -20,11 +20,11 @@ import com.example.spotifyclone.model.dto.LikedSongs
 import com.example.spotifyclone.model.dto.MusicItem
 
 class LikedSongsAdapter(
-    private val setBottom: (LikedSongs) -> Unit={},
-    private val setMusicLayout: (Int) -> Unit={},
+    private val setBottom: (LikedSongs) -> Unit = {},
+    private val setMusicLayout: (Int) -> Unit = {},
     private val saveSharedPreference: (key: String, value: String) -> Unit,
-    private val saveSharedPreferenceBool: (value: Boolean) -> Unit={},
-    private val isInSP: (value: String) -> Boolean = {false},
+    private val saveSharedPreferenceBool: (value: Boolean) -> Unit = {},
+    private val isInSP: (value: String) -> Boolean = { false },
 ) :
     RecyclerView.Adapter<LikedSongsAdapter.ViewHolder>() {
 
@@ -69,7 +69,7 @@ class LikedSongsAdapter(
         fun bind(track: LikedSongs) {
 
 
-            if(track.isTopTracks){
+            if (track.isTopTracks) {
                 binding.imgMore.visibility = View.GONE
                 val layoutParams = binding.imgAlbum.layoutParams
                 val desiredHeightInDp = 56
@@ -87,8 +87,13 @@ class LikedSongsAdapter(
                 layoutParams.height = pixels
                 layoutParams.width = pixels
                 binding.album.visibility = View.GONE
-                binding.container.setBackgroundColor(ContextCompat.getColor(binding.root.context,R.color.filled_gray))
-            }  else if(track.isFromGenre){
+                binding.container.setBackgroundColor(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.filled_gray
+                    )
+                )
+            } else if (track.isFromGenre) {
                 val layoutParams = binding.imgAlbum.layoutParams
                 val desiredHeightInDp = 64
                 val displayMetrics = binding.root.resources.displayMetrics
@@ -100,12 +105,20 @@ class LikedSongsAdapter(
                 layoutParams.height = pixels
                 layoutParams.width = pixels
                 binding.imgMore.visibility = View.GONE
-                binding.container.setBackgroundColor(ContextCompat.getColor(binding.root.context,R.color.filled_gray))
-            }
-
-            else{
+                binding.container.setBackgroundColor(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.filled_gray
+                    )
+                )
+            } else {
                 binding.imgMore.visibility = View.VISIBLE
-                binding.container.setBackgroundColor(ContextCompat.getColor(binding.root.context,R.color.primary))
+                binding.container.setBackgroundColor(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.primary
+                    )
+                )
             }
             binding.album.text = track.artist
 
@@ -125,6 +138,17 @@ class LikedSongsAdapter(
             )
 
             itemView.setOnClickListener {
+                itemView.animate()
+                    .scaleX(0.95f)
+                    .scaleY(0.95f)
+                    .setDuration(300)
+                    .alpha(0.6f)
+                    .withEndAction {
+                        itemView.scaleX = 1.0f
+                        itemView.scaleY = 1.0f
+                        itemView.alpha = 1.0f
+                    }
+                    .start()
                 saveSharedPreference("PlayingMusicImg", track.imgUri)
                 saveSharedPreference("PlayingMusic", track.name)
                 saveSharedPreference("PlayingMusicArtist", track.artist)
@@ -136,6 +160,7 @@ class LikedSongsAdapter(
 
             }
             binding.imgMore.setOnClickListener {
+
                 setBottom(track)
             }
 
