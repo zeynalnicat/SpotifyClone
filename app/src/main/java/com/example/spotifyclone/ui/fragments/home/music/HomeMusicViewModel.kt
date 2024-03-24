@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.spotifyclone.model.deezer.DeezerTrack
-import com.example.spotifyclone.network.retrofit.api.deezer.TrackApi
-import com.example.spotifyclone.resource.Resource
+import com.example.spotifyclone.domain.model.deezer.DeezerTrack
+import com.example.spotifyclone.data.network.api.deezer.TrackApi
+import com.example.spotifyclone.domain.resource.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -42,7 +42,7 @@ class HomeMusicViewModel(private val trackApi: TrackApi) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
 
             try {
-                val list = mutableListOf<DeezerTrack>()
+                val list = mutableListOf<com.example.spotifyclone.domain.model.deezer.DeezerTrack>()
                 withContext(Dispatchers.Default){
                     for (id in ids) {
                         val response = trackApi.getTrack(id)

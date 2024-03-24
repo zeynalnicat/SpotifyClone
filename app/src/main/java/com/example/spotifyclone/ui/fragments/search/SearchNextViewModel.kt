@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.spotifyclone.model.dto.SearchModel
-import com.example.spotifyclone.network.retrofit.api.deezer.SearchApi
-import com.example.spotifyclone.resource.Resource
+import com.example.spotifyclone.domain.model.dto.SearchModel
+import com.example.spotifyclone.data.network.api.deezer.SearchApi
+import com.example.spotifyclone.domain.resource.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -33,7 +33,7 @@ class SearchNextViewModel(private val searchApi: SearchApi, private val firestor
                     val result = response.body()?.data
                     result?.let { data ->
                         val model = data.map {
-                            SearchModel(
+                            com.example.spotifyclone.domain.model.dto.SearchModel(
                                 it.title,
                                 it.artist.name,
                                 it.album.cover_xl,

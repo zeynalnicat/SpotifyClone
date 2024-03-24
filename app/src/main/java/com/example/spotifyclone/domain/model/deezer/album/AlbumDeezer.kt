@@ -1,0 +1,32 @@
+package com.example.spotifyclone.domain.model.deezer.album
+
+data class AlbumDeezer(
+    val artist: com.example.spotifyclone.domain.model.deezer.album.Artist,
+    val available: Boolean,
+    val contributors: List<com.example.spotifyclone.domain.model.deezer.album.Contributor>,
+    val cover: String,
+    val cover_big: String,
+    val cover_medium: String,
+    val cover_small: String,
+    val cover_xl: String,
+    val duration: Int,
+    val explicit_content_cover: Int,
+    val explicit_content_lyrics: Int,
+    val explicit_lyrics: Boolean,
+    val fans: Int,
+    val genre_id: Int,
+    val genres: com.example.spotifyclone.domain.model.deezer.album.Genres,
+    val id: Int,
+    val label: String,
+    val link: String,
+    val md5_image: String,
+    val nb_tracks: Int,
+    val record_type: String,
+    val release_date: String,
+    val share: String,
+    val title: String,
+    val tracklist: String,
+    val tracks: com.example.spotifyclone.domain.model.deezer.album.Tracks,
+    val type: String,
+    val upc: String
+)

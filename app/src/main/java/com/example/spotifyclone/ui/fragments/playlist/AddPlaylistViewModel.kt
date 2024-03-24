@@ -5,10 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.spotifyclone.model.dto.MusicItem
+import com.example.spotifyclone.domain.model.dto.MusicItem
 
-import com.example.spotifyclone.model.dto.PlaylistModel
-import com.example.spotifyclone.resource.Resource
+import com.example.spotifyclone.domain.model.dto.PlaylistModel
+import com.example.spotifyclone.domain.resource.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
@@ -56,17 +56,17 @@ class AddPlaylistViewModel(
 
     }
 
-    suspend fun playlistsModel(): List<PlaylistModel> {
+    suspend fun playlistsModel(): List<com.example.spotifyclone.domain.model.dto.PlaylistModel> {
         val playlistsRef = firestore.collection("playlists")
         val userId = firebaseAuth.currentUser?.uid
         val query = playlistsRef.whereEqualTo("userId", userId).get().await()
-        val playlistList = mutableListOf<PlaylistModel>()
+        val playlistList = mutableListOf<com.example.spotifyclone.domain.model.dto.PlaylistModel>()
 
         if (query != null && !query.isEmpty) {
             val documents = query.documents
             for (document in documents) {
                 playlistList.add(
-                    PlaylistModel(
+                    com.example.spotifyclone.domain.model.dto.PlaylistModel(
                         document["id"].toString(),
                         document["name"].toString(),
                     )
@@ -97,7 +97,7 @@ class AddPlaylistViewModel(
     }
 
 
-    fun addFirebase(playlist: List<PlaylistModel>, track: MusicItem) {
+    fun addFirebase(playlist: List<com.example.spotifyclone.domain.model.dto.PlaylistModel>, track: com.example.spotifyclone.domain.model.dto.MusicItem) {
         val playlistsRef = firestore.collection("playlistTracks")
         val userId = firebaseAuth.currentUser?.uid
         val listStates = mutableListOf<Boolean>()

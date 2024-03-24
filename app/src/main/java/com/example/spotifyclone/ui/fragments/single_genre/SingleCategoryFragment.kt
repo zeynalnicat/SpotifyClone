@@ -13,13 +13,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.FragmentSingleCategoryBinding
-import com.example.spotifyclone.model.deezer.DeezerTrack
-import com.example.spotifyclone.model.dto.Category
-import com.example.spotifyclone.model.dto.LikedSongs
-import com.example.spotifyclone.model.dto.MusicItem
-import com.example.spotifyclone.network.retrofit.api.deezer.TrackApi
-import com.example.spotifyclone.resource.Resource
-import com.example.spotifyclone.sp.SharedPreference
+import com.example.spotifyclone.domain.model.deezer.DeezerTrack
+import com.example.spotifyclone.domain.model.dto.Category
+import com.example.spotifyclone.domain.model.dto.LikedSongs
+import com.example.spotifyclone.domain.model.dto.MusicItem
+import com.example.spotifyclone.data.network.api.deezer.TrackApi
+import com.example.spotifyclone.domain.resource.Resource
+import com.example.spotifyclone.data.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
 import com.example.spotifyclone.ui.adapters.LibraryAlbumAdapter
@@ -34,7 +34,7 @@ class SingleCategoryFragment : Fragment() {
 
     private lateinit var binding: FragmentSingleCategoryBinding
 
-    private var category: Category? = null
+    private var category: com.example.spotifyclone.domain.model.dto.Category? = null
 
     @Inject
     lateinit var trackApi: TrackApi
@@ -43,7 +43,7 @@ class SingleCategoryFragment : Fragment() {
 
     private lateinit var acitivity: MainActivity
 
-    private var tracks: List<MusicItem> = emptyList()
+    private var tracks: List<com.example.spotifyclone.domain.model.dto.MusicItem> = emptyList()
 
     private lateinit var sharedPreference: SharedPreference
 
@@ -61,7 +61,7 @@ class SingleCategoryFragment : Fragment() {
         acitivity = requireActivity() as MainActivity
         sharedPreference = SharedPreference(requireContext())
         arguments?.let {
-            category = it.getSerializable("category") as Category
+            category = it.getSerializable("category") as com.example.spotifyclone.domain.model.dto.Category
         }
 
         setNavigation()
@@ -95,7 +95,7 @@ class SingleCategoryFragment : Fragment() {
         singleCategoryViewModel.getTracks(category?.tracks ?: emptyList())
     }
 
-    private fun setAdapter(data: List<DeezerTrack>) {
+    private fun setAdapter(data: List<com.example.spotifyclone.domain.model.deezer.DeezerTrack>) {
         val adapter = LikedSongsAdapter(
             isInSP = {isInSP(it)},
             setMusicLayout = {setMusicTrack(it)},
@@ -103,7 +103,7 @@ class SingleCategoryFragment : Fragment() {
            saveSharedPreferenceBool =  { value -> saveSharedPreference(value) },
         )
         val model = data.map {
-            LikedSongs(
+            com.example.spotifyclone.domain.model.dto.LikedSongs(
                 name = it.title,
                 artist = it.artist.name,
                 imgUri = it.album.cover_xl,
@@ -112,7 +112,15 @@ class SingleCategoryFragment : Fragment() {
             )
         }
         adapter.submitList(model)
-        tracks = model.map { MusicItem(artist = it.artist,id= "", name = it.name, trackUri = it.uri, img = it.imgUri) }
+        tracks = model.map {
+            com.example.spotifyclone.domain.model.dto.MusicItem(
+                artist = it.artist,
+                id = "",
+                name = it.name,
+                trackUri = it.uri,
+                img = it.imgUri
+            )
+        }
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.recyclerView.adapter = adapter
     }

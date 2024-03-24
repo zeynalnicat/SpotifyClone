@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.spotifyclone.model.dto.LikedSongs
-import com.example.spotifyclone.model.dto.MusicItem
-import com.example.spotifyclone.model.firebase.Albums
-import com.example.spotifyclone.model.firebase.Tracks
-import com.example.spotifyclone.resource.Resource
+import com.example.spotifyclone.domain.model.dto.LikedSongs
+import com.example.spotifyclone.domain.model.dto.MusicItem
+import com.example.spotifyclone.domain.model.firebase.Albums
+import com.example.spotifyclone.domain.model.firebase.Tracks
+import com.example.spotifyclone.domain.resource.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -42,7 +42,7 @@ class SinglePlaylistViewModel(
 
     val isInLiked: LiveData<Boolean> get() = _isInLiked
 
-    private var trackModels: List<LikedSongs> = emptyList()
+    private var trackModels: List<com.example.spotifyclone.domain.model.dto.LikedSongs> = emptyList()
 
     val insertionLiked: LiveData<Long> get() = _insertionLiked
 
@@ -71,11 +71,11 @@ class SinglePlaylistViewModel(
         val query = playlistRef.whereEqualTo("userId", userId).whereEqualTo("playlistId", id)
         try {
             query.get().addOnSuccessListener { querySnapshot ->
-                val trackList = mutableListOf<LikedSongs>()
+                val trackList = mutableListOf<com.example.spotifyclone.domain.model.dto.LikedSongs>()
                 if (querySnapshot != null && !querySnapshot.isEmpty) {
                     val documents = querySnapshot.documents
                     for (document in documents) {
-                        val musicModel = LikedSongs(
+                        val musicModel = com.example.spotifyclone.domain.model.dto.LikedSongs(
                             document["trackName"].toString(),
                             document["artist"].toString(),
                             document["imgUri"].toString(),

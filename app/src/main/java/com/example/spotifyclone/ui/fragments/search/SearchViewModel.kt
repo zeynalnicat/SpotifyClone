@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-import com.example.spotifyclone.model.dto.Category
-import com.example.spotifyclone.resource.Resource
+import com.example.spotifyclone.domain.model.dto.Category
+import com.example.spotifyclone.domain.resource.Resource
 import com.google.firebase.firestore.FirebaseFirestore
 
 
@@ -23,10 +23,10 @@ class SearchViewModel(
         categoryRef.get()
             .addOnSuccessListener { querySnapshot ->
                 if (querySnapshot != null && !querySnapshot.isEmpty) {
-                    val listCategory = mutableListOf<Category>()
+                    val listCategory = mutableListOf<com.example.spotifyclone.domain.model.dto.Category>()
                     val documents = querySnapshot.documents
                     for (document in documents) {
-                        val category = Category(
+                        val category = com.example.spotifyclone.domain.model.dto.Category(
                             document["name"].toString(),
                             document["color"].toString(),
                             document["img"].toString(),

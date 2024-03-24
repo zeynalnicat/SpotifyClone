@@ -17,12 +17,12 @@ import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.BottomSheetTrackBinding
 import com.example.spotifyclone.databinding.FragmentSearchNextBinding
-import com.example.spotifyclone.model.dto.LikedSongs
-import com.example.spotifyclone.model.dto.MusicItem
-import com.example.spotifyclone.model.dto.SearchModel
-import com.example.spotifyclone.network.retrofit.api.deezer.SearchApi
-import com.example.spotifyclone.resource.Resource
-import com.example.spotifyclone.sp.SharedPreference
+import com.example.spotifyclone.domain.model.dto.LikedSongs
+import com.example.spotifyclone.domain.model.dto.MusicItem
+import com.example.spotifyclone.domain.model.dto.SearchModel
+import com.example.spotifyclone.data.network.api.deezer.SearchApi
+import com.example.spotifyclone.domain.resource.Resource
+import com.example.spotifyclone.data.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
 import com.example.spotifyclone.ui.adapters.LikedSongsAdapter
@@ -62,7 +62,7 @@ class SearchNextFragment : Fragment() {
 
     private val musicPlayerViewModel: MusicPlayerViewModel by activityViewModels()
 
-    private var tracks: List<MusicItem> = emptyList()
+    private var tracks: List<com.example.spotifyclone.domain.model.dto.MusicItem> = emptyList()
 
 
     override fun onCreateView(
@@ -133,8 +133,15 @@ class SearchNextFragment : Fragment() {
     }
 
 
-    private fun setAdapter(list: List<SearchModel>) {
-        val model = list.map { LikedSongs(it.title, it.artist, it.img, it.uri) }
+    private fun setAdapter(list: List<com.example.spotifyclone.domain.model.dto.SearchModel>) {
+        val model = list.map {
+            com.example.spotifyclone.domain.model.dto.LikedSongs(
+                it.title,
+                it.artist,
+                it.img,
+                it.uri
+            )
+        }
         val adapter = LikedSongsAdapter({ setBottomSheet(it) },
             { setMusicTrack(it) },
             { key, value -> saveSharedPreference(key, value) },
@@ -143,7 +150,7 @@ class SearchNextFragment : Fragment() {
         adapter.submitList(model)
 
         tracks = list.map {
-            MusicItem(
+            com.example.spotifyclone.domain.model.dto.MusicItem(
                 artist = it.artist,
                 name = it.title,
                 img = it.img,
@@ -155,7 +162,7 @@ class SearchNextFragment : Fragment() {
         binding.recyclerView.adapter = adapter
     }
 
-    private fun setBottomSheet(musicItem: LikedSongs) {
+    private fun setBottomSheet(musicItem: com.example.spotifyclone.domain.model.dto.LikedSongs) {
         val dialog = BottomSheetDialog(requireContext())
         val view = BottomSheetTrackBinding.inflate(layoutInflater)
 
@@ -189,7 +196,13 @@ class SearchNextFragment : Fragment() {
             view.viewAddPlaylist.setOnClickListener {
                 val bundle = Bundle()
                 val musicModel =
-                    MusicItem(musicItem.artist, "", musicItem.name, musicItem.uri, musicItem.imgUri)
+                    com.example.spotifyclone.domain.model.dto.MusicItem(
+                        musicItem.artist,
+                        "",
+                        musicItem.name,
+                        musicItem.uri,
+                        musicItem.imgUri
+                    )
                 bundle.putSerializable("track", musicModel)
                 findNavController().navigate(
                     R.id.action_searchNextFragment_to_addPlaylistFragment,

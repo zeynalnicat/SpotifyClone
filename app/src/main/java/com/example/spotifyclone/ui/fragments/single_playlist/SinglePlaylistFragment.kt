@@ -16,10 +16,10 @@ import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.BottomSheetTrackBinding
 import com.example.spotifyclone.databinding.FragmentSinglePlaylistBinding
-import com.example.spotifyclone.model.dto.LikedSongs
-import com.example.spotifyclone.model.dto.MusicItem
-import com.example.spotifyclone.resource.Resource
-import com.example.spotifyclone.sp.SharedPreference
+import com.example.spotifyclone.domain.model.dto.LikedSongs
+import com.example.spotifyclone.domain.model.dto.MusicItem
+import com.example.spotifyclone.domain.resource.Resource
+import com.example.spotifyclone.data.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
 import com.example.spotifyclone.ui.adapters.LikedSongsAdapter
 import com.example.spotifyclone.util.GsonHelper
@@ -52,7 +52,7 @@ class SinglePlaylistFragment : Fragment() {
 
     private lateinit var sharedPreference: SharedPreference
 
-    private var tracks: List<LikedSongs> = emptyList()
+    private var tracks: List<com.example.spotifyclone.domain.model.dto.LikedSongs> = emptyList()
 
     private val musicPlayerViewModel: MusicPlayerViewModel by activityViewModels()
 
@@ -112,7 +112,7 @@ class SinglePlaylistFragment : Fragment() {
         singleViewModel.getTracks(id)
     }
 
-    private fun setAdapter(data: List<LikedSongs>) {
+    private fun setAdapter(data: List<com.example.spotifyclone.domain.model.dto.LikedSongs>) {
         val adapter = LikedSongsAdapter({ setBottomSheet(it) },
             { setMusicTrack(it) },
             { key, value -> saveSharedPreference(key, value) },
@@ -159,7 +159,7 @@ class SinglePlaylistFragment : Fragment() {
         }
     }
 
-    private fun setBottomSheet(musicItem: LikedSongs) {
+    private fun setBottomSheet(musicItem: com.example.spotifyclone.domain.model.dto.LikedSongs) {
         val dialog = BottomSheetDialog(requireContext())
         val view = BottomSheetTrackBinding.inflate(layoutInflater)
 
@@ -218,7 +218,7 @@ class SinglePlaylistFragment : Fragment() {
     private fun setMusicTrack(position: Int) {
         sharedPreference.saveValue("Position", position)
         val musicItem = tracks.map {
-            MusicItem(
+            com.example.spotifyclone.domain.model.dto.MusicItem(
                 artist = it.artist,
                 name = it.name,
                 img = it.imgUri,

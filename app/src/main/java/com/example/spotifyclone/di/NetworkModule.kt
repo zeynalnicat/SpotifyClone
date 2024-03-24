@@ -1,12 +1,11 @@
 package com.example.spotifyclone.di
 
-import com.example.spotifyclone.model.deezer.album.Album
-import com.example.spotifyclone.network.retrofit.TokenRefresher
-import com.example.spotifyclone.network.retrofit.api.AlbumApi
-import com.example.spotifyclone.network.retrofit.api.ArtistsApi
-import com.example.spotifyclone.network.retrofit.api.deezer.SearchApi
-import com.example.spotifyclone.network.retrofit.api.deezer.TrackApi
-import com.example.spotifyclone.network.retrofit.consts.ConstValues
+import com.example.spotifyclone.data.network.TokenRefresher
+import com.example.spotifyclone.data.network.api.AlbumApi
+import com.example.spotifyclone.data.network.api.ArtistsApi
+import com.example.spotifyclone.data.network.api.deezer.SearchApi
+import com.example.spotifyclone.data.network.api.deezer.TrackApi
+import com.example.spotifyclone.data.network.consts.ConstValues
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -96,15 +95,17 @@ class NetworkModule {
 
     @Singleton
     @Provides
-    fun provideSearchApi(@Named("DeezerApi") retrofit: Retrofit):SearchApi = retrofit.create(SearchApi::class.java)
+    fun provideSearchApi(@Named("DeezerApi") retrofit: Retrofit): SearchApi = retrofit.create(
+        SearchApi::class.java)
 
     @Singleton
     @Provides
-    fun provideTrackApi(@Named("DeezerApi") retrofit: Retrofit):TrackApi = retrofit.create(TrackApi::class.java)
+    fun provideTrackApi(@Named("DeezerApi") retrofit: Retrofit): TrackApi = retrofit.create(TrackApi::class.java)
 
     @Singleton
     @Provides
-    fun provideDeezerAlbumApi(@Named("DeezerApi") retrofit: Retrofit):com.example.spotifyclone.network.retrofit.api.deezer.AlbumApi = retrofit.create(com.example.spotifyclone.network.retrofit.api.deezer.AlbumApi::class.java)
+    fun provideDeezerAlbumApi(@Named("DeezerApi") retrofit: Retrofit): com.example.spotifyclone.data.network.api.deezer.AlbumApi = retrofit.create(
+        com.example.spotifyclone.data.network.api.deezer.AlbumApi::class.java)
 
 
 }

@@ -23,10 +23,10 @@ import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ActivityMainBinding
-import com.example.spotifyclone.model.dto.MusicItem
+import com.example.spotifyclone.domain.model.dto.MusicItem
 import com.example.spotifyclone.service.MusicPlayerService
 import com.example.spotifyclone.service.MusicRepository
-import com.example.spotifyclone.sp.SharedPreference
+import com.example.spotifyclone.data.sp.SharedPreference
 import com.example.spotifyclone.ui.fragments.track.TrackViewFragment
 import com.example.spotifyclone.util.GsonHelper
 import com.example.spotifyclone.util.NotificationReceiver
@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener {
 
     }
 
-    private fun handleTracksUpdate(newTracks: List<MusicItem>) {
+    private fun handleTracksUpdate(newTracks: List<com.example.spotifyclone.domain.model.dto.MusicItem>) {
         if (newTracks.isNotEmpty()) {
             musicPlayerViewModel.setTracks(newTracks)
 
@@ -257,7 +257,7 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener {
         }
     }
 
-    fun setTracksAndPosition(tracks: List<MusicItem>, position: Int) {
+    fun setTracksAndPosition(tracks: List<com.example.spotifyclone.domain.model.dto.MusicItem>, position: Int) {
         musicPlayerService?.setTracks(tracks, position)
     }
 
@@ -346,6 +346,7 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener {
     override fun onDestroy() {
         super.onDestroy()
         unbindService(serviceConnection)
+
     }
 
     override fun onSwipeRight() {

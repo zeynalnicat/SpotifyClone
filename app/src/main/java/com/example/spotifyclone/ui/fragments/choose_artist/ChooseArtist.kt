@@ -19,8 +19,8 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.example.spotifyclone.databinding.FragmentChooseArtistBinding
 
-import com.example.spotifyclone.model.artist.Artist
-import com.example.spotifyclone.network.retrofit.api.ArtistsApi
+import com.example.spotifyclone.domain.model.artist.Artist
+import com.example.spotifyclone.data.network.api.ArtistsApi
 import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.JustifyContent
@@ -52,7 +52,7 @@ class ChooseArtist : Fragment() {
             artistsApi
         )
     }
-    private var selectedArtists = mutableListOf<Artist>()
+    private var selectedArtists = mutableListOf<com.example.spotifyclone.domain.model.artist.Artist>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.spotifyclone.model.dto.MusicItem
-import com.example.spotifyclone.network.retrofit.api.AlbumApi
-import com.example.spotifyclone.sp.SharedPreference
+import com.example.spotifyclone.domain.model.dto.MusicItem
+import com.example.spotifyclone.data.network.api.AlbumApi
+import com.example.spotifyclone.data.sp.SharedPreference
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -28,20 +28,21 @@ class TrackViewModel(
     val isInLiked: LiveData<Boolean> get() = _isInLiked
 
 
-    private val _currentTrack = MutableLiveData<MusicItem>()
+    private val _currentTrack = MutableLiveData<com.example.spotifyclone.domain.model.dto.MusicItem>()
 
-    val currentTrack: LiveData<MusicItem> get() = _currentTrack
+    val currentTrack: LiveData<com.example.spotifyclone.domain.model.dto.MusicItem> get() = _currentTrack
 
     fun getCurrentTrack(sp: SharedPreference) {
         val name = sp.getValue("PlayingMusic", "")
         val artist = sp.getValue("PlayingMusicArtist", "")
         val uri = sp.getValue("PlayingMusicUri", "")
 
-        _currentTrack.value = MusicItem(artist, "", name, uri)
+        _currentTrack.value =
+            com.example.spotifyclone.domain.model.dto.MusicItem(artist, "", name, uri)
 
     }
 
-    fun setCurrentTrack(musicItem: MusicItem) {
+    fun setCurrentTrack(musicItem: com.example.spotifyclone.domain.model.dto.MusicItem) {
         _currentTrack.value = musicItem
     }
 

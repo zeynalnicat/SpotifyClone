@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.spotifyclone.model.album.singlealbum.Album
-import com.example.spotifyclone.resource.Resource
-import com.example.spotifyclone.network.retrofit.api.AlbumApi
+import com.example.spotifyclone.domain.model.album.singlealbum.Album
+import com.example.spotifyclone.domain.resource.Resource
+import com.example.spotifyclone.data.network.api.AlbumApi
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -20,7 +20,7 @@ class AlbumViewModel(
     private val firebaseAuth: FirebaseAuth,
     private val firestore: FirebaseFirestore
 ) : ViewModel() {
-    private val _album = MutableLiveData<Album>()
+    private val _album = MutableLiveData<com.example.spotifyclone.domain.model.album.singlealbum.Album>()
     private val _insertion = MutableLiveData<Resource<Long>>()
     private val _isInDB = MutableLiveData<Boolean>(false)
 
@@ -28,7 +28,7 @@ class AlbumViewModel(
 
     private val _isInLiked = MutableLiveData<Boolean>(false)
 
-    val album: LiveData<Album>
+    val album: LiveData<com.example.spotifyclone.domain.model.album.singlealbum.Album>
         get() = _album
 
 

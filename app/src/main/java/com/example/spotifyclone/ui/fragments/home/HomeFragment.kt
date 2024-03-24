@@ -14,19 +14,15 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.FragmentHomeBinding
-import com.example.spotifyclone.network.retrofit.api.deezer.TrackApi
-import com.example.spotifyclone.network.retrofit.TokenRefresher
-import com.example.spotifyclone.network.retrofit.api.AlbumApi
-import com.example.spotifyclone.network.retrofit.api.ArtistsApi
-import com.example.spotifyclone.ui.fragments.home.HomeFactory
-import com.example.spotifyclone.ui.fragments.home.HomeViewModel
+import com.example.spotifyclone.data.network.api.deezer.TrackApi
+import com.example.spotifyclone.data.network.TokenRefresher
+import com.example.spotifyclone.data.network.api.AlbumApi
+import com.example.spotifyclone.data.network.api.ArtistsApi
 import com.example.spotifyclone.ui.fragments.home.general.FragmentPageAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
 
@@ -56,7 +52,7 @@ class HomeFragment : Fragment() {
     lateinit var trackApi: TrackApi
 
     @Inject
-    lateinit var albumDeezerApi: com.example.spotifyclone.network.retrofit.api.deezer.AlbumApi
+    lateinit var albumDeezerApi: com.example.spotifyclone.data.network.api.deezer.AlbumApi
 
     private val homeViewModel: HomeViewModel by viewModels {
         HomeFactory(

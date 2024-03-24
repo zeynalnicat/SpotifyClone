@@ -3,7 +3,7 @@ package com.example.spotifyclone.ui.fragments.track
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
-import com.example.spotifyclone.sp.SharedPreference
+import com.example.spotifyclone.data.sp.SharedPreference
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 

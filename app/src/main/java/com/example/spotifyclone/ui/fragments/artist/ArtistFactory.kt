@@ -2,7 +2,7 @@ package com.example.spotifyclone.ui.fragments.artist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.spotifyclone.network.retrofit.api.ArtistsApi
+import com.example.spotifyclone.data.network.api.ArtistsApi
 
 class ArtistFactory(private val artistApi: ArtistsApi) : ViewModelProvider.Factory {
 

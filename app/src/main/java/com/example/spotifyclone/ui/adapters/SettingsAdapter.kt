@@ -6,17 +6,17 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.spotifyclone.databinding.ItemSettingsBinding
-import com.example.spotifyclone.model.SettingItem
+import com.example.spotifyclone.domain.model.SettingItem
 
 class SettingsAdapter(private val nav: (Int) -> Unit, private val logout: () -> Unit) :
     RecyclerView.Adapter<SettingsAdapter.ViewHolder>() {
 
-    private val diffCall = object : DiffUtil.ItemCallback<SettingItem>() {
-        override fun areItemsTheSame(oldItem: SettingItem, newItem: SettingItem): Boolean {
+    private val diffCall = object : DiffUtil.ItemCallback<com.example.spotifyclone.domain.model.SettingItem>() {
+        override fun areItemsTheSame(oldItem: com.example.spotifyclone.domain.model.SettingItem, newItem: com.example.spotifyclone.domain.model.SettingItem): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: SettingItem, newItem: SettingItem): Boolean {
+        override fun areContentsTheSame(oldItem: com.example.spotifyclone.domain.model.SettingItem, newItem: com.example.spotifyclone.domain.model.SettingItem): Boolean {
             return oldItem == newItem
         }
     }
@@ -38,7 +38,7 @@ class SettingsAdapter(private val nav: (Int) -> Unit, private val logout: () -> 
 
     inner class ViewHolder(private val binding: ItemSettingsBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(current: SettingItem) {
+        fun bind(current: com.example.spotifyclone.domain.model.SettingItem) {
             binding.txtSectionName.setText(current.name)
             if (current.canNavigate) {
                 binding.cardView.setOnClickListener {
@@ -58,7 +58,7 @@ class SettingsAdapter(private val nav: (Int) -> Unit, private val logout: () -> 
         }
     }
 
-    fun submitList(items: List<SettingItem>) {
+    fun submitList(items: List<com.example.spotifyclone.domain.model.SettingItem>) {
         diffUtil.submitList(items)
     }
 }

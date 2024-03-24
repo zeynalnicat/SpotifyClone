@@ -15,10 +15,10 @@ import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.ui.adapters.LibraryAlbumAdapter
 import com.example.spotifyclone.databinding.FragmentLibraryBinding
-import com.example.spotifyclone.model.dto.Album
+import com.example.spotifyclone.domain.model.dto.Album
 
-import com.example.spotifyclone.network.retrofit.api.AlbumApi
-import com.example.spotifyclone.resource.Resource
+import com.example.spotifyclone.data.network.api.AlbumApi
+import com.example.spotifyclone.domain.resource.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,7 +40,7 @@ class LibraryFragment : Fragment() {
     lateinit var firestore: FirebaseFirestore
 
     @Inject
-    lateinit var deezerAlbumApi: com.example.spotifyclone.network.retrofit.api.deezer.AlbumApi
+    lateinit var deezerAlbumApi: com.example.spotifyclone.data.network.api.deezer.AlbumApi
 
     private val libraryViewModel: LibraryViewModel by viewModels {
         LibraryFactor(
@@ -192,14 +192,22 @@ class LibraryFragment : Fragment() {
                 )
             }
             val albums =
-                it.map { Album(it.images[0].url, it.id, it.name, emptyList(), isLibrary = true) }
+                it.map {
+                    com.example.spotifyclone.domain.model.dto.Album(
+                        it.images[0].url,
+                        it.id,
+                        it.name,
+                        emptyList(),
+                        isLibrary = true
+                    )
+                }
             adapter.submitList(albums)
             binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
             binding.recyclerView.adapter = adapter
         }
     }
 
-    private fun setAdapterDeezer(data: List<Album>) {
+    private fun setAdapterDeezer(data: List<com.example.spotifyclone.domain.model.dto.Album>) {
         val adapter = LibraryAlbumAdapter {
             findNavController().navigate(
                 R.id.action_libraryFragment_to_albumViewFragment,
@@ -207,21 +215,40 @@ class LibraryFragment : Fragment() {
             )
         }
         val albumsModel =
-            data.map { Album(it.coverImg, it.id, it.name, it.tracks, true, true, isDeezer = true) }
+            data.map {
+                com.example.spotifyclone.domain.model.dto.Album(
+                    it.coverImg,
+                    it.id,
+                    it.name,
+                    it.tracks,
+                    true,
+                    true,
+                    isDeezer = true
+                )
+            }
         adapter.submitList(albumsModel)
         binding.recyclerDeezer.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerDeezer.adapter = adapter
     }
 
 
-    private fun setAdapterFirebase(albums: List<Album>) {
+    private fun setAdapterFirebase(albums: List<com.example.spotifyclone.domain.model.dto.Album>) {
         val adapter = LibraryAlbumAdapter {
             findNavController().navigate(
                 R.id.action_libraryFragment_to_albumViewFragment,
                 it
             )
         }
-        val albumsModel = albums.map { Album(it.coverImg, it.id, it.name, it.tracks, true, true) }
+        val albumsModel = albums.map {
+            com.example.spotifyclone.domain.model.dto.Album(
+                it.coverImg,
+                it.id,
+                it.name,
+                it.tracks,
+                true,
+                true
+            )
+        }
         adapter.submitList(albumsModel)
         binding.recyclerFirebase.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerFirebase.adapter = adapter

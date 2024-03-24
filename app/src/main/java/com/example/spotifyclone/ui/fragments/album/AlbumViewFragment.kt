@@ -23,14 +23,14 @@ import com.example.spotifyclone.ui.adapters.SingleAlbumTracksAdapter
 import com.example.spotifyclone.databinding.BottomSheetTrackBinding
 import com.example.spotifyclone.databinding.FragmentAlbumViewBinding
 
-import com.example.spotifyclone.model.album.singlealbum.Artist
-import com.example.spotifyclone.model.dto.Album
-import com.example.spotifyclone.model.dto.MusicItem
-import com.example.spotifyclone.musicplayer.MusicPlayer
-import com.example.spotifyclone.network.retrofit.api.AlbumApi
+import com.example.spotifyclone.domain.model.album.singlealbum.Artist
+import com.example.spotifyclone.domain.model.dto.Album
+import com.example.spotifyclone.domain.model.dto.MusicItem
+
+import com.example.spotifyclone.data.network.api.AlbumApi
 import com.example.spotifyclone.service.MusicPlayerService
 import com.example.spotifyclone.service.MusicRepository
-import com.example.spotifyclone.sp.SharedPreference
+import com.example.spotifyclone.data.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
 import com.example.spotifyclone.util.GsonHelper
@@ -47,7 +47,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class AlbumViewFragment : Fragment() {
     private lateinit var binding: FragmentAlbumViewBinding
-    private lateinit var album: Album
+    private lateinit var album: com.example.spotifyclone.domain.model.dto.Album
     private var mediaPlayer: MediaPlayer? = null
 
     private val musicPlayerViewModel: MusicPlayerViewModel by activityViewModels()
@@ -71,7 +71,7 @@ class AlbumViewFragment : Fragment() {
             firestore
         )
     }
-    private var tracks: List<MusicItem> = emptyList()
+    private var tracks: List<com.example.spotifyclone.domain.model.dto.MusicItem> = emptyList()
     private var imgAlbum = ""
     private lateinit var adapter: SingleAlbumTracksAdapter
     private lateinit var sharedPreference: SharedPreference
@@ -135,7 +135,7 @@ class AlbumViewFragment : Fragment() {
 
     private fun getAlbumId() {
         arguments?.let {
-            album = it.getSerializable("album") as Album
+            album = it.getSerializable("album") as com.example.spotifyclone.domain.model.dto.Album
         }
     }
 
@@ -161,7 +161,12 @@ class AlbumViewFragment : Fragment() {
                 .load(album.coverImg)
                 .into(binding.imgArtist)
             val music = album.tracks.map {
-                MusicItem(it.artist!!, it.id!!, it.name!!, it.trackUri!!)
+                com.example.spotifyclone.domain.model.dto.MusicItem(
+                    it.artist!!,
+                    it.id!!,
+                    it.name!!,
+                    it.trackUri!!
+                )
             }
 
             setAdapter(album.coverImg, music)
@@ -170,7 +175,7 @@ class AlbumViewFragment : Fragment() {
             albumViewModel.getAlbum(album.id)
             albumViewModel.checkInDB(album.id, false)
             albumViewModel.album.observe(viewLifecycleOwner) {
-                val artistNames = it.artists.joinToString { artist: Artist -> artist.name + " " }
+                val artistNames = it.artists.joinToString { artist: com.example.spotifyclone.domain.model.album.singlealbum.Artist -> artist.name + " " }
                 binding.txtArtistName.text = artistNames
                 binding.txtAlbumYear.text = it.release_date
                 binding.txtAlbumName.text = it.name
@@ -182,7 +187,7 @@ class AlbumViewFragment : Fragment() {
                     .load(it.images[1].url)
                     .into(binding.imgArtist)
                 val music = it.tracks.items.map {
-                    MusicItem(
+                    com.example.spotifyclone.domain.model.dto.MusicItem(
                         it.artists[0].name,
                         it.id,
                         it.name,
@@ -197,13 +202,20 @@ class AlbumViewFragment : Fragment() {
 
     private fun setAdapter(
         img: String,
-        tracks: List<MusicItem>
+        tracks: List<com.example.spotifyclone.domain.model.dto.MusicItem>
     ) {
-        MusicPlayer.setListOfTracks(tracks)
 
 
 
-        val model = tracks.map { MusicItem(it.artist, it.id, it.name, it.trackUri, img) }
+        val model = tracks.map {
+            com.example.spotifyclone.domain.model.dto.MusicItem(
+                it.artist,
+                it.id,
+                it.name,
+                it.trackUri,
+                img
+            )
+        }
 
 
         adapter = SingleAlbumTracksAdapter(img,
@@ -238,7 +250,7 @@ class AlbumViewFragment : Fragment() {
         sharedPreference.removeCurrent()
     }
 
-    private fun setBottomSheet(musicItem: MusicItem, trackId: String) {
+    private fun setBottomSheet(musicItem: com.example.spotifyclone.domain.model.dto.MusicItem, trackId: String) {
         val dialog = BottomSheetDialog(requireContext())
         val view = BottomSheetTrackBinding.inflate(layoutInflater)
 
@@ -338,7 +350,6 @@ class AlbumViewFragment : Fragment() {
     }
 
     private fun playAll() {
-        mediaPlayer = MusicPlayer.getMediaPlayer()
         binding.imgPlay.setOnClickListener {
             isPlaying.postValue(true)
             GsonHelper.serializeTracks(requireContext().applicationContext, tracks)

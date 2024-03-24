@@ -13,7 +13,7 @@ import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.ui.adapters.SettingsAdapter
 import com.example.spotifyclone.databinding.FragmentSettingsBinding
-import com.example.spotifyclone.model.SettingItem
+import com.example.spotifyclone.domain.model.SettingItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
@@ -88,16 +88,23 @@ class SettingsFragment : Fragment() {
 
     private fun setAdapter() {
         val settingsItem = listOf(
-            SettingItem(R.string.setting_account),
-            SettingItem(R.string.setting_data),
-            SettingItem(R.string.setting_language, true,R.id.action_settingsFragment_to_chooseLanguageFragment),
-            SettingItem(R.string.setting_playback),
-            SettingItem(R.string.setting_explicit),
-            SettingItem(R.string.setting_device),
-            SettingItem(R.string.setting_car),
-            SettingItem(R.string.setting_social),
-            SettingItem(R.string.setting_storage),
-            SettingItem(R.string.setting_logout, isLogout = true)
+            com.example.spotifyclone.domain.model.SettingItem(R.string.setting_account),
+            com.example.spotifyclone.domain.model.SettingItem(R.string.setting_data),
+            com.example.spotifyclone.domain.model.SettingItem(
+                R.string.setting_language,
+                true,
+                R.id.action_settingsFragment_to_chooseLanguageFragment
+            ),
+            com.example.spotifyclone.domain.model.SettingItem(R.string.setting_playback),
+            com.example.spotifyclone.domain.model.SettingItem(R.string.setting_explicit),
+            com.example.spotifyclone.domain.model.SettingItem(R.string.setting_device),
+            com.example.spotifyclone.domain.model.SettingItem(R.string.setting_car),
+            com.example.spotifyclone.domain.model.SettingItem(R.string.setting_social),
+            com.example.spotifyclone.domain.model.SettingItem(R.string.setting_storage),
+            com.example.spotifyclone.domain.model.SettingItem(
+                R.string.setting_logout,
+                isLogout = true
+            )
         )
         val adapter = SettingsAdapter({ findNavController().navigate(it) }, { logout() })
         adapter.submitList(settingsItem)

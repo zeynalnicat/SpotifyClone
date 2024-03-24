@@ -5,11 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
-import com.example.spotifyclone.model.album.popularalbums.Album
-import com.example.spotifyclone.model.firebase.Albums
-import com.example.spotifyclone.model.firebase.Tracks
-import com.example.spotifyclone.network.retrofit.api.AlbumApi
-import com.example.spotifyclone.resource.Resource
+import com.example.spotifyclone.domain.model.album.popularalbums.Album
+import com.example.spotifyclone.domain.model.firebase.Albums
+import com.example.spotifyclone.domain.model.firebase.Tracks
+import com.example.spotifyclone.data.network.api.AlbumApi
+import com.example.spotifyclone.domain.resource.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -24,31 +24,31 @@ class LibraryViewModel(
     private val albumApi: AlbumApi,
     private val firebaseAuth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
-    private val deezerApi: com.example.spotifyclone.network.retrofit.api.deezer.AlbumApi
+    private val deezerApi: com.example.spotifyclone.data.network.api.deezer.AlbumApi
 ) : ViewModel() {
 
-    private val _likedAlbums = MutableLiveData<List<Album>>()
+    private val _likedAlbums = MutableLiveData<List<com.example.spotifyclone.domain.model.album.popularalbums.Album>>()
     private val _deezerAlbums =
-        MutableLiveData<Resource<List<com.example.spotifyclone.model.dto.Album>>>()
+        MutableLiveData<Resource<List<com.example.spotifyclone.domain.model.dto.Album>>>()
     private val _albumIds = MutableLiveData<List<String>>()
     private val _count = MutableLiveData<Int>(0)
 
     private val _likedAlbumsFirestore =
-        MutableLiveData<Resource<List<com.example.spotifyclone.model.dto.Album>>>()
+        MutableLiveData<Resource<List<com.example.spotifyclone.domain.model.dto.Album>>>()
 
 
     val count: LiveData<Int> get() = _count
 
-    val likedAlbums: LiveData<List<Album>>
+    val likedAlbums: LiveData<List<com.example.spotifyclone.domain.model.album.popularalbums.Album>>
         get() = _likedAlbums
 
     val albumIds: LiveData<List<String>>
         get() = _albumIds
 
-    val deezerAlbums: LiveData<Resource<List<com.example.spotifyclone.model.dto.Album>>>
+    val deezerAlbums: LiveData<Resource<List<com.example.spotifyclone.domain.model.dto.Album>>>
         get() = _deezerAlbums
 
-    val likedAlbumsFirestore: LiveData<Resource<List<com.example.spotifyclone.model.dto.Album>>> get() = _likedAlbumsFirestore
+    val likedAlbumsFirestore: LiveData<Resource<List<com.example.spotifyclone.domain.model.dto.Album>>> get() = _likedAlbumsFirestore
 
     fun getFromDB() {
         val albumRef = firestore.collection("retrofitAlbum")
@@ -80,7 +80,7 @@ class LibraryViewModel(
             val query = albumRef.whereEqualTo("userId", userId)
             val refAlbums = database.getReference("albums")
 
-            val listAlbums = mutableListOf<Albums>()
+            val listAlbums = mutableListOf<com.example.spotifyclone.domain.model.firebase.Albums>()
             val listAlbumIds = mutableListOf<String>()
 
             query.get().addOnCompleteListener { task ->
@@ -98,7 +98,7 @@ class LibraryViewModel(
                                         val tracksMap = albumMap["tracks"] as List<Map<*, *>>
                                         val trackList = tracksMap.map { track ->
                                             val trackMap = track
-                                            Tracks(
+                                            com.example.spotifyclone.domain.model.firebase.Tracks(
                                                 artist = trackMap["artist"] as String?,
                                                 id = trackMap["id"] as String?,
                                                 name = trackMap["name"] as String?,
@@ -106,17 +106,18 @@ class LibraryViewModel(
                                             )
                                         }
 
-                                        val album = Albums(
-                                            albumMap["coverImg"] as String?,
-                                            albumMap["id"] as String?,
-                                            albumMap["name"] as String?,
-                                            trackList
-                                        )
+                                        val album =
+                                            com.example.spotifyclone.domain.model.firebase.Albums(
+                                                albumMap["coverImg"] as String?,
+                                                albumMap["id"] as String?,
+                                                albumMap["name"] as String?,
+                                                trackList
+                                            )
 
                                         listAlbums.add(album)
                                     }
                                     val albumModel = listAlbums.map {
-                                        com.example.spotifyclone.model.dto.Album(
+                                        com.example.spotifyclone.domain.model.dto.Album(
                                             it.coverImg ?: "",
                                             it.id ?: "",
                                             it.name ?: "",
@@ -144,18 +145,18 @@ class LibraryViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val ids = getDeezerIds()
-                val listAlbum = mutableListOf<com.example.spotifyclone.model.dto.Album>()
+                val listAlbum = mutableListOf<com.example.spotifyclone.domain.model.dto.Album>()
                 for (id in ids) {
                     val response = deezerApi.getAlbum(id)
                     if (response.isSuccessful) {
                         val result = response.body()
                         result?.let {
-                            val model = com.example.spotifyclone.model.dto.Album(
+                            val model = com.example.spotifyclone.domain.model.dto.Album(
                                 it.cover_xl,
                                 "" + it.id,
                                 it.title,
                                 it.tracks.data.map { track ->
-                                    Tracks(
+                                    com.example.spotifyclone.domain.model.firebase.Tracks(
                                         track.artist.name,
                                         "",
                                         track.title,

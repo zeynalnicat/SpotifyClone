@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 
 
-import com.example.spotifyclone.model.dto.PlaylistModel
-import com.example.spotifyclone.resource.Resource
+import com.example.spotifyclone.domain.model.dto.PlaylistModel
+import com.example.spotifyclone.domain.resource.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +31,7 @@ class UserLibraryViewModel(
 
                 val playlistModels = playlistsModel()
                 val playlistMap = playlistTrackCounts()
-                val listPlaylist = mutableListOf<PlaylistModel>()
+                val listPlaylist = mutableListOf<com.example.spotifyclone.domain.model.dto.PlaylistModel>()
 
                 playlistModels.forEach {
                     it.countTrack = playlistMap[it.id] ?: 0
@@ -50,17 +50,17 @@ class UserLibraryViewModel(
 
     }
 
-    suspend fun playlistsModel(): List<PlaylistModel> {
+    suspend fun playlistsModel(): List<com.example.spotifyclone.domain.model.dto.PlaylistModel> {
         val playlistsRef = firestore.collection("playlists")
         val userId = firebaseAuth.currentUser?.uid
         val query = playlistsRef.whereEqualTo("userId", userId).get().await()
-        val playlistList = mutableListOf<PlaylistModel>()
+        val playlistList = mutableListOf<com.example.spotifyclone.domain.model.dto.PlaylistModel>()
 
         if (query != null && !query.isEmpty) {
             val documents = query.documents
             for (document in documents) {
                 playlistList.add(
-                    PlaylistModel(
+                    com.example.spotifyclone.domain.model.dto.PlaylistModel(
                         document["id"].toString(),
                         document["name"].toString(),
                         isLibrary = true

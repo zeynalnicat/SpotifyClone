@@ -16,11 +16,11 @@ import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.BottomSheetTrackBinding
 import com.example.spotifyclone.ui.adapters.PlaylistAdapter
 import com.example.spotifyclone.databinding.FragmentUserLibraryBinding
-import com.example.spotifyclone.model.dto.MusicItem
+import com.example.spotifyclone.domain.model.dto.MusicItem
 
-import com.example.spotifyclone.model.dto.PlaylistModel
-import com.example.spotifyclone.resource.Resource
-import com.example.spotifyclone.sp.SharedPreference
+import com.example.spotifyclone.domain.model.dto.PlaylistModel
+import com.example.spotifyclone.domain.resource.Resource
+import com.example.spotifyclone.data.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
@@ -134,7 +134,7 @@ class UserLibraryFragment : Fragment() {
         }
     }
 
-    private fun setAdapter(list: List<PlaylistModel>) {
+    private fun setAdapter(list: List<com.example.spotifyclone.domain.model.dto.PlaylistModel>) {
         val adapter =
             PlaylistAdapter ({ bundle ->
                 findNavController().navigate(
@@ -149,7 +149,7 @@ class UserLibraryFragment : Fragment() {
     }
 
 
-    private fun setBottomSheet(playlistModel: PlaylistModel) {
+    private fun setBottomSheet(playlistModel: com.example.spotifyclone.domain.model.dto.PlaylistModel) {
         val dialog = BottomSheetDialog(requireContext())
         val view = BottomSheetTrackBinding.inflate(layoutInflater)
 

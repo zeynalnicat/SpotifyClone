@@ -9,11 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ItemHomeMusicBinding
-import com.example.spotifyclone.model.deezer.DeezerTrack
-import com.example.spotifyclone.model.dto.LikedSongs
+import com.example.spotifyclone.domain.model.deezer.DeezerTrack
+import com.example.spotifyclone.domain.model.dto.LikedSongs
 
 class TrackAdapter(
-    private val setBottom: (LikedSongs) -> Unit = {},
+    private val setBottom: (com.example.spotifyclone.domain.model.dto.LikedSongs) -> Unit = {},
     private val setMusicLayout: (Int) -> Unit = {},
     private val saveSharedPreference: (key: String, value: String) -> Unit,
     private val saveSharedPreferenceBool: (value: Boolean) -> Unit = {},
@@ -22,12 +22,12 @@ class TrackAdapter(
 ) : RecyclerView.Adapter<TrackAdapter.ViewHolder>() {
 
 
-    private val diffCallBack = object : DiffUtil.ItemCallback<DeezerTrack>() {
-        override fun areItemsTheSame(oldItem: DeezerTrack, newItem: DeezerTrack): Boolean {
+    private val diffCallBack = object : DiffUtil.ItemCallback<com.example.spotifyclone.domain.model.deezer.DeezerTrack>() {
+        override fun areItemsTheSame(oldItem: com.example.spotifyclone.domain.model.deezer.DeezerTrack, newItem: com.example.spotifyclone.domain.model.deezer.DeezerTrack): Boolean {
             return newItem === oldItem
         }
 
-        override fun areContentsTheSame(oldItem: DeezerTrack, newItem: DeezerTrack): Boolean {
+        override fun areContentsTheSame(oldItem: com.example.spotifyclone.domain.model.deezer.DeezerTrack, newItem: com.example.spotifyclone.domain.model.deezer.DeezerTrack): Boolean {
             return newItem == oldItem
         }
 
@@ -51,7 +51,7 @@ class TrackAdapter(
 
     inner class ViewHolder(private val binding: ItemHomeMusicBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(current: DeezerTrack) {
+        fun bind(current: com.example.spotifyclone.domain.model.deezer.DeezerTrack) {
             binding.txtArtist.text = current.artist.name
             binding.txtTrack.text = current.title
             binding.txtTrackName.text = current.title
@@ -102,7 +102,7 @@ class TrackAdapter(
 
     }
 
-    fun submitList(list: List<DeezerTrack>) {
+    fun submitList(list: List<com.example.spotifyclone.domain.model.deezer.DeezerTrack>) {
         diffUtil.submitList(list)
     }
 }

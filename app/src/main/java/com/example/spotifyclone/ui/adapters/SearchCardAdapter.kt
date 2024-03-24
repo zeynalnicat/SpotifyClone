@@ -9,16 +9,16 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.databinding.ItemSearchCardBinding
-import com.example.spotifyclone.model.dto.Category
+import com.example.spotifyclone.domain.model.dto.Category
 
 class SearchCardAdapter(private val nav : (Bundle) -> Unit) : RecyclerView.Adapter<SearchCardAdapter.ViewHolder>() {
 
-    val diffCallBack = object : DiffUtil.ItemCallback<Category>() {
-        override fun areItemsTheSame(oldItem: Category, newItem: Category): Boolean {
+    val diffCallBack = object : DiffUtil.ItemCallback<com.example.spotifyclone.domain.model.dto.Category>() {
+        override fun areItemsTheSame(oldItem: com.example.spotifyclone.domain.model.dto.Category, newItem: com.example.spotifyclone.domain.model.dto.Category): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: Category, newItem: Category): Boolean {
+        override fun areContentsTheSame(oldItem: com.example.spotifyclone.domain.model.dto.Category, newItem: com.example.spotifyclone.domain.model.dto.Category): Boolean {
             return oldItem == newItem
         }
 
@@ -40,13 +40,13 @@ class SearchCardAdapter(private val nav : (Bundle) -> Unit) : RecyclerView.Adapt
         return holder.bind(diffUtil.currentList[position])
     }
 
-    fun submitList(list: List<Category>) {
+    fun submitList(list: List<com.example.spotifyclone.domain.model.dto.Category>) {
         diffUtil.submitList(list)
     }
 
     inner class ViewHolder(private val binding: ItemSearchCardBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(current: Category) {
+        fun bind(current: com.example.spotifyclone.domain.model.dto.Category) {
             val color = if (!current.color.isNullOrEmpty()) {
                 Color.parseColor(current.color)
             } else {

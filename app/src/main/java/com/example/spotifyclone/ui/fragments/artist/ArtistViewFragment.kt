@@ -13,8 +13,8 @@ import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.ui.adapters.AlbumAdapter
 import com.example.spotifyclone.databinding.FragmentArtistViewBinding
-import com.example.spotifyclone.model.dto.Album
-import com.example.spotifyclone.network.retrofit.api.ArtistsApi
+import com.example.spotifyclone.domain.model.dto.Album
+import com.example.spotifyclone.data.network.api.ArtistsApi
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -72,7 +72,14 @@ class ArtistViewFragment : Fragment() {
                     it
                 )
             }
-            val album = it.map { Album(it.images[0].url, it.id, it.name, emptyList()) }
+            val album = it.map {
+                com.example.spotifyclone.domain.model.dto.Album(
+                    it.images[0].url,
+                    it.id,
+                    it.name,
+                    emptyList()
+                )
+            }
             adapter.submitList(album)
             binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
             binding.recyclerView.adapter = adapter

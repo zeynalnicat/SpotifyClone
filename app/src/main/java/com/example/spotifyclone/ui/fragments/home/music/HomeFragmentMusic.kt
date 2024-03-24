@@ -11,11 +11,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.spotifyclone.databinding.FragmentHomeMusicBinding
-import com.example.spotifyclone.model.deezer.DeezerTrack
-import com.example.spotifyclone.model.dto.MusicItem
-import com.example.spotifyclone.network.retrofit.api.deezer.TrackApi
-import com.example.spotifyclone.resource.Resource
-import com.example.spotifyclone.sp.SharedPreference
+import com.example.spotifyclone.domain.model.deezer.DeezerTrack
+import com.example.spotifyclone.domain.model.dto.MusicItem
+import com.example.spotifyclone.data.network.api.deezer.TrackApi
+import com.example.spotifyclone.domain.resource.Resource
+import com.example.spotifyclone.data.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
 import com.example.spotifyclone.ui.fragments.home.music.adapter.TrackAdapter
@@ -36,7 +36,7 @@ class HomeFragmentMusic : Fragment() {
 
     private lateinit var acitivity: MainActivity
 
-    private var tracks: List<MusicItem> = emptyList()
+    private var tracks: List<com.example.spotifyclone.domain.model.dto.MusicItem> = emptyList()
 
     private val musicPlayerViewModel: MusicPlayerViewModel by activityViewModels()
 
@@ -108,14 +108,22 @@ class HomeFragmentMusic : Fragment() {
 
 
 
-    private fun setAdapter(data: List<DeezerTrack>) {
+    private fun setAdapter(data: List<com.example.spotifyclone.domain.model.deezer.DeezerTrack>) {
         val adapter = TrackAdapter(isInSP = { isInSP(it) },
             setMusicLayout = { setMusicTrack(it) },
             saveSharedPreference = { key, value -> saveSharedPreference(key, value) },
             saveSharedPreferenceBool = { value -> saveSharedPreference(value) },
             isPlaying = {getIsPlaying()})
         adapter.submitList(data)
-        tracks = data.map { MusicItem(it.artist.name,"",it.title,it.preview,it.album.cover_xl) }
+        tracks = data.map {
+            com.example.spotifyclone.domain.model.dto.MusicItem(
+                it.artist.name,
+                "",
+                it.title,
+                it.preview,
+                it.album.cover_xl
+            )
+        }
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)
         binding.recyclerView.adapter = adapter
     }

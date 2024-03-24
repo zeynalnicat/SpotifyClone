@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-import com.example.spotifyclone.model.dto.LikedSongs
-import com.example.spotifyclone.resource.Resource
+import com.example.spotifyclone.domain.model.dto.LikedSongs
+import com.example.spotifyclone.domain.resource.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -31,11 +31,11 @@ class LikedSongsViewModel(
             query.get()
                 .addOnCompleteListener { task ->
                     val result = task.result
-                    val listLikedSongs = mutableListOf<LikedSongs>()
+                    val listLikedSongs = mutableListOf<com.example.spotifyclone.domain.model.dto.LikedSongs>()
                     if (result != null && !result.isEmpty) {
                         val documents = result.documents
                         for (document in documents) {
-                            val song = LikedSongs(
+                            val song = com.example.spotifyclone.domain.model.dto.LikedSongs(
                                 document["name"].toString(),
                                 document["artist"].toString(),
                                 document["imgUri"].toString(),

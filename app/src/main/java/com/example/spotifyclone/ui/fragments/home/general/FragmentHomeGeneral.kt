@@ -1,54 +1,34 @@
 package com.example.spotifyclone.ui.fragments.home
 
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
-import android.view.Gravity
 
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.view.GravityCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.ui.adapters.ArtistAdapter
 import com.example.spotifyclone.ui.adapters.AlbumAdapter
-import com.example.spotifyclone.databinding.FragmentHomeBinding
 import com.example.spotifyclone.databinding.FragmentHomeGeneralBinding
 
-import com.example.spotifyclone.model.album.newrelease.Item
-import com.example.spotifyclone.model.artist.Artist
-import com.example.spotifyclone.model.dto.Album
-import com.example.spotifyclone.model.dto.LikedSongs
-import com.example.spotifyclone.model.dto.MusicItem
-import com.example.spotifyclone.network.retrofit.api.deezer.TrackApi
-import com.example.spotifyclone.network.retrofit.TokenRefresher
-import com.example.spotifyclone.network.retrofit.api.AlbumApi
-import com.example.spotifyclone.network.retrofit.api.ArtistsApi
-import com.example.spotifyclone.resource.Resource
-import com.example.spotifyclone.sp.SharedPreference
+import com.example.spotifyclone.data.network.api.deezer.TrackApi
+import com.example.spotifyclone.data.network.TokenRefresher
+import com.example.spotifyclone.data.network.api.AlbumApi
+import com.example.spotifyclone.data.network.api.ArtistsApi
+import com.example.spotifyclone.domain.resource.Resource
+import com.example.spotifyclone.data.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
-import com.example.spotifyclone.ui.adapters.LibraryAlbumAdapter
 import com.example.spotifyclone.ui.adapters.LikedSongsAdapter
 import com.example.spotifyclone.util.GsonHelper
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
 
@@ -79,12 +59,12 @@ class FragmentHomeGeneral : Fragment() {
 
     private lateinit var acitivity: MainActivity
 
-    private var tracks: List<MusicItem> = emptyList()
+    private var tracks: List<com.example.spotifyclone.domain.model.dto.MusicItem> = emptyList()
 
     private lateinit var sharedPreference: SharedPreference
 
     @Inject
-    lateinit var albumDeezerApi: com.example.spotifyclone.network.retrofit.api.deezer.AlbumApi
+    lateinit var albumDeezerApi: com.example.spotifyclone.data.network.api.deezer.AlbumApi
 
     private val homeViewModel: HomeViewModel by viewModels {
         HomeFactory(
@@ -246,7 +226,7 @@ class FragmentHomeGeneral : Fragment() {
         }
     }
 
-    private fun setTopMusics(data: List<MusicItem>) {
+    private fun setTopMusics(data: List<com.example.spotifyclone.domain.model.dto.MusicItem>) {
         val adapter = LikedSongsAdapter(
             isInSP = { isInSP(it) },
             setMusicLayout = { setMusicTrack(it) },
@@ -254,7 +234,15 @@ class FragmentHomeGeneral : Fragment() {
             saveSharedPreferenceBool = { value -> saveSharedPreference(value) },
         )
         val model =
-            data.map { LikedSongs(it.name, it.artist, it.img, it.trackUri, isTopTracks = true) }
+            data.map {
+                com.example.spotifyclone.domain.model.dto.LikedSongs(
+                    it.name,
+                    it.artist,
+                    it.img,
+                    it.trackUri,
+                    isTopTracks = true
+                )
+            }
         adapter.submitList(model)
         tracks = data
         binding.recyclerTopMusics.layoutManager = GridLayoutManager(requireContext(), 2)
@@ -289,7 +277,7 @@ class FragmentHomeGeneral : Fragment() {
     }
 
 
-    private fun setNewRelease(list: List<Album>) {
+    private fun setNewRelease(list: List<com.example.spotifyclone.domain.model.dto.Album>) {
 
         val adapter =
             AlbumAdapter {
@@ -306,7 +294,7 @@ class FragmentHomeGeneral : Fragment() {
     }
 
 
-    private fun setTrySomethingElse(list: List<Artist>) {
+    private fun setTrySomethingElse(list: List<com.example.spotifyclone.domain.model.artist.Artist>) {
 
         val adapter =
             ArtistAdapter {
@@ -323,7 +311,7 @@ class FragmentHomeGeneral : Fragment() {
     }
 
 
-    private fun setPopularAlbums(list: List<Album>) {
+    private fun setPopularAlbums(list: List<com.example.spotifyclone.domain.model.dto.Album>) {
 
         val adapter =
             AlbumAdapter {
@@ -340,7 +328,7 @@ class FragmentHomeGeneral : Fragment() {
     }
 
 
-    private fun setRecommended(list: List<Album>) {
+    private fun setRecommended(list: List<com.example.spotifyclone.domain.model.dto.Album>) {
         val adapter = AlbumAdapter {
             findNavController().navigate(
                 R.id.action_homeFragment_to_albumViewFragment,
@@ -356,7 +344,7 @@ class FragmentHomeGeneral : Fragment() {
     }
 
 
-    private fun deezerAlbums(list: List<Album>) {
+    private fun deezerAlbums(list: List<com.example.spotifyclone.domain.model.dto.Album>) {
 
     }
 }

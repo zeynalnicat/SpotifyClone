@@ -2,7 +2,7 @@ package com.example.spotifyclone.ui.fragments.album
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.spotifyclone.network.retrofit.api.AlbumApi
+import com.example.spotifyclone.data.network.api.AlbumApi
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 

@@ -5,17 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.spotifyclone.model.album.newrelease.Item
-import com.example.spotifyclone.model.artist.Artist
-import com.example.spotifyclone.model.dto.Album
-import com.example.spotifyclone.model.dto.MusicItem
-import com.example.spotifyclone.model.firebase.Albums
-import com.example.spotifyclone.model.firebase.Tracks
-import com.example.spotifyclone.network.retrofit.api.deezer.TrackApi
-import com.example.spotifyclone.network.retrofit.TokenRefresher
-import com.example.spotifyclone.resource.Resource
-import com.example.spotifyclone.network.retrofit.api.AlbumApi
-import com.example.spotifyclone.network.retrofit.api.ArtistsApi
+import com.example.spotifyclone.data.network.api.deezer.TrackApi
+import com.example.spotifyclone.data.network.TokenRefresher
+import com.example.spotifyclone.domain.resource.Resource
+import com.example.spotifyclone.data.network.api.AlbumApi
+import com.example.spotifyclone.data.network.api.ArtistsApi
+import com.example.spotifyclone.domain.model.artist.Artist
+import com.example.spotifyclone.domain.model.dto.Album
+import com.example.spotifyclone.domain.model.dto.MusicItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -37,7 +34,7 @@ class HomeViewModel(
     private val firebaseAuth: FirebaseAuth,
     private val tokenRefresher: TokenRefresher,
     private val trackApi: TrackApi,
-    private val albumDeezerApi: com.example.spotifyclone.network.retrofit.api.deezer.AlbumApi
+    private val albumDeezerApi: com.example.spotifyclone.data.network.api.deezer.AlbumApi
 ) : ViewModel() {
 
     private val _date = MutableLiveData<String>()
@@ -104,7 +101,14 @@ class HomeViewModel(
                 if (response.isSuccessful) {
                     val result = response.body()?.albums?.items
                     result?.let {
-                        val model = it.map { Album(it.images[0].url,it.id,it.name, emptyList()) }
+                        val model = it.map {
+                            com.example.spotifyclone.domain.model.dto.Album(
+                                it.images[0].url,
+                                it.id,
+                                it.name,
+                                emptyList()
+                            )
+                        }
                         _newReleases.postValue(Resource.Success(model))
                     }
 
@@ -129,7 +133,14 @@ class HomeViewModel(
                 if (response.isSuccessful) {
                     val result = response.body()?.albums
                     result?.let {
-                        val model = it.map { Album(it.images[0].url,it.id,it.name, emptyList()) }
+                        val model = it.map {
+                            com.example.spotifyclone.domain.model.dto.Album(
+                                it.images[0].url,
+                                it.id,
+                                it.name,
+                                emptyList()
+                            )
+                        }
                         _popularAlbums.postValue(Resource.Success(model))
                     }
 
@@ -154,7 +165,7 @@ class HomeViewModel(
 
         try {
             val artistIDs = hashSetOf<String>()
-            val artists = mutableListOf<Artist>()
+            val artists = mutableListOf<com.example.spotifyclone.domain.model.artist.Artist>()
             query.get()
                 .addOnSuccessListener { querySnapshot ->
                     if (!querySnapshot.isEmpty) {
@@ -196,7 +207,7 @@ class HomeViewModel(
         try {
             val database = FirebaseDatabase.getInstance()
             val refAlbums = database.getReference("albums")
-            val listAlbums = mutableListOf<Albums>()
+            val listAlbums = mutableListOf<com.example.spotifyclone.domain.model.firebase.Albums>()
             refAlbums.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(ds: DataSnapshot) {
                     for (v in ds.children) {
@@ -205,7 +216,7 @@ class HomeViewModel(
 
                         val trackList = tracksMap.map { track ->
                             val trackMap = track
-                            Tracks(
+                            com.example.spotifyclone.domain.model.firebase.Tracks(
                                 artist = trackMap["artist"] as String?,
                                 id = trackMap["id"] as String?,
                                 name = trackMap["name"] as String?,
@@ -213,7 +224,7 @@ class HomeViewModel(
                             )
                         }
 
-                        val album = Albums(
+                        val album = com.example.spotifyclone.domain.model.firebase.Albums(
                             albumMap["coverImg"] as String?,
                             albumMap["id"] as String?,
                             albumMap["name"] as String?,
@@ -224,7 +235,7 @@ class HomeViewModel(
                     }
 
                     val albumModel = listAlbums.map {
-                        com.example.spotifyclone.model.dto.Album(
+                        com.example.spotifyclone.domain.model.dto.Album(
                             it.coverImg ?: "",
                             it.id ?: "",
                             it.name ?: "",
@@ -253,16 +264,16 @@ class HomeViewModel(
         val idsMusic = listOf(89077549, 509382892, 82715364, 6461432, 1151534112, 74427068)
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val listMusic = mutableListOf<MusicItem>()
+                val listMusic = mutableListOf<com.example.spotifyclone.domain.model.dto.MusicItem>()
 
                 idsMusic.forEach {
                     val response = trackApi.getTrack(it)
                     if (response.isSuccessful) {
                         val result = response.body()
                         result?.let { track ->
-                            val musicItem = MusicItem(
+                            val musicItem = com.example.spotifyclone.domain.model.dto.MusicItem(
                                 track.artist.name,
-                                ""+track.id,
+                                "" + track.id,
                                 track.title,
                                 track.preview,
                                 track.album.cover_xl
@@ -285,25 +296,26 @@ class HomeViewModel(
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val listMusic = mutableListOf<Album>()
+                val listMusic = mutableListOf<com.example.spotifyclone.domain.model.dto.Album>()
 
                 albumIds.forEach {
                     val response = albumDeezerApi.getAlbum(it)
                     if (response.isSuccessful) {
                         val result = response.body()
                         result?.let {
-                            val albumItem = Album(
+                            val albumItem = com.example.spotifyclone.domain.model.dto.Album(
                                 it.cover_xl,
-                                ""+it.id,
+                                "" + it.id,
                                 it.title,
                                 it.tracks.data.map { track ->
-                                    Tracks(
+                                    com.example.spotifyclone.domain.model.firebase.Tracks(
                                         track.artist.name,
                                         "",
                                         track.title,
                                         track.preview,
                                     )
-                                },isFirebase = true, isDeezer = true)
+                                }, isFirebase = true, isDeezer = true
+                            )
                             listMusic.add(albumItem)
                         }
                         _popularAlbums.postValue(Resource.Success(listMusic))
@@ -323,25 +335,26 @@ class HomeViewModel(
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val listMusic = mutableListOf<Album>()
+                val listMusic = mutableListOf<com.example.spotifyclone.domain.model.dto.Album>()
 
                 albumIds.forEach {
                     val response = albumDeezerApi.getAlbum(it)
                     if (response.isSuccessful) {
                         val result = response.body()
                         result?.let {
-                            val albumItem = Album(
+                            val albumItem = com.example.spotifyclone.domain.model.dto.Album(
                                 it.cover_xl,
-                                ""+it.id,
+                                "" + it.id,
                                 it.title,
                                 it.tracks.data.map { track ->
-                                    Tracks(
+                                    com.example.spotifyclone.domain.model.firebase.Tracks(
                                         track.artist.name,
                                         "",
                                         track.title,
                                         track.preview,
                                     )
-                                },isFirebase = true, isDeezer = true)
+                                }, isFirebase = true, isDeezer = true
+                            )
                             listMusic.add(albumItem)
                         }
                         _newReleases.postValue(Resource.Success(listMusic))

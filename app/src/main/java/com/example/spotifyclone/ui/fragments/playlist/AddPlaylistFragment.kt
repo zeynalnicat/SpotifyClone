@@ -16,10 +16,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.spotifyclone.R
 import com.example.spotifyclone.ui.adapters.PlaylistAdapter
 import com.example.spotifyclone.databinding.FragmentAddPlaylistBinding
-import com.example.spotifyclone.model.dto.MusicItem
+import com.example.spotifyclone.domain.model.dto.MusicItem
 
-import com.example.spotifyclone.model.dto.PlaylistModel
-import com.example.spotifyclone.resource.Resource
+import com.example.spotifyclone.domain.model.dto.PlaylistModel
+import com.example.spotifyclone.domain.resource.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,10 +36,10 @@ class AddPlaylistFragment : Fragment() {
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
 
-    private var track: MusicItem? = null
+    private var track: com.example.spotifyclone.domain.model.dto.MusicItem? = null
 
     companion object {
-        val selectedPlaylists = MutableLiveData<List<PlaylistModel>>()
+        val selectedPlaylists = MutableLiveData<List<com.example.spotifyclone.domain.model.dto.PlaylistModel>>()
     }
 
     private lateinit var adapter: PlaylistAdapter
@@ -66,7 +66,7 @@ class AddPlaylistFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.let {
-            track = it.getSerializable("track") as MusicItem
+            track = it.getSerializable("track") as com.example.spotifyclone.domain.model.dto.MusicItem
         }
 
         Log.d("track",track.toString())
@@ -136,7 +136,7 @@ class AddPlaylistFragment : Fragment() {
         addPlaylistViewModel.getPlaylists()
     }
 
-    private fun setAdapter(playlists: List<PlaylistModel>) {
+    private fun setAdapter(playlists: List<com.example.spotifyclone.domain.model.dto.PlaylistModel>) {
         adapter = PlaylistAdapter ({},{})
         adapter.submitList(playlists)
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)

@@ -11,27 +11,27 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ItemPlaylistViewBinding
-import com.example.spotifyclone.model.dto.PlaylistModel
+import com.example.spotifyclone.domain.model.dto.PlaylistModel
 import com.example.spotifyclone.ui.fragments.playlist.AddPlaylistFragment
 import kotlin.math.log
 
 class PlaylistAdapter(
     private val nav: (Bundle) -> Unit?,
-    private val setBottom: (PlaylistModel) -> Unit?
+    private val setBottom: (com.example.spotifyclone.domain.model.dto.PlaylistModel) -> Unit?
 ) :
     RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
-    private val diffCall = object : DiffUtil.ItemCallback<PlaylistModel>() {
-        override fun areItemsTheSame(oldItem: PlaylistModel, newItem: PlaylistModel): Boolean {
+    private val diffCall = object : DiffUtil.ItemCallback<com.example.spotifyclone.domain.model.dto.PlaylistModel>() {
+        override fun areItemsTheSame(oldItem: com.example.spotifyclone.domain.model.dto.PlaylistModel, newItem: com.example.spotifyclone.domain.model.dto.PlaylistModel): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: PlaylistModel, newItem: PlaylistModel): Boolean {
+        override fun areContentsTheSame(oldItem: com.example.spotifyclone.domain.model.dto.PlaylistModel, newItem: com.example.spotifyclone.domain.model.dto.PlaylistModel): Boolean {
             return oldItem == newItem
         }
     }
 
     private val diffUtil = AsyncListDiffer(this, diffCall)
-    private val selectedPlaylists = mutableListOf<PlaylistModel>()
+    private val selectedPlaylists = mutableListOf<com.example.spotifyclone.domain.model.dto.PlaylistModel>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
@@ -51,7 +51,7 @@ class PlaylistAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
 
-        fun bind(playlist: PlaylistModel) {
+        fun bind(playlist: com.example.spotifyclone.domain.model.dto.PlaylistModel) {
             if (playlist.isLibrary) {
                 binding.checkBox.visibility = View.GONE
                 itemView.setOnClickListener {
@@ -108,7 +108,7 @@ class PlaylistAdapter(
     }
 
 
-    fun submitList(list: List<PlaylistModel>) {
+    fun submitList(list: List<com.example.spotifyclone.domain.model.dto.PlaylistModel>) {
         diffUtil.submitList(list)
     }
 

@@ -18,10 +18,10 @@ import com.example.spotifyclone.databinding.BottomSheetTrackBinding
 import com.example.spotifyclone.ui.adapters.LikedSongsAdapter
 import com.example.spotifyclone.databinding.FragmentLikedSongsBinding
 
-import com.example.spotifyclone.model.dto.LikedSongs
-import com.example.spotifyclone.model.dto.MusicItem
-import com.example.spotifyclone.resource.Resource
-import com.example.spotifyclone.sp.SharedPreference
+import com.example.spotifyclone.domain.model.dto.LikedSongs
+import com.example.spotifyclone.domain.model.dto.MusicItem
+import com.example.spotifyclone.domain.resource.Resource
+import com.example.spotifyclone.data.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
 import com.example.spotifyclone.util.GsonHelper
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -45,7 +45,7 @@ class LikedSongsFragment : Fragment() {
 
     private val musicPlayerViewModel: MusicPlayerViewModel by activityViewModels()
 
-    private var tracks: List<MusicItem> = emptyList()
+    private var tracks: List<com.example.spotifyclone.domain.model.dto.MusicItem> = emptyList()
 
     private val likedSongsViewModel: LikedSongsViewModel by viewModels {
         LikedSongsFactory(
@@ -108,7 +108,7 @@ class LikedSongsFragment : Fragment() {
         }
     }
 
-    private fun setAdapter(songs: List<LikedSongs>) {
+    private fun setAdapter(songs: List<com.example.spotifyclone.domain.model.dto.LikedSongs>) {
         val adapter = LikedSongsAdapter({ setBottomSheet(it) },
             { setMusicTrack(it) },
             { key, value -> saveSharedPreference(key, value) },
@@ -116,7 +116,7 @@ class LikedSongsFragment : Fragment() {
             { isInSP(it) })
         adapter.submitList(songs)
         tracks = songs.map {
-            MusicItem(
+            com.example.spotifyclone.domain.model.dto.MusicItem(
                 artist = it.artist,
                 name = it.name,
                 img = it.imgUri,
@@ -128,7 +128,7 @@ class LikedSongsFragment : Fragment() {
         binding.recyclerView.adapter = adapter
     }
 
-    private fun setBottomSheet(musicItem: LikedSongs) {
+    private fun setBottomSheet(musicItem: com.example.spotifyclone.domain.model.dto.LikedSongs) {
         val dialog = BottomSheetDialog(requireContext())
         val view = BottomSheetTrackBinding.inflate(layoutInflater)
 
@@ -151,7 +151,13 @@ class LikedSongsFragment : Fragment() {
 
         view.viewAddPlaylist.setOnClickListener {
             val bundle = Bundle()
-            val model = MusicItem(artist = musicItem.artist, id="" , name = musicItem.name, img = musicItem.imgUri, trackUri = musicItem.uri)
+            val model = com.example.spotifyclone.domain.model.dto.MusicItem(
+                artist = musicItem.artist,
+                id = "",
+                name = musicItem.name,
+                img = musicItem.imgUri,
+                trackUri = musicItem.uri
+            )
             bundle.putSerializable("track", model)
             findNavController().navigate(
                 R.id.action_likedSongsFragment_to_addPlaylistFragment,

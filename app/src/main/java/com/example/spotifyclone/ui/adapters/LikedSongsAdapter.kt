@@ -16,11 +16,11 @@ import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ItemLibraryAlbumBinding
 
-import com.example.spotifyclone.model.dto.LikedSongs
-import com.example.spotifyclone.model.dto.MusicItem
+import com.example.spotifyclone.domain.model.dto.LikedSongs
+import com.example.spotifyclone.domain.model.dto.MusicItem
 
 class LikedSongsAdapter(
-    private val setBottom: (LikedSongs) -> Unit = {},
+    private val setBottom: (com.example.spotifyclone.domain.model.dto.LikedSongs) -> Unit = {},
     private val setMusicLayout: (Int) -> Unit = {},
     private val saveSharedPreference: (key: String, value: String) -> Unit,
     private val saveSharedPreferenceBool: (value: Boolean) -> Unit = {},
@@ -29,17 +29,17 @@ class LikedSongsAdapter(
     RecyclerView.Adapter<LikedSongsAdapter.ViewHolder>() {
 
 
-    private val diffCallBack = object : DiffUtil.ItemCallback<LikedSongs>() {
+    private val diffCallBack = object : DiffUtil.ItemCallback<com.example.spotifyclone.domain.model.dto.LikedSongs>() {
         override fun areItemsTheSame(
-            oldItem: LikedSongs,
-            newItem: LikedSongs
+            oldItem: com.example.spotifyclone.domain.model.dto.LikedSongs,
+            newItem: com.example.spotifyclone.domain.model.dto.LikedSongs
         ): Boolean {
             return oldItem === newItem
         }
 
         override fun areContentsTheSame(
-            oldItem: LikedSongs,
-            newItem: LikedSongs
+            oldItem: com.example.spotifyclone.domain.model.dto.LikedSongs,
+            newItem: com.example.spotifyclone.domain.model.dto.LikedSongs
         ): Boolean {
             return oldItem == newItem
         }
@@ -66,7 +66,7 @@ class LikedSongsAdapter(
 
     inner class ViewHolder(private val binding: ItemLibraryAlbumBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(track: LikedSongs) {
+        fun bind(track: com.example.spotifyclone.domain.model.dto.LikedSongs) {
 
 
             if (track.isTopTracks) {
@@ -167,7 +167,7 @@ class LikedSongsAdapter(
         }
     }
 
-    fun submitList(list: List<LikedSongs>) {
+    fun submitList(list: List<com.example.spotifyclone.domain.model.dto.LikedSongs>) {
         diffUtil.submitList(list)
     }
 

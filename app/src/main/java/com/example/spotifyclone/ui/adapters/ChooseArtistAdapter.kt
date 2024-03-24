@@ -8,19 +8,19 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.databinding.ArtistsListviewBinding
-import com.example.spotifyclone.model.artist.Artist
+import com.example.spotifyclone.domain.model.artist.Artist
 import com.example.spotifyclone.ui.fragments.choose_artist.ChooseArtist
 
 class ChooseArtistAdapter(val fragment: ChooseArtist) :
     RecyclerView.Adapter<ChooseArtistAdapter.ViewHolder>() {
-    private val selectedArtists = mutableListOf<Artist>()
+    private val selectedArtists = mutableListOf<com.example.spotifyclone.domain.model.artist.Artist>()
 
-    private val diffCallBack = object : DiffUtil.ItemCallback<Artist>() {
-        override fun areItemsTheSame(oldItem: Artist, newItem: Artist): Boolean {
+    private val diffCallBack = object : DiffUtil.ItemCallback<com.example.spotifyclone.domain.model.artist.Artist>() {
+        override fun areItemsTheSame(oldItem: com.example.spotifyclone.domain.model.artist.Artist, newItem: com.example.spotifyclone.domain.model.artist.Artist): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: Artist, newItem: Artist): Boolean {
+        override fun areContentsTheSame(oldItem: com.example.spotifyclone.domain.model.artist.Artist, newItem: com.example.spotifyclone.domain.model.artist.Artist): Boolean {
             return oldItem == newItem
         }
     }
@@ -44,7 +44,7 @@ class ChooseArtistAdapter(val fragment: ChooseArtist) :
 
     inner class ViewHolder(private val binding: ArtistsListviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(current: Artist) {
+        fun bind(current: com.example.spotifyclone.domain.model.artist.Artist) {
             binding.txtArtistName.text = current.name
             Glide.with(binding.root)
                 .load(current.images?.get(0)?.url)
@@ -69,11 +69,11 @@ class ChooseArtistAdapter(val fragment: ChooseArtist) :
         }
     }
 
-    fun submitList(list: List<Artist>) {
+    fun submitList(list: List<com.example.spotifyclone.domain.model.artist.Artist>) {
         diffUtil.submitList(list)
     }
 
-    fun getSelectedArtists(): MutableList<Artist> {
+    fun getSelectedArtists(): MutableList<com.example.spotifyclone.domain.model.artist.Artist> {
         return selectedArtists
     }
 }

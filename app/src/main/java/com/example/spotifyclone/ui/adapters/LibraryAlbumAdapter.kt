@@ -10,18 +10,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ItemLibraryAlbumBinding
-import com.example.spotifyclone.model.dto.Album
-import com.example.spotifyclone.model.dto.LibraryAlbum
+import com.example.spotifyclone.domain.model.dto.Album
+import com.example.spotifyclone.domain.model.dto.LibraryAlbum
 
 class LibraryAlbumAdapter(private val nav: (Bundle) -> Unit = {}) :
     RecyclerView.Adapter<LibraryAlbumAdapter.ViewHolder>() {
 
-    private val diffCallBack = object : DiffUtil.ItemCallback<Album>() {
-        override fun areItemsTheSame(oldItem: Album, newItem: Album): Boolean {
+    private val diffCallBack = object : DiffUtil.ItemCallback<com.example.spotifyclone.domain.model.dto.Album>() {
+        override fun areItemsTheSame(oldItem: com.example.spotifyclone.domain.model.dto.Album, newItem: com.example.spotifyclone.domain.model.dto.Album): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: Album, newItem: Album): Boolean {
+        override fun areContentsTheSame(oldItem: com.example.spotifyclone.domain.model.dto.Album, newItem: com.example.spotifyclone.domain.model.dto.Album): Boolean {
             return oldItem == newItem
         }
 
@@ -46,7 +46,7 @@ class LibraryAlbumAdapter(private val nav: (Bundle) -> Unit = {}) :
 
     inner class ViewHolder(private val binding: ItemLibraryAlbumBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(album: Album) {
+        fun bind(album: com.example.spotifyclone.domain.model.dto.Album) {
 
             if (!album.isLibrary) {
                 binding.cardView.setCardBackgroundColor(
@@ -80,7 +80,7 @@ class LibraryAlbumAdapter(private val nav: (Bundle) -> Unit = {}) :
         }
     }
 
-    fun submitList(list: List<Album>) {
+    fun submitList(list: List<com.example.spotifyclone.domain.model.dto.Album>) {
         diffUtil.submitList(list)
     }
 

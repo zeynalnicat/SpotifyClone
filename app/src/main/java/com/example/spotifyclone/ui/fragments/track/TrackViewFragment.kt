@@ -20,7 +20,7 @@ import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.FragmentTrackViewBinding
 import com.example.spotifyclone.service.MusicPlayerService
 
-import com.example.spotifyclone.sp.SharedPreference
+import com.example.spotifyclone.data.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
 import com.google.firebase.auth.FirebaseAuth

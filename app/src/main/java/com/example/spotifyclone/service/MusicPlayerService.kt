@@ -22,8 +22,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.media.app.NotificationCompat.MediaStyle
 import com.example.spotifyclone.R
-import com.example.spotifyclone.model.dto.MusicItem
-import com.example.spotifyclone.sp.SharedPreference
+import com.example.spotifyclone.domain.model.dto.MusicItem
+import com.example.spotifyclone.data.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
 import com.example.spotifyclone.util.GsonHelper
@@ -37,8 +37,8 @@ class MusicPlayerService : Service() {
 
     lateinit var mediaPlayer: MediaPlayer
     var songIndex = MutableLiveData(0)
-    var tracks = MutableLiveData<List<MusicItem>>()
-     val current = MutableLiveData<MusicItem>()
+    var tracks = MutableLiveData<List<com.example.spotifyclone.domain.model.dto.MusicItem>>()
+     val current = MutableLiveData<com.example.spotifyclone.domain.model.dto.MusicItem>()
     private var currentUri = ""
     val musicIsPlaying = MutableLiveData<Boolean>()
     private lateinit var mediaSession: MediaSessionCompat
@@ -96,7 +96,7 @@ class MusicPlayerService : Service() {
     }
 
 
-    fun getCurrentTrack(musicItem: MusicItem):MusicItem{
+    fun getCurrentTrack(musicItem: com.example.spotifyclone.domain.model.dto.MusicItem): com.example.spotifyclone.domain.model.dto.MusicItem {
         return musicItem
     }
 
@@ -203,7 +203,7 @@ class MusicPlayerService : Service() {
         }
     }
 
-    fun setTracks(tracks: List<MusicItem>, position: Int) {
+    fun setTracks(tracks: List<com.example.spotifyclone.domain.model.dto.MusicItem>, position: Int) {
         this.tracks.postValue(tracks)
         songIndex.postValue(position)
     }
@@ -332,9 +332,14 @@ class MusicPlayerService : Service() {
 
     }
 
-    fun currentTrack(): MusicItem {
+    fun currentTrack(): com.example.spotifyclone.domain.model.dto.MusicItem {
         val index = songIndex.value!!
-        return tracks.value?.get(index) ?: MusicItem("", "", "", "")
+        return tracks.value?.get(index) ?: com.example.spotifyclone.domain.model.dto.MusicItem(
+            "",
+            "",
+            "",
+            ""
+        )
     }
 
 
@@ -342,7 +347,7 @@ class MusicPlayerService : Service() {
 
         when (intent?.action) {
             ACTION_SET_TRACKS -> {
-                val tracks = intent.getSerializableExtra(EXTRA_TRACKS_JSON) as? ArrayList<MusicItem>
+                val tracks = intent.getSerializableExtra(EXTRA_TRACKS_JSON) as? ArrayList<com.example.spotifyclone.domain.model.dto.MusicItem>
                 this.tracks.postValue(tracks)
 
             }

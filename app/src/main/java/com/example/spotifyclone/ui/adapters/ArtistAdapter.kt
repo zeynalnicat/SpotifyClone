@@ -10,18 +10,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.databinding.ArtistsListviewBinding
 
-import com.example.spotifyclone.model.artist.Artist
+import com.example.spotifyclone.domain.model.artist.Artist
 
 class ArtistAdapter(
     private val nav: (Bundle) -> Unit
 ) : RecyclerView.Adapter<ArtistAdapter.ViewHolder>() {
 
-    private val diffCallBack = object : DiffUtil.ItemCallback<Artist>() {
-        override fun areItemsTheSame(oldItem: Artist, newItem: Artist): Boolean {
+    private val diffCallBack = object : DiffUtil.ItemCallback<com.example.spotifyclone.domain.model.artist.Artist>() {
+        override fun areItemsTheSame(oldItem: com.example.spotifyclone.domain.model.artist.Artist, newItem: com.example.spotifyclone.domain.model.artist.Artist): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: Artist, newItem: Artist): Boolean {
+        override fun areContentsTheSame(oldItem: com.example.spotifyclone.domain.model.artist.Artist, newItem: com.example.spotifyclone.domain.model.artist.Artist): Boolean {
             return oldItem == newItem
         }
 
@@ -45,7 +45,7 @@ class ArtistAdapter(
 
     inner class ViewHolder(private val binding: ArtistsListviewBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(current: Artist) {
+        fun bind(current: com.example.spotifyclone.domain.model.artist.Artist) {
             Glide.with(binding.root)
                 .load(current.images?.get(0)?.url)
                 .into(binding.imgArtist)
@@ -67,7 +67,7 @@ class ArtistAdapter(
         }
     }
 
-    fun submitList(list: List<Artist>) {
+    fun submitList(list: List<com.example.spotifyclone.domain.model.artist.Artist>) {
         diffUtil.submitList(list)
     }
 

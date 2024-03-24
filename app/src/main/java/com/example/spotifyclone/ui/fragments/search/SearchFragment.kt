@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.spotifyclone.R
 import com.example.spotifyclone.ui.adapters.SearchCardAdapter
 import com.example.spotifyclone.databinding.FragmentSearchBinding
-import com.example.spotifyclone.model.dto.Category
-import com.example.spotifyclone.resource.Resource
+import com.example.spotifyclone.domain.model.dto.Category
+import com.example.spotifyclone.domain.resource.Resource
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
@@ -62,7 +62,7 @@ class SearchFragment : Fragment() {
         searchViewModel.getCategories()
     }
 
-    private fun setAdapter(data: List<Category>) {
+    private fun setAdapter(data: List<com.example.spotifyclone.domain.model.dto.Category>) {
             val adapter = SearchCardAdapter{findNavController().navigate(R.id.action_searchFragment_to_singleCategoryFragment,it)}
             adapter.submitList(data)
             binding.recyclerView.layoutManager =

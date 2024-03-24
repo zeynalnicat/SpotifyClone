@@ -4,7 +4,7 @@ import android.media.MediaPlayer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.spotifyclone.model.dto.MusicItem
+import com.example.spotifyclone.domain.model.dto.MusicItem
 
 class MusicPlayerViewModel : ViewModel() {
     private val _selectedTrackPosition = MutableLiveData<Int>()
@@ -12,27 +12,27 @@ class MusicPlayerViewModel : ViewModel() {
         get() = _selectedTrackPosition
 
 
-    private val _currentTrack = MutableLiveData<MusicItem>()
+    private val _currentTrack = MutableLiveData<com.example.spotifyclone.domain.model.dto.MusicItem>()
 
-    private val _tracks = MutableLiveData<List<MusicItem>>()
+    private val _tracks = MutableLiveData<List<com.example.spotifyclone.domain.model.dto.MusicItem>>()
 
-    private val _current = MutableLiveData<MusicItem>()
+    private val _current = MutableLiveData<com.example.spotifyclone.domain.model.dto.MusicItem>()
 
-    val current :LiveData<MusicItem> get() = _current
-    val tracks: LiveData<List<MusicItem>>
+    val current :LiveData<com.example.spotifyclone.domain.model.dto.MusicItem> get() = _current
+    val tracks: LiveData<List<com.example.spotifyclone.domain.model.dto.MusicItem>>
         get() = _tracks
 
-    val currentTrack: LiveData<MusicItem> get() = _currentTrack
+    val currentTrack: LiveData<com.example.spotifyclone.domain.model.dto.MusicItem> get() = _currentTrack
 
     fun setSelectedTrackPosition(position: Int) {
         _selectedTrackPosition.value = position
     }
 
-    fun setTracks(tracks: List<MusicItem>) {
+    fun setTracks(tracks: List<com.example.spotifyclone.domain.model.dto.MusicItem>) {
         _tracks.value = tracks
     }
 
-    fun setCurrentMusic(musicItem: MusicItem) {
+    fun setCurrentMusic(musicItem: com.example.spotifyclone.domain.model.dto.MusicItem) {
         _currentTrack.postValue(musicItem)
     }
 
@@ -40,7 +40,7 @@ class MusicPlayerViewModel : ViewModel() {
         _selectedTrackPosition.postValue(pos)
     }
 
-    fun getCurrent(musicItem: MusicItem){
+    fun getCurrent(musicItem: com.example.spotifyclone.domain.model.dto.MusicItem){
         _current.postValue(musicItem)
     }
 
