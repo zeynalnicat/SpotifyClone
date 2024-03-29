@@ -289,6 +289,8 @@ class MusicPlayerService : Service() {
 
     fun removeNotification() {
         stopForeground(true)
+        stopSelf()
+
     }
 
     fun prevSong() {
@@ -329,10 +331,11 @@ class MusicPlayerService : Service() {
 
     fun stopMusic() {
         mediaPlayer.stop()
+        mediaPlayer.reset()
 
     }
 
-    fun currentTrack(): com.example.spotifyclone.domain.model.dto.MusicItem {
+    fun currentTrack(): MusicItem {
         val index = songIndex.value!!
         return tracks.value?.get(index) ?: com.example.spotifyclone.domain.model.dto.MusicItem(
             "",

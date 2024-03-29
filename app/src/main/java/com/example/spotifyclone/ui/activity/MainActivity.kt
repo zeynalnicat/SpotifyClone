@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener {
 
     private lateinit var sharedPreference: SharedPreference
     private var position = 0
+    private var isServiceBound = false
 
     companion object {
         private var musicPlayerService: MusicPlayerService? = null
@@ -72,6 +73,31 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener {
     }
 
 
+    private val serviceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as MusicPlayerService.MusicPlayerBinder
+            musicPlayerService = binder.getService()
+            musicPlayerService?.let {
+                it.current.observe(this@MainActivity) { music ->
+                    setMusicLayout(music.name, music.img, music.trackUri)
+                    musicPlayerViewModel.setCurrentMusic(music)
+                }
+            }
+            handleMusic()
+            updateProgress()
+            checkVisibility()
+            isServiceBound = true
+
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            musicPlayerService = null
+            isServiceBound = false
+        }
+    }
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -88,6 +114,9 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener {
         val navController = navHostFragment.navController
         NavigationUI.setupWithNavController(binding.bottomNav, navController)
         setNavigation()
+
+
+
 
 
         musicPlayerViewModel.tracks.observe(this@MainActivity) { tracks ->
@@ -130,7 +159,7 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener {
 
     }
 
-    private fun handleTracksUpdate(newTracks: List<com.example.spotifyclone.domain.model.dto.MusicItem>) {
+    private fun handleTracksUpdate(newTracks: List<MusicItem>) {
         if (newTracks.isNotEmpty()) {
             musicPlayerViewModel.setTracks(newTracks)
 
@@ -143,41 +172,18 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener {
 
     private fun startService() {
         val intent = Intent(this, MusicPlayerService::class.java)
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         startForegroundService(intent)
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+
+
     }
 
-    private val serviceConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            val binder = service as MusicPlayerService.MusicPlayerBinder
-            musicPlayerService = binder.getService()
 
-            musicPlayerService?.let {
-                it.current.observe(this@MainActivity) { music ->
-                    setMusicLayout(music.name, music.img, music.trackUri)
-                    musicPlayerViewModel.setCurrentMusic(music)
-                }
-            }
-            handleMusic()
-            updateProgress()
-            checkVisibility()
-            if (cancelMusic()) {
-                musicPlayerService?.removeNotification()
-            }
-
-        }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-
-        }
-    }
 
     fun handleMusic() {
         musicPlayerService?.let {
             val mediaPlayer = it.mediaPlayer
-            if (cancelMusic()) {
-                it.removeNotification()
-            }
+            cancelMusic()
 
             binding.imgPause.setOnClickListener { view ->
                 view.animate()
@@ -203,8 +209,8 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener {
     }
 
 
-    fun cancelMusic(): Boolean {
-        var flag = false
+    fun cancelMusic(){
+
         binding.imgCancel.setOnClickListener {
             it.animate()
                 .scaleX(0.95f)
@@ -225,9 +231,9 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener {
             GsonHelper.serializeTracks(this, emptyList())
             musicPlayerService?.tracks?.postValue(emptyList())
             musicPlayerService?.stopMusic()
-            flag = true
+            musicPlayerService?.removeNotification()
         }
-        return flag
+
     }
 
 
@@ -343,10 +349,12 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener {
     }
 
 
-    override fun onDestroy() {
-        super.onDestroy()
-        unbindService(serviceConnection)
-
+    override fun onStop() {
+        super.onStop()
+        if (isServiceBound) {
+            unbindService(serviceConnection)
+            isServiceBound = false
+        }
     }
 
     override fun onSwipeRight() {
