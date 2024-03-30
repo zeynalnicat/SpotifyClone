@@ -3,15 +3,9 @@ package com.example.spotifyclone.ui.fragments.track
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.spotifyclone.domain.model.dto.MusicItem
-import com.example.spotifyclone.data.network.api.AlbumApi
 import com.example.spotifyclone.data.sp.SharedPreference
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class TrackViewModel(
     private val firebaseAuth: FirebaseAuth,

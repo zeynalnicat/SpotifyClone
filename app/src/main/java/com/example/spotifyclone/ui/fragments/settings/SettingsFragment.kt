@@ -2,18 +2,17 @@ package com.example.spotifyclone.ui.fragments.settings
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
-import com.example.spotifyclone.ui.adapters.SettingsAdapter
 import com.example.spotifyclone.databinding.FragmentSettingsBinding
-import com.example.spotifyclone.domain.model.SettingItem
+import com.example.spotifyclone.ui.adapters.SettingsAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint

@@ -1,29 +1,27 @@
 package com.example.spotifyclone.ui.fragments.home
 
 import android.os.Bundle
-
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.spotifyclone.R
-import com.example.spotifyclone.ui.adapters.ArtistAdapter
-import com.example.spotifyclone.ui.adapters.AlbumAdapter
-import com.example.spotifyclone.databinding.FragmentHomeGeneralBinding
-
-import com.example.spotifyclone.data.network.api.deezer.TrackApi
 import com.example.spotifyclone.data.network.TokenRefresher
 import com.example.spotifyclone.data.network.api.AlbumApi
 import com.example.spotifyclone.data.network.api.ArtistsApi
-import com.example.spotifyclone.domain.resource.Resource
+import com.example.spotifyclone.data.network.api.deezer.TrackApi
 import com.example.spotifyclone.data.sp.SharedPreference
+import com.example.spotifyclone.databinding.FragmentHomeGeneralBinding
+import com.example.spotifyclone.domain.resource.Resource
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
+import com.example.spotifyclone.ui.adapters.AlbumAdapter
+import com.example.spotifyclone.ui.adapters.ArtistAdapter
 import com.example.spotifyclone.ui.adapters.LikedSongsAdapter
 import com.example.spotifyclone.util.GsonHelper
 import com.google.firebase.auth.FirebaseAuth

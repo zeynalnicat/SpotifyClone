@@ -31,7 +31,7 @@ class UserLibraryViewModel(
 
                 val playlistModels = playlistsModel()
                 val playlistMap = playlistTrackCounts()
-                val listPlaylist = mutableListOf<com.example.spotifyclone.domain.model.dto.PlaylistModel>()
+                val listPlaylist = mutableListOf<PlaylistModel>()
 
                 playlistModels.forEach {
                     it.countTrack = playlistMap[it.id] ?: 0

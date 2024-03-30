@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.spotifyclone.domain.model.deezer.DeezerTrack
 import com.example.spotifyclone.data.network.api.deezer.TrackApi
+import com.example.spotifyclone.domain.model.deezer.DeezerTrack
 import com.example.spotifyclone.domain.resource.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

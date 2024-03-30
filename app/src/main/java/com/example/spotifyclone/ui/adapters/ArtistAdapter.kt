@@ -5,12 +5,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
-
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.databinding.ArtistsListviewBinding
-
-import com.example.spotifyclone.domain.model.artist.Artist
 
 class ArtistAdapter(
     private val nav: (Bundle) -> Unit

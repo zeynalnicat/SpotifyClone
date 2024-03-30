@@ -1,11 +1,10 @@
 package com.example.spotifyclone.ui.fragments.sign_up
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.Navigation
+import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation.findNavController
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.FragmentSignUp1Binding

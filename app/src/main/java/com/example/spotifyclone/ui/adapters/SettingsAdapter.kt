@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.spotifyclone.databinding.ItemSettingsBinding
-import com.example.spotifyclone.domain.model.SettingItem
 
 class SettingsAdapter(private val nav: (Int) -> Unit, private val logout: () -> Unit) :
     RecyclerView.Adapter<SettingsAdapter.ViewHolder>() {

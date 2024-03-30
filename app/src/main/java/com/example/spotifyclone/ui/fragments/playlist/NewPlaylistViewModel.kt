@@ -2,14 +2,9 @@ package com.example.spotifyclone.ui.fragments.playlist
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-
 import com.example.spotifyclone.domain.resource.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.lang.Exception
 import java.util.UUID
 
 class NewPlaylistViewModel(private val firebaseAuth: FirebaseAuth, private val firebaseFirestore: FirebaseFirestore) : ViewModel() {

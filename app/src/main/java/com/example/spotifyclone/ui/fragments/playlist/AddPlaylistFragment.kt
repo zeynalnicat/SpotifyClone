@@ -36,10 +36,10 @@ class AddPlaylistFragment : Fragment() {
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
 
-    private var track: com.example.spotifyclone.domain.model.dto.MusicItem? = null
+    private var track: MusicItem? = null
 
     companion object {
-        val selectedPlaylists = MutableLiveData<List<com.example.spotifyclone.domain.model.dto.PlaylistModel>>()
+        val selectedPlaylists = MutableLiveData<List<PlaylistModel>>()
     }
 
     private lateinit var adapter: PlaylistAdapter
@@ -66,7 +66,7 @@ class AddPlaylistFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.let {
-            track = it.getSerializable("track") as com.example.spotifyclone.domain.model.dto.MusicItem
+            track = it.getSerializable("track") as MusicItem
         }
 
         Log.d("track",track.toString())
@@ -136,7 +136,7 @@ class AddPlaylistFragment : Fragment() {
         addPlaylistViewModel.getPlaylists()
     }
 
-    private fun setAdapter(playlists: List<com.example.spotifyclone.domain.model.dto.PlaylistModel>) {
+    private fun setAdapter(playlists: List<PlaylistModel>) {
         adapter = PlaylistAdapter ({},{})
         adapter.submitList(playlists)
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)

@@ -9,8 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.databinding.AlbumListviewBinding
 
-import com.example.spotifyclone.domain.model.dto.Album
-
 class AlbumAdapter(private val nav: (Bundle) -> Unit) :
     RecyclerView.Adapter<AlbumAdapter.TrackAdapterHolder>() {
 

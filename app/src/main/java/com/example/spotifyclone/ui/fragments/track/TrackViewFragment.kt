@@ -1,26 +1,19 @@
 package com.example.spotifyclone.ui.fragments.track
 
-import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import android.widget.SeekBar
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
-import com.example.spotifyclone.databinding.FragmentTrackViewBinding
-import com.example.spotifyclone.service.MusicPlayerService
-
 import com.example.spotifyclone.data.sp.SharedPreference
+import com.example.spotifyclone.databinding.FragmentTrackViewBinding
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
 import com.google.firebase.auth.FirebaseAuth

@@ -3,23 +3,10 @@ package com.example.spotifyclone.ui.fragments.single_playlist
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.spotifyclone.domain.model.dto.LikedSongs
-import com.example.spotifyclone.domain.model.dto.MusicItem
-import com.example.spotifyclone.domain.model.firebase.Albums
-import com.example.spotifyclone.domain.model.firebase.Tracks
 import com.example.spotifyclone.domain.resource.Resource
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import java.util.Locale
 
 class SinglePlaylistViewModel(
     private val firestore: FirebaseFirestore,
@@ -42,7 +29,7 @@ class SinglePlaylistViewModel(
 
     val isInLiked: LiveData<Boolean> get() = _isInLiked
 
-    private var trackModels: List<com.example.spotifyclone.domain.model.dto.LikedSongs> = emptyList()
+    private var trackModels: List<LikedSongs> = emptyList()
 
     val insertionLiked: LiveData<Long> get() = _insertionLiked
 
@@ -71,11 +58,11 @@ class SinglePlaylistViewModel(
         val query = playlistRef.whereEqualTo("userId", userId).whereEqualTo("playlistId", id)
         try {
             query.get().addOnSuccessListener { querySnapshot ->
-                val trackList = mutableListOf<com.example.spotifyclone.domain.model.dto.LikedSongs>()
+                val trackList = mutableListOf<LikedSongs>()
                 if (querySnapshot != null && !querySnapshot.isEmpty) {
                     val documents = querySnapshot.documents
                     for (document in documents) {
-                        val musicModel = com.example.spotifyclone.domain.model.dto.LikedSongs(
+                        val musicModel = LikedSongs(
                             document["trackName"].toString(),
                             document["artist"].toString(),
                             document["imgUri"].toString(),

@@ -1,28 +1,25 @@
 package com.example.spotifyclone.ui.fragments.others
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
-import com.example.spotifyclone.databinding.BottomSheetTrackBinding
-import com.example.spotifyclone.ui.adapters.LikedSongsAdapter
-import com.example.spotifyclone.databinding.FragmentLikedSongsBinding
-
-import com.example.spotifyclone.domain.model.dto.LikedSongs
-import com.example.spotifyclone.domain.model.dto.MusicItem
-import com.example.spotifyclone.domain.resource.Resource
 import com.example.spotifyclone.data.sp.SharedPreference
+import com.example.spotifyclone.databinding.BottomSheetTrackBinding
+import com.example.spotifyclone.databinding.FragmentLikedSongsBinding
+import com.example.spotifyclone.domain.resource.Resource
 import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
+import com.example.spotifyclone.ui.adapters.LikedSongsAdapter
 import com.example.spotifyclone.util.GsonHelper
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth

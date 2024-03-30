@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.databinding.ArtistsListviewBinding
-import com.example.spotifyclone.domain.model.artist.Artist
 import com.example.spotifyclone.ui.fragments.choose_artist.ChooseArtist
 
 class ChooseArtistAdapter(val fragment: ChooseArtist) :

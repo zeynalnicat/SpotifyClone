@@ -1,6 +1,5 @@
 package com.example.spotifyclone.ui.fragments.library
 
-import android.R.attr
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.graphics.Bitmap

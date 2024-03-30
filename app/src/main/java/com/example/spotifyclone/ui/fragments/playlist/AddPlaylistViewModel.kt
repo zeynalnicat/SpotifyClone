@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.util.Locale
 
-@Suppress("CAST_NEVER_SUCCEEDS")
+
 class AddPlaylistViewModel(
     private val firebaseAuth: FirebaseAuth,
     private val firestore: FirebaseFirestore

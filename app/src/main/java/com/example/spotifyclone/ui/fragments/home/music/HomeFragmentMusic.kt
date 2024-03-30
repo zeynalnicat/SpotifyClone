@@ -10,19 +10,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.spotifyclone.databinding.FragmentHomeMusicBinding
-import com.example.spotifyclone.domain.model.deezer.DeezerTrack
-import com.example.spotifyclone.domain.model.dto.MusicItem
 import com.example.spotifyclone.data.network.api.deezer.TrackApi
-import com.example.spotifyclone.domain.resource.Resource
 import com.example.spotifyclone.data.sp.SharedPreference
+import com.example.spotifyclone.databinding.FragmentHomeMusicBinding
+import com.example.spotifyclone.domain.resource.Resource
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
 import com.example.spotifyclone.ui.fragments.home.music.adapter.TrackAdapter
 import com.example.spotifyclone.util.GsonHelper
 import dagger.hilt.android.AndroidEntryPoint
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
 @AndroidEntryPoint

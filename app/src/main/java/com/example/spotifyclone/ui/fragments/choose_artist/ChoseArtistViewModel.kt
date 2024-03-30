@@ -4,11 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.spotifyclone.domain.model.artist.Artist
 import com.example.spotifyclone.data.network.api.ArtistsApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class ChoseArtistViewModel(private val artistApi: ArtistsApi) : ViewModel() {
     private val _artists = MutableLiveData<List<com.example.spotifyclone.domain.model.artist.Artist>>()

@@ -3,12 +3,10 @@ package com.example.spotifyclone.ui.fragments.others
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-
 import com.example.spotifyclone.domain.model.dto.LikedSongs
 import com.example.spotifyclone.domain.resource.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 
 
 class LikedSongsViewModel(

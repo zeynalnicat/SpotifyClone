@@ -1,43 +1,33 @@
 package com.example.spotifyclone.ui.activity
 
+import LanguageHelper
 import SwipeGestureDetector
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.media.MediaPlayer
-import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
-import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
+import com.example.spotifyclone.data.sp.SharedPreference
 import com.example.spotifyclone.databinding.ActivityMainBinding
 import com.example.spotifyclone.domain.model.dto.MusicItem
 import com.example.spotifyclone.service.MusicPlayerService
 import com.example.spotifyclone.service.MusicRepository
-import com.example.spotifyclone.data.sp.SharedPreference
 import com.example.spotifyclone.ui.fragments.track.TrackViewFragment
 import com.example.spotifyclone.util.GsonHelper
-import com.example.spotifyclone.util.NotificationReceiver
-import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener {
+class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener,  MusicPlayerService.MusicPlayerCallback {
     private lateinit var binding: ActivityMainBinding
     private lateinit var musicPlayerViewModel: MusicPlayerViewModel
 
@@ -65,24 +55,12 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener {
         return LanguageHelper.setLocale(context, savedLanguage)
     }
 
-    override fun onStart() {
-        super.onStart()
-        startService()
-
-
-    }
-
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as MusicPlayerService.MusicPlayerBinder
-            musicPlayerService = binder.getService()
-            musicPlayerService?.let {
-                it.current.observe(this@MainActivity) { music ->
-                    setMusicLayout(music.name, music.img, music.trackUri)
-                    musicPlayerViewModel.setCurrentMusic(music)
-                }
-            }
+            musicPlayerService = binder.getService() //TODO
+            musicPlayerService?.setMusicPlayerCallback(this@MainActivity)
             handleMusic()
             updateProgress()
             checkVisibility()
@@ -91,12 +69,9 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener {
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            musicPlayerService = null
             isServiceBound = false
         }
     }
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,80 +80,62 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener {
         val swipeGestureDetector = SwipeGestureDetector(this, binding.musicPlayer, this)
         musicPlayerViewModel = ViewModelProvider(this)[MusicPlayerViewModel::class.java]
         sharedPreference = SharedPreference(this)
+        position = sharedPreference.getValue("Position",0)
         repository = MusicRepository(applicationContext)
         binding.musicPlayer.setOnTouchListener(swipeGestureDetector)
-
-
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         val navController = navHostFragment.navController
         NavigationUI.setupWithNavController(binding.bottomNav, navController)
         setNavigation()
-
-
-
-
-
-        musicPlayerViewModel.tracks.observe(this@MainActivity) { tracks ->
-            val intent = Intent(this@MainActivity, MusicPlayerService::class.java)
-            intent.action = MusicPlayerService.ACTION_SET_TRACKS
-
-
-            intent.putExtra(MusicPlayerService.EXTRA_TRACKS_JSON, ArrayList(tracks))
-            startService(intent)
-
-        }
-
-
-        musicPlayerViewModel.selectedTrackPosition.observe(this@MainActivity) { position ->
-            this@MainActivity.position = position
-
-            setMusicPlayer(true)
-        }
-
-
-
-        musicPlayerViewModel.selectedTrackPosition.observe(this) {
-            musicPlayerService?.setPosition(it)
-        }
-
         repository.loadTracks()
-
-        repository.tracksLiveData.observeForever { newTracks ->
-            newTracks?.let {
-                handleTracksUpdate(it)
-            }
-
-        }
-
-
-        musicPlayerViewModel.current.observe(this) {
-            setMusicLayout(it.name, it.img, it.trackUri)
-        }
-
+        observeAll()
 
     }
-
     private fun handleTracksUpdate(newTracks: List<MusicItem>) {
         if (newTracks.isNotEmpty()) {
             musicPlayerViewModel.setTracks(newTracks)
 
         }
     }
-
     fun getMediaPlayer(): MediaPlayer? {
         return musicPlayerService?.mediaPlayer
     }
+    private fun observeAll() {
+        repository.tracksLiveData.observeForever { newTracks ->
+            newTracks?.let {
+                handleTracksUpdate(it)
+            }
+        }
+        musicPlayerViewModel.current.observe(this) {
+            setMusicLayout(it.name, it.img, it.trackUri)
+        }
+        musicPlayerViewModel.selectedTrackPosition.observe(this@MainActivity) { position ->
+            this@MainActivity.position = position
+            musicPlayerService?.setPosition(position)
+            setMusicPlayer(true)
+        }
 
-    private fun startService() {
-        val intent = Intent(this, MusicPlayerService::class.java)
-        startForegroundService(intent)
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+        musicPlayerViewModel.tracks.observe(this@MainActivity) { tracks ->
+            val intent = Intent(this@MainActivity, MusicPlayerService::class.java)
+            intent.action = MusicPlayerService.ACTION_SET_TRACKS
+            intent.putExtra(MusicPlayerService.EXTRA_TRACKS_JSON, ArrayList(tracks))
+
+            if (!isServiceBound) {
+                startTheService(intent)
+                isServiceBound = true
+            } else {
+                musicPlayerService?.setTracks(tracks, position)
+            }
+        }
 
 
     }
 
-
+    private fun startTheService(musicIntent: Intent) {
+        bindService(musicIntent, serviceConnection, Context.BIND_AUTO_CREATE)
+        startForegroundService(musicIntent)
+    }
 
     fun handleMusic() {
         musicPlayerService?.let {
@@ -208,8 +165,7 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener {
         }
     }
 
-
-    fun cancelMusic(){
+    fun cancelMusic() {
 
         binding.imgCancel.setOnClickListener {
             it.animate()
@@ -229,13 +185,12 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener {
             sharedPreference.updateValue("PlayingMusicImg", "")
             setMusicPlayer(false)
             GsonHelper.serializeTracks(this, emptyList())
-            musicPlayerService?.tracks?.postValue(emptyList())
+            musicPlayerService?.tracks?.value = emptyList()
             musicPlayerService?.stopMusic()
             musicPlayerService?.removeNotification()
         }
 
     }
-
 
     fun checkVisibility() {
         val sharedPreference = SharedPreference(this)
@@ -263,9 +218,6 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener {
         }
     }
 
-    fun setTracksAndPosition(tracks: List<com.example.spotifyclone.domain.model.dto.MusicItem>, position: Int) {
-        musicPlayerService?.setTracks(tracks, position)
-    }
 
     fun setMusicAttrs() {
         val sharedPreference = SharedPreference(this)
@@ -279,12 +231,11 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener {
 
     private fun setMusicLayout(name: String, img: String, uri: String) {
 
-
-        musicPlayerService?.playMusic(uri)
-
-        Glide.with(binding.root)
-            .load(img)
-            .into(binding.imgTrack)
+        if (!isDestroyed) {
+            Glide.with(this)
+                .load(img)
+                .into(binding.imgTrack)
+        }
 
 
         binding.txtMusicName.text = name
@@ -363,6 +314,11 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener {
 
     override fun onSwipeLeft() {
         musicPlayerService?.prevSong()
+    }
+
+    override fun onMusicChanged(music: MusicItem) {
+        setMusicLayout(music.name, music.img, music.trackUri)
+        musicPlayerViewModel.setCurrentMusic(music)
     }
 
 }

@@ -23,10 +23,10 @@ class SearchViewModel(
         categoryRef.get()
             .addOnSuccessListener { querySnapshot ->
                 if (querySnapshot != null && !querySnapshot.isEmpty) {
-                    val listCategory = mutableListOf<com.example.spotifyclone.domain.model.dto.Category>()
+                    val listCategory = mutableListOf<Category>()
                     val documents = querySnapshot.documents
                     for (document in documents) {
-                        val category = com.example.spotifyclone.domain.model.dto.Category(
+                        val category = Category(
                             document["name"].toString(),
                             document["color"].toString(),
                             document["img"].toString(),

@@ -3,33 +3,27 @@ package com.example.spotifyclone.ui.fragments.choose_artist
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.example.spotifyclone.R
-import com.example.spotifyclone.ui.adapters.ChooseArtistAdapter
-import com.google.android.flexbox.FlexDirection
-import com.google.android.flexbox.FlexboxLayoutManager
-import com.example.spotifyclone.databinding.FragmentChooseArtistBinding
-
-import com.example.spotifyclone.domain.model.artist.Artist
 import com.example.spotifyclone.data.network.api.ArtistsApi
+import com.example.spotifyclone.databinding.FragmentChooseArtistBinding
+import com.example.spotifyclone.domain.model.artist.Artist
+import com.example.spotifyclone.ui.adapters.ChooseArtistAdapter
 import com.google.android.flexbox.AlignItems
+import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -52,7 +46,7 @@ class ChooseArtist : Fragment() {
             artistsApi
         )
     }
-    private var selectedArtists = mutableListOf<com.example.spotifyclone.domain.model.artist.Artist>()
+    private var selectedArtists = mutableListOf<Artist>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -1,47 +1,31 @@
 package com.example.spotifyclone.ui.fragments.album
 
-import android.content.ComponentName
-import android.content.ServiceConnection
 import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Bundle
-import android.os.IBinder
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
-import com.example.spotifyclone.ui.adapters.SingleAlbumTracksAdapter
+import com.example.spotifyclone.data.network.api.AlbumApi
+import com.example.spotifyclone.data.sp.SharedPreference
 import com.example.spotifyclone.databinding.BottomSheetTrackBinding
 import com.example.spotifyclone.databinding.FragmentAlbumViewBinding
-
-import com.example.spotifyclone.domain.model.album.singlealbum.Artist
-import com.example.spotifyclone.domain.model.dto.Album
-import com.example.spotifyclone.domain.model.dto.MusicItem
-
-import com.example.spotifyclone.data.network.api.AlbumApi
-import com.example.spotifyclone.service.MusicPlayerService
-import com.example.spotifyclone.service.MusicRepository
-import com.example.spotifyclone.data.sp.SharedPreference
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
+import com.example.spotifyclone.ui.adapters.SingleAlbumTracksAdapter
 import com.example.spotifyclone.util.GsonHelper
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @AndroidEntryPoint

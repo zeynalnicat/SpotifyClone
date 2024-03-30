@@ -1,19 +1,18 @@
 package com.example.spotifyclone.ui.fragments.search
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.spotifyclone.R
-import com.example.spotifyclone.ui.adapters.SearchCardAdapter
 import com.example.spotifyclone.databinding.FragmentSearchBinding
-import com.example.spotifyclone.domain.model.dto.Category
 import com.example.spotifyclone.domain.resource.Resource
 import com.example.spotifyclone.ui.activity.MainActivity
+import com.example.spotifyclone.ui.adapters.SearchCardAdapter
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

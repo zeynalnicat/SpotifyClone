@@ -4,16 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.spotifyclone.domain.model.album.singlealbum.Album
-import com.example.spotifyclone.domain.resource.Resource
 import com.example.spotifyclone.data.network.api.AlbumApi
+import com.example.spotifyclone.domain.resource.Resource
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.Exception
 
 class AlbumViewModel(
     private val albumApi: AlbumApi,
@@ -22,11 +19,11 @@ class AlbumViewModel(
 ) : ViewModel() {
     private val _album = MutableLiveData<com.example.spotifyclone.domain.model.album.singlealbum.Album>()
     private val _insertion = MutableLiveData<Resource<Long>>()
-    private val _isInDB = MutableLiveData<Boolean>(false)
+    private val _isInDB = MutableLiveData(false)
 
     private val _insertionLiked = MutableLiveData<Long>()
 
-    private val _isInLiked = MutableLiveData<Boolean>(false)
+    private val _isInLiked = MutableLiveData(false)
 
     val album: LiveData<com.example.spotifyclone.domain.model.album.singlealbum.Album>
         get() = _album

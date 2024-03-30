@@ -1,7 +1,6 @@
 package com.example.spotifyclone.ui.adapters
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,9 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ItemPlaylistViewBinding
-import com.example.spotifyclone.domain.model.dto.PlaylistModel
 import com.example.spotifyclone.ui.fragments.playlist.AddPlaylistFragment
-import kotlin.math.log
 
 class PlaylistAdapter(
     private val nav: (Bundle) -> Unit?,

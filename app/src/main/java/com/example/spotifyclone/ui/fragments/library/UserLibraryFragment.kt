@@ -2,26 +2,22 @@ package com.example.spotifyclone.ui.fragments.library
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
-
 import com.example.spotifyclone.R
-import com.example.spotifyclone.databinding.BottomSheetTrackBinding
-import com.example.spotifyclone.ui.adapters.PlaylistAdapter
-import com.example.spotifyclone.databinding.FragmentUserLibraryBinding
-import com.example.spotifyclone.domain.model.dto.MusicItem
-
-import com.example.spotifyclone.domain.model.dto.PlaylistModel
-import com.example.spotifyclone.domain.resource.Resource
 import com.example.spotifyclone.data.sp.SharedPreference
+import com.example.spotifyclone.databinding.BottomSheetTrackBinding
+import com.example.spotifyclone.databinding.FragmentUserLibraryBinding
+import com.example.spotifyclone.domain.resource.Resource
 import com.example.spotifyclone.ui.activity.MainActivity
+import com.example.spotifyclone.ui.adapters.PlaylistAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore

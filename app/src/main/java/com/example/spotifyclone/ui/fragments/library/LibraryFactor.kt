@@ -13,7 +13,6 @@ class LibraryFactor(
     private val deezerAlbumApi: com.example.spotifyclone.data.network.api.deezer.AlbumApi
 ) :
     ViewModelProvider.Factory {
-
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return LibraryViewModel(albumApi, firebaseAuth, firestore,deezerAlbumApi) as T
     }

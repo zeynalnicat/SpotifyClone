@@ -1,6 +1,5 @@
 package com.example.spotifyclone.service
 
-import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -19,13 +18,12 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.media.app.NotificationCompat.MediaStyle
 import com.example.spotifyclone.R
-import com.example.spotifyclone.domain.model.dto.MusicItem
 import com.example.spotifyclone.data.sp.SharedPreference
-import com.example.spotifyclone.ui.activity.MainActivity
-import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
+import com.example.spotifyclone.domain.model.dto.MusicItem
 import com.example.spotifyclone.util.GsonHelper
 import com.example.spotifyclone.util.NotificationReceiver
 import java.io.FileNotFoundException
@@ -37,12 +35,36 @@ class MusicPlayerService : Service() {
 
     lateinit var mediaPlayer: MediaPlayer
     var songIndex = MutableLiveData(0)
-    var tracks = MutableLiveData<List<com.example.spotifyclone.domain.model.dto.MusicItem>>()
-     val current = MutableLiveData<com.example.spotifyclone.domain.model.dto.MusicItem>()
+    var tracks = MutableLiveData<List<MusicItem>>()
+    val current = MutableLiveData<MusicItem>()
     private var currentUri = ""
     val musicIsPlaying = MutableLiveData<Boolean>()
+    private var musicPlayerCallback: MusicPlayerCallback? = null
     private lateinit var mediaSession: MediaSessionCompat
     private lateinit var sharedPreference: SharedPreference
+
+    private val tracksObserver = Observer<List<MusicItem>> { newTracks ->
+        if (newTracks.isNotEmpty()) {
+            val index = songIndex.value ?: 0
+            sharedPreference.saveValue("Position", index)
+            saveSharedPreference(
+                newTracks[index].img,
+                newTracks[index].name,
+                newTracks[index].artist,
+                newTracks[index].trackUri
+            )
+            playMusic(newTracks[index].trackUri)
+        }
+    }
+
+    private val songIndexObserver = Observer<Int> { newIndex ->
+        if (newIndex >= 0 && newIndex < (tracks.value?.size ?: 0)) {
+            val track = tracks.value?.get(newIndex) ?: return@Observer
+            sharedPreference.saveValue("Position", newIndex)
+            saveSharedPreference(track.img, track.name, track.artist, track.trackUri)
+            playMusic(track.trackUri)
+        }
+    }
 
 
     companion object {
@@ -56,6 +78,14 @@ class MusicPlayerService : Service() {
 
     }
 
+    fun setMusicPlayerCallback(callback: MusicPlayerCallback) {
+        musicPlayerCallback = callback
+    }
+
+    interface MusicPlayerCallback {
+        fun onMusicChanged(music: MusicItem)
+    }
+
     override fun onCreate() {
         super.onCreate()
         mediaPlayer = MediaPlayer()
@@ -64,41 +94,12 @@ class MusicPlayerService : Service() {
         sharedPreference = SharedPreference(applicationContext)
         LocalBroadcastManager.getInstance(this)
             .registerReceiver(broadcastReceiver, IntentFilter(BROADCAST_ACTION))
+        tracks.observeForever(tracksObserver)
+        songIndex.observeForever(songIndexObserver)
 
-        tracks.observeForever {
-            if (!it.isEmpty() && it != null) {
-                val index = songIndex.value!!
-                sharedPreference.saveValue("Position", index)
-                saveSharedPreference(
-                    it[index].img,
-                    it[index].name,
-                    it[index].artist,
-                    it[index].trackUri
-                )
-                playMusic(it[index].trackUri)
-            }
-
-        }
-
-
-        songIndex.observeForever {
-            if (it != null) {
-                if (tracks.value != null && tracks.value?.isNotEmpty() == true && it < tracks.value?.size!!) {
-                    val track = tracks.value?.get(it)!!
-                    sharedPreference.saveValue("Position", it)
-                    saveSharedPreference(track.img, track.name, track.artist, track.trackUri)
-                    playMusic(track.trackUri)
-
-                }
-            }
-        }
 
     }
 
-
-    fun getCurrentTrack(musicItem: com.example.spotifyclone.domain.model.dto.MusicItem): com.example.spotifyclone.domain.model.dto.MusicItem {
-        return musicItem
-    }
 
     fun saveSharedPreference(img: String, name: String, artist: String, uri: String) {
         sharedPreference.saveValue("PlayingMusicImg", img)
@@ -112,30 +113,31 @@ class MusicPlayerService : Service() {
         fun getService(): MusicPlayerService = this@MusicPlayerService
     }
 
-
-    private fun setNotification(img:Int) {
+    private fun setNotification(img: Int) {
         val track = tracks.value?.get(songIndex.value ?: 0) ?: return
-        val playPauseActionIcon = R.drawable.icon_music_pause
 
-        val nextIntent = Intent(baseContext, NotificationReceiver::class.java).setAction(ACTION_NEXT)
+        val nextIntent =
+            Intent(baseContext, NotificationReceiver::class.java).setAction(ACTION_NEXT)
         val nextPendingIntent = PendingIntent.getBroadcast(
-            baseContext,
+            this,
             0,
             nextIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val prevIntent = Intent(baseContext, NotificationReceiver::class.java).setAction(ACTION_PREVIOUS)
+        val prevIntent =
+            Intent(baseContext, NotificationReceiver::class.java).setAction(ACTION_PREVIOUS)
         val prevPendingIntent = PendingIntent.getBroadcast(
-            baseContext,
+            this,
             0,
             prevIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val pauseIntent = Intent(baseContext, NotificationReceiver::class.java).setAction(ACTION_PAUSE)
+        val pauseIntent =
+            Intent(baseContext, NotificationReceiver::class.java).setAction(ACTION_PAUSE)
         val pausePendingIntent = PendingIntent.getBroadcast(
-            baseContext,
+            this,
             0,
             pauseIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
@@ -145,7 +147,7 @@ class MusicPlayerService : Service() {
             .setContentTitle(track.name)
             .setContentText(track.artist)
             .setSmallIcon(R.drawable.logo)
-            .setLargeIcon(BitmapFactory.decodeResource(resources,R.drawable.facebook))
+            .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.facebook))
             .setStyle(MediaStyle().setMediaSession(mediaSession.sessionToken))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -203,7 +205,7 @@ class MusicPlayerService : Service() {
         }
     }
 
-    fun setTracks(tracks: List<com.example.spotifyclone.domain.model.dto.MusicItem>, position: Int) {
+    fun setTracks(tracks: List<MusicItem>, position: Int) {
         this.tracks.postValue(tracks)
         songIndex.postValue(position)
     }
@@ -227,7 +229,8 @@ class MusicPlayerService : Service() {
         ) {
             return
         } else if (tracks.value?.isNotEmpty() == true) {
-            current.postValue(tracks.value?.get(songIndex.value?:0))
+            val currentTrack = tracks.value?.get(songIndex.value ?: 0)
+            musicPlayerCallback?.onMusicChanged(currentTrack!!)
             sharedPreference.saveValue("Position", index)
             setNotification(R.drawable.icon_music_pause)
             mediaPlayer.stop()
@@ -266,7 +269,6 @@ class MusicPlayerService : Service() {
             ACTION_PREVIOUS -> {
                 prevSong()
             }
-
         }
     }
 
@@ -281,7 +283,7 @@ class MusicPlayerService : Service() {
             tracks.value?.get(newIndex)?.img ?: "",
             tracks.value?.get(newIndex)?.name ?: "",
             tracks.value?.get(newIndex)?.artist ?: "",
-            tracks.value?.get(newIndex)?.trackUri ?: ""
+            tracks.value?.get(newIndex)?.trackUri.orEmpty()
         )
         val songUri: String = tracks.value?.get(newIndex)?.trackUri ?: ""
         playMusic(songUri)
@@ -316,7 +318,7 @@ class MusicPlayerService : Service() {
             mediaPlayer.pause()
             setNotification(R.drawable.icon_music_play)
 
-        }else{
+        } else {
             mediaPlayer.start()
             setNotification(R.drawable.icon_music_pause)
         }
@@ -337,7 +339,7 @@ class MusicPlayerService : Service() {
 
     fun currentTrack(): MusicItem {
         val index = songIndex.value!!
-        return tracks.value?.get(index) ?: com.example.spotifyclone.domain.model.dto.MusicItem(
+        return tracks.value?.get(index) ?: MusicItem(
             "",
             "",
             "",
@@ -350,8 +352,10 @@ class MusicPlayerService : Service() {
 
         when (intent?.action) {
             ACTION_SET_TRACKS -> {
-                val tracks = intent.getSerializableExtra(EXTRA_TRACKS_JSON) as? ArrayList<com.example.spotifyclone.domain.model.dto.MusicItem>
+                val tracks =
+                    intent.getSerializableExtra(EXTRA_TRACKS_JSON) as? ArrayList<com.example.spotifyclone.domain.model.dto.MusicItem>
                 this.tracks.postValue(tracks)
+
 
             }
 

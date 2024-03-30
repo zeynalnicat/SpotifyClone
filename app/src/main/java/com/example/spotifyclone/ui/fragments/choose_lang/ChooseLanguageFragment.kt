@@ -1,13 +1,11 @@
 package com.example.spotifyclone.ui.fragments.choose_lang
 
-import android.content.Context
-import android.content.res.Configuration
+import LanguageHelper
 import android.os.Bundle
-import android.preference.PreferenceManager
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.FragmentChooseLanguageBinding

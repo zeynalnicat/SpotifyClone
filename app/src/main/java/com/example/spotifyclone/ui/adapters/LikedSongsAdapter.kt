@@ -1,12 +1,9 @@
 package com.example.spotifyclone.ui.adapters
 
-import android.app.ActionBar.LayoutParams
 import android.util.TypedValue
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.ui.text.font.Typeface
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -15,9 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.ItemLibraryAlbumBinding
-
-import com.example.spotifyclone.domain.model.dto.LikedSongs
-import com.example.spotifyclone.domain.model.dto.MusicItem
 
 class LikedSongsAdapter(
     private val setBottom: (com.example.spotifyclone.domain.model.dto.LikedSongs) -> Unit = {},
