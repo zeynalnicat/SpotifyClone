@@ -43,6 +43,8 @@ class MusicPlayerService : Service() {
     private lateinit var mediaSession: MediaSessionCompat
     private lateinit var sharedPreference: SharedPreference
 
+
+
     private val tracksObserver = Observer<List<MusicItem>> { newTracks ->
         if (newTracks.isNotEmpty()) {
             val index = songIndex.value ?: 0
@@ -142,12 +144,12 @@ class MusicPlayerService : Service() {
             pauseIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
+        val defaultIconBitmap = BitmapFactory.decodeResource(resources, R.drawable.view_liked_songs)
         val largeIconBitmap: Bitmap? = uriStringToBitmap(baseContext, track.img)
         val notification = NotificationCompat.Builder(this, "running_channel")
             .setContentTitle(track.name)
             .setContentText(track.artist)
             .setSmallIcon(R.drawable.logo)
-            .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.facebook))
             .setStyle(MediaStyle().setMediaSession(mediaSession.sessionToken))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -174,7 +176,14 @@ class MusicPlayerService : Service() {
                     nextPendingIntent
                 ).build()
             )
-            .build()
+
+        if (largeIconBitmap != null) {
+            notification.setLargeIcon(largeIconBitmap)
+        } else {
+            notification.setLargeIcon(defaultIconBitmap)
+        }
+
+        val notificationBuilder  = notification.build()
 
         val notificationManager = getSystemService(NotificationManager::class.java)
         val channel = NotificationChannel(
@@ -184,7 +193,7 @@ class MusicPlayerService : Service() {
         )
         notificationManager.createNotificationChannel(channel)
 
-        startForeground(1, notification)
+        startForeground(1, notificationBuilder)
     }
 
     fun uriStringToBitmap(context: Context, uriString: String): Bitmap? {

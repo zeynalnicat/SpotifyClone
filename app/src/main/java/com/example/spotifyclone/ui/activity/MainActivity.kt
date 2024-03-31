@@ -309,11 +309,11 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener, 
     }
 
     override fun onSwipeRight() {
-        musicPlayerService?.nextSong()
+        musicPlayerService?.prevSong()
     }
 
     override fun onSwipeLeft() {
-        musicPlayerService?.prevSong()
+        musicPlayerService?.nextSong()
     }
 
     override fun onMusicChanged(music: MusicItem) {
