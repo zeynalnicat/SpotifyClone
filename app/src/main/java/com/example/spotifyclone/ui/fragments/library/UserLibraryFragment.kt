@@ -18,6 +18,8 @@ import com.example.spotifyclone.databinding.FragmentUserLibraryBinding
 import com.example.spotifyclone.domain.resource.Resource
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.ui.adapters.PlaylistAdapter
+import com.example.spotifyclone.ui.fragments.library.viewmodel.UserLibraryFactory
+import com.example.spotifyclone.ui.fragments.library.viewmodel.UserLibraryViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore

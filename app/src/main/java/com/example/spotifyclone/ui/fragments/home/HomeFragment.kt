@@ -19,6 +19,8 @@ import com.example.spotifyclone.data.network.api.ArtistsApi
 import com.example.spotifyclone.data.network.api.deezer.TrackApi
 import com.example.spotifyclone.databinding.FragmentHomeBinding
 import com.example.spotifyclone.ui.fragments.home.general.FragmentPageAdapter
+import com.example.spotifyclone.ui.fragments.home.viewmodel.HomeFactory
+import com.example.spotifyclone.ui.fragments.home.viewmodel.HomeViewModel
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore

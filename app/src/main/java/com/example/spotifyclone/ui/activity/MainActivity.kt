@@ -11,8 +11,8 @@ import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.Glide
@@ -21,17 +21,21 @@ import com.example.spotifyclone.data.sp.SharedPreference
 import com.example.spotifyclone.databinding.ActivityMainBinding
 import com.example.spotifyclone.domain.model.dto.MusicItem
 import com.example.spotifyclone.service.MusicPlayerService
-import com.example.spotifyclone.service.MusicRepository
+import com.example.spotifyclone.domain.MusicRepository
+import com.example.spotifyclone.ui.activity.viewmodel.MusicPlayerViewModel
 import com.example.spotifyclone.ui.fragments.track.TrackViewFragment
 import com.example.spotifyclone.util.GsonHelper
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener,  MusicPlayerService.MusicPlayerCallback {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var musicPlayerViewModel: MusicPlayerViewModel
+    private val musicPlayerViewModel : MusicPlayerViewModel by viewModels()
 
-    private lateinit var repository: MusicRepository
+
+    @Inject
+    lateinit var repository: MusicRepository
 
     private lateinit var sharedPreference: SharedPreference
     private var position = 0
@@ -59,7 +63,7 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener, 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as MusicPlayerService.MusicPlayerBinder
-            musicPlayerService = binder.getService() //TODO
+            musicPlayerService = binder.getService()
             musicPlayerService?.setMusicPlayerCallback(this@MainActivity)
             handleMusic()
             updateProgress()
@@ -78,9 +82,7 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener, 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val swipeGestureDetector = SwipeGestureDetector(this, binding.musicPlayer, this)
-        musicPlayerViewModel = ViewModelProvider(this)[MusicPlayerViewModel::class.java]
         sharedPreference = SharedPreference(this)
-        position = sharedPreference.getValue("Position",0)
         repository = MusicRepository(applicationContext)
         binding.musicPlayer.setOnTouchListener(swipeGestureDetector)
         val navHostFragment =
@@ -95,7 +97,6 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener, 
     private fun handleTracksUpdate(newTracks: List<MusicItem>) {
         if (newTracks.isNotEmpty()) {
             musicPlayerViewModel.setTracks(newTracks)
-
         }
     }
     fun getMediaPlayer(): MediaPlayer? {
@@ -110,11 +111,6 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener, 
         musicPlayerViewModel.current.observe(this) {
             setMusicLayout(it.name, it.img, it.trackUri)
         }
-        musicPlayerViewModel.selectedTrackPosition.observe(this@MainActivity) { position ->
-            this@MainActivity.position = position
-            musicPlayerService?.setPosition(position)
-            setMusicPlayer(true)
-        }
 
         musicPlayerViewModel.tracks.observe(this@MainActivity) { tracks ->
             val intent = Intent(this@MainActivity, MusicPlayerService::class.java)
@@ -128,7 +124,11 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener, 
                 musicPlayerService?.setTracks(tracks, position)
             }
         }
-
+        musicPlayerViewModel.selectedTrackPosition.observe(this@MainActivity) { position ->
+            this@MainActivity.position = position
+            musicPlayerService?.setPosition(position)
+            setMusicPlayer(true)
+        }
 
     }
 

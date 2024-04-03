@@ -15,8 +15,10 @@ import com.example.spotifyclone.data.sp.SharedPreference
 import com.example.spotifyclone.databinding.FragmentHomeMusicBinding
 import com.example.spotifyclone.domain.resource.Resource
 import com.example.spotifyclone.ui.activity.MainActivity
-import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
+import com.example.spotifyclone.ui.activity.viewmodel.MusicPlayerViewModel
 import com.example.spotifyclone.ui.fragments.home.music.adapter.TrackAdapter
+import com.example.spotifyclone.ui.fragments.home.music.viewmodel.HomeMusicFactory
+import com.example.spotifyclone.ui.fragments.home.music.viewmodel.HomeMusicViewModel
 import com.example.spotifyclone.util.GsonHelper
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

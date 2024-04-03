@@ -13,6 +13,8 @@ import com.example.spotifyclone.databinding.FragmentSearchBinding
 import com.example.spotifyclone.domain.resource.Resource
 import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.ui.adapters.SearchCardAdapter
+import com.example.spotifyclone.ui.fragments.search.viewmodel.SearchFactory
+import com.example.spotifyclone.ui.fragments.search.viewmodel.SearchViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

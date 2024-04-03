@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.databinding.ArtistsListviewBinding
-import com.example.spotifyclone.ui.fragments.choose_artist.ChooseArtist
+import com.example.spotifyclone.ui.fragments.choose_artist.ChooseArtistFragment
 
-class ChooseArtistAdapter(val fragment: ChooseArtist) :
+class ChooseArtistAdapter(val fragment: ChooseArtistFragment) :
     RecyclerView.Adapter<ChooseArtistAdapter.ViewHolder>() {
     private val selectedArtists = mutableListOf<com.example.spotifyclone.domain.model.artist.Artist>()
 

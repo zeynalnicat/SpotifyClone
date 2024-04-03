@@ -85,7 +85,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUp1"
-        android:name="com.example.spotifyclone.ui.fragments.sign_up.SignUp1"
+        android:name="com.example.spotifyclone.ui.fragments.sign_up.SignUpFragment1"
         android:label="fragment_sign_up1"
         tools:layout="@layout/fragment_sign_up1">
         <action
@@ -96,7 +96,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUp2"
-        android:name="com.example.spotifyclone.ui.fragments.sign_up.SignUp2"
+        android:name="com.example.spotifyclone.ui.fragments.sign_up.SignUpFragment2"
         android:label="fragment_sign_up2"
         tools:layout="@layout/fragment_sign_up1">
         <action
@@ -108,7 +108,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUp3"
-        android:name="com.example.spotifyclone.ui.fragments.sign_up.SignUp3"
+        android:name="com.example.spotifyclone.ui.fragments.sign_up.SignUpFragment3"
         android:label="fragment_sign_up3"
         tools:layout="@layout/fragment_sign_up3">
         <action
@@ -117,7 +117,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUp43"
-        android:name="com.example.spotifyclone.ui.fragments.sign_up.SignUp4"
+        android:name="com.example.spotifyclone.ui.fragments.sign_up.SignUpFragment4"
         android:label="SignUp4"
         tools:layout="@layout/fragment_sign_up4">
         <action
@@ -126,7 +126,7 @@
     </fragment>
     <fragment
         android:id="@+id/chooseArtist"
-        android:name="com.example.spotifyclone.ui.fragments.choose_artist.ChooseArtist"
+        android:name="com.example.spotifyclone.ui.fragments.choose_artist.ChooseArtistFragment"
         android:label="ChooseArtist"
         tools:layout="@layout/fragment_choose_artist">
         <action
@@ -137,7 +137,7 @@
     </fragment>
     <fragment
         android:id="@+id/login"
-        android:name="com.example.spotifyclone.ui.fragments.login.Login"
+        android:name="com.example.spotifyclone.ui.fragments.login.LoginFragment"
         android:label="Login"
         tools:layout="@layout/fragment_login">
         <action

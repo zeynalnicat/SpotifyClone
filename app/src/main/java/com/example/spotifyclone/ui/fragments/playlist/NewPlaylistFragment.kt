@@ -15,6 +15,8 @@ import com.example.spotifyclone.data.sp.SharedPreference
 import com.example.spotifyclone.databinding.FragmentNewPlaylistBinding
 import com.example.spotifyclone.domain.resource.Resource
 import com.example.spotifyclone.ui.activity.MainActivity
+import com.example.spotifyclone.ui.fragments.playlist.viewmodel.NewPlaylistFactory
+import com.example.spotifyclone.ui.fragments.playlist.viewmodel.NewPlaylistViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint

@@ -17,6 +17,8 @@ import com.example.spotifyclone.data.network.api.AlbumApi
 import com.example.spotifyclone.databinding.FragmentLibraryBinding
 import com.example.spotifyclone.domain.resource.Resource
 import com.example.spotifyclone.ui.adapters.LibraryAlbumAdapter
+import com.example.spotifyclone.ui.fragments.library.viewmodel.LibraryFactor
+import com.example.spotifyclone.ui.fragments.library.viewmodel.LibraryViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint

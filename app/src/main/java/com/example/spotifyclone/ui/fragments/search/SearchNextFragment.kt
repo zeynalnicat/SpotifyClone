@@ -21,8 +21,10 @@ import com.example.spotifyclone.databinding.BottomSheetTrackBinding
 import com.example.spotifyclone.databinding.FragmentSearchNextBinding
 import com.example.spotifyclone.domain.resource.Resource
 import com.example.spotifyclone.ui.activity.MainActivity
-import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
+import com.example.spotifyclone.ui.activity.viewmodel.MusicPlayerViewModel
 import com.example.spotifyclone.ui.adapters.LikedSongsAdapter
+import com.example.spotifyclone.ui.fragments.search.viewmodel.SearchNextFactory
+import com.example.spotifyclone.ui.fragments.search.viewmodel.SearchNextViewModel
 import com.example.spotifyclone.util.GsonHelper
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth

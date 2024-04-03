@@ -12,7 +12,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.spotifyclone.R
 import com.example.spotifyclone.ui.adapters.PlaylistAdapter
 import com.example.spotifyclone.databinding.FragmentAddPlaylistBinding
@@ -20,6 +19,8 @@ import com.example.spotifyclone.domain.model.dto.MusicItem
 
 import com.example.spotifyclone.domain.model.dto.PlaylistModel
 import com.example.spotifyclone.domain.resource.Resource
+import com.example.spotifyclone.ui.fragments.playlist.viewmodel.AddPlaylistFactory
+import com.example.spotifyclone.ui.fragments.playlist.viewmodel.AddPlaylistViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint

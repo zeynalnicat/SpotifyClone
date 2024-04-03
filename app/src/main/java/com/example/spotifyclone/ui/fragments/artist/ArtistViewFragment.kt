@@ -13,6 +13,8 @@ import com.example.spotifyclone.R
 import com.example.spotifyclone.data.network.api.ArtistsApi
 import com.example.spotifyclone.databinding.FragmentArtistViewBinding
 import com.example.spotifyclone.ui.adapters.AlbumAdapter
+import com.example.spotifyclone.ui.fragments.artist.viewmodel.ArtistFactory
+import com.example.spotifyclone.ui.fragments.artist.viewmodel.ArtistViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

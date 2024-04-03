@@ -19,8 +19,10 @@ import com.example.spotifyclone.data.sp.SharedPreference
 import com.example.spotifyclone.databinding.BottomSheetTrackBinding
 import com.example.spotifyclone.databinding.FragmentAlbumViewBinding
 import com.example.spotifyclone.ui.activity.MainActivity
-import com.example.spotifyclone.ui.activity.MusicPlayerViewModel
+import com.example.spotifyclone.ui.activity.viewmodel.MusicPlayerViewModel
 import com.example.spotifyclone.ui.adapters.SingleAlbumTracksAdapter
+import com.example.spotifyclone.ui.fragments.album.viewmodel.AlbumFactory
+import com.example.spotifyclone.ui.fragments.album.viewmodel.AlbumViewModel
 import com.example.spotifyclone.util.GsonHelper
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.auth.FirebaseAuth
@@ -33,20 +35,16 @@ class AlbumViewFragment : Fragment() {
     private lateinit var binding: FragmentAlbumViewBinding
     private lateinit var album: com.example.spotifyclone.domain.model.dto.Album
     private var mediaPlayer: MediaPlayer? = null
-
     private val musicPlayerViewModel: MusicPlayerViewModel by activityViewModels()
-
 
     @Inject
     lateinit var albumApi: AlbumApi
-
     @Inject
     lateinit var firestore: FirebaseFirestore
-
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
 
-    private val isPlaying = MutableLiveData<Boolean>(false)
+    private val isPlaying = MutableLiveData(false)
     private lateinit var acitivity: MainActivity
     private val albumViewModel: AlbumViewModel by viewModels {
         AlbumFactory(
@@ -76,7 +74,6 @@ class AlbumViewFragment : Fragment() {
         setNavigation()
         getAlbumId()
 
-
         albumViewModel.insertionLiked.observe(viewLifecycleOwner) {
             if (it == -1L) {
                 Toast.makeText(requireContext(), "Something wrong!", Toast.LENGTH_SHORT).show()
@@ -88,7 +85,6 @@ class AlbumViewFragment : Fragment() {
             }
         }
         setLayoutButton()
-
         getAlbum()
 
         if (this.tracks == musicPlayerViewModel.tracks.value || this.tracks.equals(musicPlayerViewModel.tracks.value) && mediaPlayer?.isPlaying==true) {
@@ -98,7 +94,6 @@ class AlbumViewFragment : Fragment() {
             isPlaying.postValue(false)
 
         }
-
         isPlaying.observe(viewLifecycleOwner){
             if(it){
                 binding.imgPlay.setImageResource(R.drawable.icon_album_pause)
@@ -106,8 +101,6 @@ class AlbumViewFragment : Fragment() {
                 binding.imgPlay.setImageResource(R.drawable.icon_play)
             }
         }
-
-
     }
 
 
@@ -240,14 +233,11 @@ class AlbumViewFragment : Fragment() {
 
         dialog.setCancelable(true)
         dialog.setContentView(view.root)
-
         Glide.with(binding.root)
             .load(musicItem.img)
             .into(view.imgAlbum)
-
         view.txtArtistName.text = musicItem.artist
         view.txtTrackName.text = musicItem.name
-
         view.viewAddLiked.setOnClickListener {
             it.animate()
                 .scaleX(0.95f)
@@ -267,9 +257,7 @@ class AlbumViewFragment : Fragment() {
             )
 
         }
-
         albumViewModel.isInLiked.observe(viewLifecycleOwner) {
-
             if (it) {
                 view.txtLiked.setText(R.string.bottom_sheet_txt_remove)
             } else {
@@ -278,7 +266,6 @@ class AlbumViewFragment : Fragment() {
         }
 
         albumViewModel.checkLikedSongs(musicItem.name)
-
         view.viewAddPlaylist.setOnClickListener {
             it.animate()
                 .scaleX(0.95f)
@@ -301,7 +288,6 @@ class AlbumViewFragment : Fragment() {
         dialog.show()
 
     }
-
 
     private fun saveSharedPreference(key: String, value: String) {
         sharedPreference.saveValue(key, value)

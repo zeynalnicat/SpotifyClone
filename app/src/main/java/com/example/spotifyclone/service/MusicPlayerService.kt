@@ -43,10 +43,8 @@ class MusicPlayerService : Service() {
     private lateinit var mediaSession: MediaSessionCompat
     private lateinit var sharedPreference: SharedPreference
 
-
-
     private val tracksObserver = Observer<List<MusicItem>> { newTracks ->
-        if (newTracks.isNotEmpty()) {
+        if (newTracks.isNotEmpty() && newTracks.size>songIndex.value!!) {
             val index = songIndex.value ?: 0
             sharedPreference.saveValue("Position", index)
             saveSharedPreference(
@@ -92,13 +90,11 @@ class MusicPlayerService : Service() {
         super.onCreate()
         mediaPlayer = MediaPlayer()
         mediaSession = MediaSessionCompat(baseContext, "Spotify")
-
         sharedPreference = SharedPreference(applicationContext)
         LocalBroadcastManager.getInstance(this)
             .registerReceiver(broadcastReceiver, IntentFilter(BROADCAST_ACTION))
         tracks.observeForever(tracksObserver)
         songIndex.observeForever(songIndexObserver)
-
 
     }
 
@@ -183,7 +179,7 @@ class MusicPlayerService : Service() {
             notification.setLargeIcon(defaultIconBitmap)
         }
 
-        val notificationBuilder  = notification.build()
+        val notificationBuilder = notification.build()
 
         val notificationManager = getSystemService(NotificationManager::class.java)
         val channel = NotificationChannel(
