@@ -121,6 +121,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-storage")
+    implementation ("com.google.firebase:firebase-messaging:23.0.0")
 
 
     implementation("androidx.media:media:1.7.0")

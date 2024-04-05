@@ -92,12 +92,9 @@ class HomeFragmentMusic : Fragment() {
         GsonHelper.serializeTracks(requireContext().applicationContext, tracks)
         musicPlayerViewModel.setTracks(tracks)
         musicPlayerViewModel.setSelectedTrackPosition(position)
-
-
     }
 
     private fun getIsPlaying():Boolean{
-
         return sharedPreference.getValue("isPlaying",false)
     }
 
