@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Binder
+import android.os.Handler
 import android.os.IBinder
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
@@ -26,9 +27,15 @@ import com.example.spotifyclone.data.sp.SharedPreference
 import com.example.spotifyclone.domain.model.dto.MusicItem
 import com.example.spotifyclone.util.GsonHelper
 import com.example.spotifyclone.util.NotificationReceiver
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
 
 
 class MusicPlayerService : Service() {
@@ -41,10 +48,11 @@ class MusicPlayerService : Service() {
     val musicIsPlaying = MutableLiveData<Boolean>()
     private var musicPlayerCallback: MusicPlayerCallback? = null
     private lateinit var mediaSession: MediaSessionCompat
+    private lateinit var notification : NotificationCompat.Builder
     private lateinit var sharedPreference: SharedPreference
-
+    private val handler = Handler()
     private val tracksObserver = Observer<List<MusicItem>> { newTracks ->
-        if (newTracks.isNotEmpty() && newTracks.size>songIndex.value!!) {
+        if (newTracks.isNotEmpty() && newTracks.size > songIndex.value!!) {
             val index = songIndex.value ?: 0
             sharedPreference.saveValue("Position", index)
             saveSharedPreference(
@@ -65,6 +73,7 @@ class MusicPlayerService : Service() {
             playMusic(track.trackUri)
         }
     }
+
 
 
     companion object {
@@ -96,6 +105,8 @@ class MusicPlayerService : Service() {
         tracks.observeForever(tracksObserver)
         songIndex.observeForever(songIndexObserver)
 
+
+
     }
 
 
@@ -113,102 +124,84 @@ class MusicPlayerService : Service() {
 
     private fun setNotification(img: Int) {
         val track = tracks.value?.get(songIndex.value ?: 0) ?: return
+        val defaultIconBitmap = BitmapFactory.decodeResource(resources, R.drawable.playlist_image)
 
-        val nextIntent =
-            Intent(baseContext, NotificationReceiver::class.java).setAction(ACTION_NEXT)
-        val nextPendingIntent = PendingIntent.getBroadcast(
-            this,
-            0,
-            nextIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
+        var largeIconBitmap: Bitmap? = null
+        CoroutineScope(Dispatchers.IO).launch {
+            largeIconBitmap = uriStringToBitmap(baseContext, track.img)
+            buildNotification(track, img, largeIconBitmap ?: defaultIconBitmap)
+        }
+    }
 
-        val prevIntent =
-            Intent(baseContext, NotificationReceiver::class.java).setAction(ACTION_PREVIOUS)
-        val prevPendingIntent = PendingIntent.getBroadcast(
-            this,
-            0,
-            prevIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
+    private fun buildNotification(track: MusicItem, img: Int, largeIconBitmap: Bitmap) {
+        val notificationManager = getSystemService(NotificationManager::class.java)
+        val channel = NotificationChannel("running_channel", "Spotify", NotificationManager.IMPORTANCE_HIGH)
 
-        val pauseIntent =
-            Intent(baseContext, NotificationReceiver::class.java).setAction(ACTION_PAUSE)
-        val pausePendingIntent = PendingIntent.getBroadcast(
-            this,
-            0,
-            pauseIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-        val defaultIconBitmap = BitmapFactory.decodeResource(resources, R.drawable.view_liked_songs)
-        val largeIconBitmap: Bitmap? = uriStringToBitmap(baseContext, track.img)
-        val notification = NotificationCompat.Builder(this, "running_channel")
+
+        val nextIntent = Intent(baseContext, NotificationReceiver::class.java).setAction(ACTION_NEXT)
+        val nextPendingIntent = PendingIntent.getBroadcast(this, 0, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+
+        val prevIntent = Intent(baseContext, NotificationReceiver::class.java).setAction(ACTION_PREVIOUS)
+        val prevPendingIntent = PendingIntent.getBroadcast(this, 0, prevIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+
+        val pauseIntent = Intent(baseContext, NotificationReceiver::class.java).setAction(ACTION_PAUSE)
+        val pausePendingIntent = PendingIntent.getBroadcast(this, 0, pauseIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+
+        val totalDuration = mediaPlayer.duration
+        val currentDuration = mediaPlayer.currentPosition
+
+        notification = NotificationCompat.Builder(this, "running_channel")
             .setContentTitle(track.name)
             .setContentText(track.artist)
             .setSmallIcon(R.drawable.logo)
+            .setColorized(true)
+            .setBadgeIconType(R.drawable.logo)
             .setStyle(MediaStyle().setMediaSession(mediaSession.sessionToken))
+            .setOngoing(true)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setOnlyAlertOnce(true)
-            .setProgress(mediaPlayer.duration, mediaPlayer.currentPosition, false)
-            .addAction(
-                NotificationCompat.Action.Builder(
-                    R.drawable.icon_music_notification_previous,
-                    "Previous",
-                    prevPendingIntent
-                ).build()
-            )
-            .addAction(
-                NotificationCompat.Action.Builder(
-                    img,
-                    if (mediaPlayer.isPlaying) "Pause" else "Play",
-                    pausePendingIntent
-                ).build()
-            )
-            .addAction(
-                NotificationCompat.Action.Builder(
-                    R.drawable.icon_music_notification_next,
-                    "Next",
-                    nextPendingIntent
-                ).build()
-            )
+            .setLargeIcon(largeIconBitmap)
+            .addAction(NotificationCompat.Action.Builder(R.drawable.icon_music_notification_previous, "Previous", prevPendingIntent).build())
+            .addAction(NotificationCompat.Action.Builder(img, if (mediaPlayer.isPlaying) "Pause" else "Play", pausePendingIntent).build())
+            .addAction(NotificationCompat.Action.Builder(R.drawable.icon_music_notification_next, "Next", nextPendingIntent).build())
+            .setProgress(totalDuration, currentDuration, false)
 
-        if (largeIconBitmap != null) {
-            notification.setLargeIcon(largeIconBitmap)
-        } else {
-            notification.setLargeIcon(defaultIconBitmap)
-        }
-
-        val notificationBuilder = notification.build()
-
-        val notificationManager = getSystemService(NotificationManager::class.java)
-        val channel = NotificationChannel(
-            "running_channel",
-            "Spotify",
-            NotificationManager.IMPORTANCE_HIGH
-        )
         notificationManager.createNotificationChannel(channel)
-
+        val notificationBuilder = notification.build()
         startForeground(1, notificationBuilder)
+
+        mediaPlayer.setOnSeekCompleteListener {
+            val currentPosition = mediaPlayer.currentPosition
+            notification.setProgress(totalDuration, currentPosition, false)
+            notificationManager.notify(1, notification.build())
+        }
     }
 
-    fun uriStringToBitmap(context: Context, uriString: String): Bitmap? {
-        val uri = Uri.parse(uriString)
-        var inputStream: InputStream? = null
-        return try {
-            inputStream = context.contentResolver.openInputStream(uri)
-            BitmapFactory.decodeStream(inputStream)
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-            null
-        } finally {
+    private suspend fun uriStringToBitmap(context: Context, uriString: String): Bitmap? {
+        return withContext(Dispatchers.IO) {
+            var inputStream: InputStream? = null
             try {
-                inputStream?.close()
+                val url = URL(uriString)
+                val connection = url.openConnection() as HttpURLConnection
+                connection.doInput = true
+                connection.connect()
+                inputStream = connection.inputStream
+                BitmapFactory.decodeStream(inputStream)
             } catch (e: IOException) {
                 e.printStackTrace()
+                null
+            } finally {
+                try {
+                    inputStream?.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
             }
         }
     }
+
+
 
     fun setTracks(tracks: List<MusicItem>, position: Int) {
         this.tracks.postValue(tracks)
@@ -247,8 +240,6 @@ class MusicPlayerService : Service() {
                 musicIsPlaying.postValue(true)
 
             }
-
-
             mediaPlayer.prepareAsync()
             if (!GsonHelper.hasTracks(applicationContext)) {
                 GsonHelper.serializeTracks(applicationContext, tracks.value ?: emptyList())
@@ -297,11 +288,9 @@ class MusicPlayerService : Service() {
     fun removeNotification() {
         stopForeground(true)
         stopSelf()
-
     }
 
     fun prevSong() {
-
         mediaPlayer.reset()
         val index = songIndex.value!!
         val newIndex = (index - 1) % (tracks.value?.size ?: 0)
