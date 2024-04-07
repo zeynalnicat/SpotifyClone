@@ -28,7 +28,6 @@ class UserLibraryViewModel(
          _playlists.postValue(Resource.Loading)
         viewModelScope.launch(Dispatchers.IO) {
             try {
-
                 val playlistModels = playlistsModel()
                 val playlistMap = playlistTrackCounts()
                 val listPlaylist = mutableListOf<PlaylistModel>()
@@ -38,37 +37,31 @@ class UserLibraryViewModel(
                     listPlaylist.add(it)
                     _playlists.postValue(Resource.Success(listPlaylist))
                 }
-
-
             }catch (e:Exception){
                 _playlists.postValue(Resource.Error(e))
             }
-
-
         }
-
-
     }
 
-    suspend fun playlistsModel(): List<com.example.spotifyclone.domain.model.dto.PlaylistModel> {
+    suspend fun playlistsModel(): List<PlaylistModel> {
         val playlistsRef = firestore.collection("playlists")
         val userId = firebaseAuth.currentUser?.uid
         val query = playlistsRef.whereEqualTo("userId", userId).get().await()
-        val playlistList = mutableListOf<com.example.spotifyclone.domain.model.dto.PlaylistModel>()
+        val playlistList = mutableListOf<PlaylistModel>()
 
         if (query != null && !query.isEmpty) {
             val documents = query.documents
             for (document in documents) {
                 playlistList.add(
-                    com.example.spotifyclone.domain.model.dto.PlaylistModel(
+                    PlaylistModel(
                         document["id"].toString(),
                         document["name"].toString(),
                         isLibrary = true
                     )
                 )
             }
-
-
+        }else{
+            _playlists.postValue(Resource.Error(Exception("There was an error")))
         }
         return playlistList
     }
@@ -91,13 +84,10 @@ class UserLibraryViewModel(
         return playlistMap
     }
 
-
     fun removeFromPlaylist(id:String){
         val userId = firebaseAuth.currentUser?.uid
         val playlistRef = firestore.collection("playlists")
         val query = playlistRef.whereEqualTo("userId",userId).whereEqualTo("id",id)
-
-
         viewModelScope.launch(Dispatchers.IO) {
             removeRelatedTracks(id)
             query.get().addOnSuccessListener {querySnapshot->
@@ -111,7 +101,6 @@ class UserLibraryViewModel(
 
     }
 
-
     suspend fun removeRelatedTracks(id: String) {
         val userId = firebaseAuth.currentUser?.uid
         val playlistRef = firestore.collection("playlistTracks")
@@ -121,6 +110,4 @@ class UserLibraryViewModel(
             playlistRef.document(document.id).delete()
         }
     }
-
-
 }

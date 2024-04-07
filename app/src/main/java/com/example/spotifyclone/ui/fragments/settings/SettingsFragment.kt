@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.spotifyclone.R
 import com.example.spotifyclone.databinding.FragmentSettingsBinding
+import com.example.spotifyclone.ui.activity.MainActivity
 import com.example.spotifyclone.ui.adapters.SettingsAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -114,6 +115,8 @@ class SettingsFragment : Fragment() {
 
     private fun logout() {
         firebaseAuth.signOut()
+        val mainActivity = requireActivity() as MainActivity
+        mainActivity.stopMusicService()
         findNavController().navigate(R.id.action_settingsFragment_to_startFragment)
     }
 

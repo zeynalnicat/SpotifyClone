@@ -15,6 +15,7 @@ import com.example.spotifyclone.R
 import com.example.spotifyclone.data.network.api.ArtistsApi
 import com.example.spotifyclone.databinding.FragmentChooseArtistBinding
 import com.example.spotifyclone.domain.model.artist.Artist
+import com.example.spotifyclone.domain.resource.Resource
 import com.example.spotifyclone.ui.adapters.ChooseArtistAdapter
 import com.example.spotifyclone.ui.fragments.choose_artist.viewmodel.ChooseArtistFactory
 import com.example.spotifyclone.ui.fragments.choose_artist.viewmodel.ChoseArtistViewModel
@@ -56,9 +57,27 @@ class ChooseArtistFragment : Fragment() {
     ): View? {
         binding = FragmentChooseArtistBinding.inflate(inflater, container, false)
         search()
-        setAdapter()
         setNavigation()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        chooseArtistViewModel.getArtists()
+
+        chooseArtistViewModel.artists.observe(viewLifecycleOwner) {
+          when(it){
+              is Resource.Success->{
+                  setAdapter(it.data)
+              }
+              is Resource.Error->{
+                  findNavController().navigate(R.id.action_chooseArtist_to_homeFragment)
+              }
+              is Resource.Loading->{
+
+              }
+          }
+        }
     }
 
 
@@ -94,25 +113,20 @@ class ChooseArtistFragment : Fragment() {
             navController.popBackStack(R.id.signUp43, false)
         }
 
-        chooseArtistViewModel.getArtists()
 
     }
 
-    private fun setAdapter() {
-        chooseArtistViewModel.artists.observe(viewLifecycleOwner) {
-            if (!it.isNullOrEmpty()) {
-                adapter = ChooseArtistAdapter(this@ChooseArtistFragment)
-                val layoutManager = FlexboxLayoutManager(requireContext())
-                layoutManager.flexDirection = FlexDirection.ROW
-                layoutManager.justifyContent = JustifyContent.SPACE_BETWEEN
-                layoutManager.flexWrap = FlexWrap.WRAP
-                layoutManager.alignItems = AlignItems.FLEX_START
-                binding.artistRecycle.layoutManager = layoutManager
-                adapter.submitList(it)
-                binding.artistRecycle.adapter = adapter
+    private fun setAdapter(listArtist:List<Artist>) {
 
-            }
-        }
+        adapter = ChooseArtistAdapter(this@ChooseArtistFragment)
+        val layoutManager = FlexboxLayoutManager(requireContext())
+        layoutManager.flexDirection = FlexDirection.ROW
+        layoutManager.justifyContent = JustifyContent.SPACE_BETWEEN
+        layoutManager.flexWrap = FlexWrap.WRAP
+        layoutManager.alignItems = AlignItems.FLEX_START
+        binding.artistRecycle.layoutManager = layoutManager
+        adapter.submitList(listArtist)
+        binding.artistRecycle.adapter = adapter
 
 
     }

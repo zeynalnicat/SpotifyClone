@@ -55,11 +55,11 @@
             app:layout_constraintStart_toEndOf="@+id/txtCountMusic"
             app:layout_constraintTop_toTopOf="@+id/txtCountMusic" />
 
-        <CheckBox
+        <androidx.appcompat.widget.AppCompatCheckBox
             android:id="@+id/checkBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
+            android:button="@null"
             android:background="@drawable/radio_btn_playlist"
             app:layout_constraintBottom_toBottomOf="@+id/txtSaves"
             app:layout_constraintEnd_toEndOf="parent"

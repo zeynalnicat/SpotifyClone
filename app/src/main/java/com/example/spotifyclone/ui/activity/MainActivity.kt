@@ -178,18 +178,24 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener, 
                     it.scaleY = 1.0f
                     it.alpha = 1.0f
                 }
-            sharedPreference.saveIsPlaying(false)
-            sharedPreference.updateValue("PlayingMusic", "")
-            sharedPreference.updateValue("PlayingMusicUri", "")
-            sharedPreference.updateValue("PlayingMusicArtist", "")
-            sharedPreference.updateValue("PlayingMusicImg", "")
-            setMusicPlayer(false)
-            GsonHelper.serializeTracks(this, emptyList())
-            musicPlayerService?.tracks?.value = emptyList()
-            musicPlayerService?.stopMusic()
-            musicPlayerService?.removeNotification()
+
+            removeMusic()
         }
 
+    }
+
+
+    fun removeMusic(){
+        sharedPreference.saveIsPlaying(false)
+        sharedPreference.updateValue("PlayingMusic", "")
+        sharedPreference.updateValue("PlayingMusicUri", "")
+        sharedPreference.updateValue("PlayingMusicArtist", "")
+        sharedPreference.updateValue("PlayingMusicImg", "")
+        setMusicPlayer(false)
+        GsonHelper.serializeTracks(this, emptyList())
+        musicPlayerService?.tracks?.value = emptyList()
+        musicPlayerService?.stopMusic()
+        musicPlayerService?.removeNotification()
     }
 
     fun checkVisibility() {
@@ -319,6 +325,13 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener, 
     override fun onMusicChanged(music: MusicItem) {
         setMusicLayout(music.name, music.img, music.trackUri)
         musicPlayerViewModel.setCurrentMusic(music)
+    }
+
+
+    fun stopMusicService(){
+        removeMusic()
+        stopService(Intent(this,MusicPlayerService::class.java))
+
     }
 
 }

@@ -179,13 +179,14 @@
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toBottomOf="@+id/txtPrivacy" />
 
-    <androidx.appcompat.widget.AppCompatRadioButton
+    <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/radioButton"
         android:layout_width="wrap_content"
         android:scaleX="0.7"
         android:scaleY="0.7"
         android:layout_height="wrap_content"
-        android:background="@drawable/radiobtn"
+        android:button="@null"
+        android:background="@drawable/radio_btn_playlist"
         app:layout_constraintBottom_toBottomOf="@+id/txtNews"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintTop_toTopOf="@+id/txtNews" />
@@ -202,13 +203,14 @@
         app:layout_constraintStart_toStartOf="@+id/leftGuideline"
         app:layout_constraintTop_toBottomOf="@+id/radioButton" />
 
-    <androidx.appcompat.widget.AppCompatRadioButton
+    <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/radioButton2"
         android:layout_width="wrap_content"
         android:scaleX="0.7"
         android:scaleY="0.7"
         android:layout_height="wrap_content"
-        android:background="@drawable/radiobtn"
+        android:button="@null"
+        android:background="@drawable/radio_btn_playlist"
         app:layout_constraintBottom_toBottomOf="@+id/txtShareData"
         app:layout_constraintEnd_toStartOf="@+id/rightGuideline"
         app:layout_constraintTop_toTopOf="@+id/txtShareData" />

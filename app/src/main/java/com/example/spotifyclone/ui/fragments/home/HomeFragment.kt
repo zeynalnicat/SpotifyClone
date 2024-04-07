@@ -131,8 +131,8 @@ class HomeFragment : Fragment() {
 
                         binding.txtNameDrawer.text = name ?: "N/A"
                         if (image?.isEmpty() == true) {
-                            binding.imgProfileAccount.setImageResource(if (gender == "Men") R.drawable.man_icon else R.drawable.woman_icon)
-                            binding.imgProfileDrawer.setImageResource(if (gender == "Men") R.drawable.man_icon else R.drawable.woman_icon)
+                            binding.imgProfileAccount.setImageResource(if (gender == "Men" || gender==null) R.drawable.man_icon else R.drawable.woman_icon)
+                            binding.imgProfileDrawer.setImageResource(if (gender == "Men" || gender==null) R.drawable.man_icon else R.drawable.woman_icon)
                         } else {
                             Glide.with(binding.root)
                                 .load(image.toString())

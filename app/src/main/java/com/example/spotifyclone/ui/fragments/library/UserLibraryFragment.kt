@@ -64,19 +64,16 @@ class UserLibraryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         userLibraryViewModel.getPlaylists()
         userLibraryViewModel.playlists.observe(viewLifecycleOwner) {
             when (it) {
                 is Resource.Success -> {
-                    setAdapter(it.data)
                     binding.progressBar.visibility=View.GONE
+                    setAdapter(it.data)
                 }
 
                 is Resource.Error -> {
                     binding.progressBar.visibility=View.GONE
-                    Toast.makeText(requireContext(), it.exception.message, Toast.LENGTH_SHORT)
-                        .show()
                 }
 
                 else -> {
@@ -102,7 +99,7 @@ class UserLibraryFragment : Fragment() {
                         binding.txtEmail.text = firebaseAuth.currentUser?.email
                         val image = querySnapshot.documents[0].getString("img")
                         if (image?.isEmpty() == true) {
-                            binding.imgProfile.setImageResource(if (gender == "Men") R.drawable.man_icon else R.drawable.woman_icon)
+                            binding.imgProfile.setImageResource(if (gender == "Men" || gender==null) R.drawable.man_icon else R.drawable.woman_icon)
                         } else {
                             Glide.with(binding.root)
                                 .load(image.toString())
