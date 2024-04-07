@@ -201,8 +201,6 @@ class MusicPlayerService : Service() {
         }
     }
 
-
-
     fun setTracks(tracks: List<MusicItem>, position: Int) {
         this.tracks.postValue(tracks)
         songIndex.postValue(position)
