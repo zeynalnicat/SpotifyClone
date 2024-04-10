@@ -25,12 +25,4 @@ class NotificationReceiver : BroadcastReceiver() {
     }
 
 
-    fun playMusic(){
-        MusicPlayerService
-    }
-
-
-
-
-
 }

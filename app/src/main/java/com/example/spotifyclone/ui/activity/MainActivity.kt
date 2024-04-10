@@ -294,6 +294,7 @@ class MainActivity : AppCompatActivity(), SwipeGestureDetector.OnSwipeListener, 
 
 
     fun nextSong() {
+
         musicPlayerService?.nextSong()
     }
 
