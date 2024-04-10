@@ -158,8 +158,6 @@ class UserLibraryFragment : Fragment() {
         view.viewAddLiked.visibility = View.GONE
         view.imgAlbum.setImageResource(R.drawable.playlist_image)
         view.imageView3.setImageResource(R.drawable.icon_delete)
-
-
         view.viewAddPlaylist.setOnClickListener {
            userLibraryViewModel.removeFromPlaylist(playlistModel.id)
            dialog.hide()

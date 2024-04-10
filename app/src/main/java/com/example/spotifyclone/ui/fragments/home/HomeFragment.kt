@@ -40,7 +40,6 @@ class HomeFragment : Fragment() {
     @Inject
     lateinit var albumApi: AlbumApi
 
-
     @Inject
     lateinit var firestore: FirebaseFirestore
 

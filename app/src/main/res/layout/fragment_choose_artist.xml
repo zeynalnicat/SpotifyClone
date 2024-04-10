@@ -47,9 +47,6 @@
 
 
 
-
-
-
     <ImageButton
         android:id="@+id/navBack"
         android:layout_width="wrap_content"
@@ -89,7 +86,7 @@
         app:layout_constraintTop_toBottomOf="@+id/edtSearch"
         app:layout_constraintVertical_bias="0.0" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnNext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

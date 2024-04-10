@@ -167,15 +167,12 @@ class SearchNextFragment : Fragment() {
         dialog.setContentView(view.root)
 
         Glide.with(binding.root).load(musicItem.imgUri).into(view.imgAlbum)
-
         view.txtArtistName.text = musicItem.artist
         view.txtTrackName.text = musicItem.name
-
         view.viewAddLiked.setOnClickListener {
             searchNextViewModel.insertLikedSongs(
                 musicItem.name, musicItem.artist, musicItem.imgUri, musicItem.uri
             )
-
             dialog.hide()
 
         }
@@ -188,7 +185,6 @@ class SearchNextFragment : Fragment() {
             } else {
                 view.txtLiked.setText(R.string.bottom_sheet_txt_liked)
             }
-
 
             view.viewAddPlaylist.setOnClickListener {
                 val bundle = Bundle()
@@ -228,12 +224,9 @@ class SearchNextFragment : Fragment() {
 
     private fun setMusicTrack(position: Int) {
         sharedPreference.saveValue("Position", position)
-
         GsonHelper.serializeTracks(requireContext().applicationContext, tracks)
         musicPlayerViewModel.setSelectedTrackPosition(position)
         musicPlayerViewModel.setTracks(tracks)
-
-
     }
 
 

@@ -67,7 +67,7 @@ class NetworkModule {
             clientId = "3927891f65e6435586508e1bc22ce82a",
             clientSecret = "8aac71670abc416e99adf6012dd96ad8",
             redirectUri = "https://oauth.pstmn.io/v1/browser-callback",
-            accessToken = "BQDE7e8O1faQdBo6cjn7N0JktoF7QF3dMXI6W2VINIo3W298OVSLIYyjmTv5PfZP4eaxmCaBs25JQCSUu_rTsb9MHsRO4rJnoPfnZec3KZuPFh9AZ8OgJ4x3PH3_I5NWpaQuYEr7JShadWfNiy4CL4DfPSQg8df62Oq4MFXs1lWNShqiVmpghmNLNbyNbSJGm9rwsAdOBPJ-h_gQqu_KS9dmfQgyUM05ObUSYEsvwKmWbTZPNiVoHMUvpXx8h32ezqUoXqSTqrIWSw",
+            accessToken = "BQAIhZGCbwM2PFbLmM_ZDIfFm6km9--aXtT25X86riXlMCTM5lxdhtCuTxb1CQEEtQSELkdCoWXcc_ergsoo7Lhf1lLcba1z83fGqK0dPuauN1Zflm2SMWf2YbQ95oYuis2SyioPW63ZKane4DKRNSSMzC3q9O1gYcgNSWcgXv9zUOxwtrwz3og1ID1_0pcpMnK-68Gd4zsYbfnCkafv-TtP9DZDLp78WC9UjhT0LRH5532I6nSn3ySyWE6259pEwHXlTKpbrBZwuQ",
             tokenType = "Bearer",
             accessTokenUrl = "https://accounts.spotify.com/api/token",
             expiresIn = 3600,

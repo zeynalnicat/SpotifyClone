@@ -71,7 +71,7 @@ class ChooseArtistFragment : Fragment() {
                   setAdapter(it.data)
               }
               is Resource.Error->{
-                  findNavController().navigate(R.id.action_chooseArtist_to_homeFragment)
+//                  findNavController().navigate(R.id.action_chooseArtist_to_homeFragment)
               }
               is Resource.Loading->{
 

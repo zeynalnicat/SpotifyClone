@@ -37,7 +37,7 @@ class SharedPreference(context: Context) {
     }
     fun updateValue(key: String, newValue: Int) {
         editor.putInt(key, newValue)
-        editor.apply()
+        editor.commit()
     }
 
     fun containsValue(value: String): Boolean {
